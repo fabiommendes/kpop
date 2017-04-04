@@ -1,6 +1,8 @@
 language: python
 cache: pip
 sudo: false
+compiler:
+  - gcc
 
 # Test environments
 matrix:

@@ -1,3 +1,13 @@
+.. image:: https://readthedocs.org/projects/kpop/badge/?version=latest
+   :target: kpop.rtfd.io/
+
+.. image:: https://codecov.io/gh/fabiommendes/kpop/branch/master/graph/badge.svg
+   :target: https://codecov.io/gh/fabiommendes/kpop
+
+.. image:: https://travis-ci.org/fabiommendes/kpop.svg?branch=master
+   :target: https://travis-ci.org/fabiommendes/kpop
+
+
 Kpop is a Python package to perform population genetics analysis that
 integrates traditional methods such as PCA and LDA (Latent Dirichilet Analysis,
 a.k.a the algorithm introduced by Pritchard in the Structure program) with
