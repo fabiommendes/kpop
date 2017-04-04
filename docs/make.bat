@@ -231,7 +231,7 @@ if "%1" == "doctest" (
 	if errorlevel 1 exit /b 1
 	echo.
 	echo.Testing of doctests in the sources finished, look at the ^
-results in %BUILDDIR%/doctest/output.txt.
+_results in %BUILDDIR%/doctest/output.txt.
 	goto end
 )
 
@@ -240,7 +240,7 @@ if "%1" == "coverage" (
 	if errorlevel 1 exit /b 1
 	echo.
 	echo.Testing of coverage in the sources finished, look at the ^
-results in %BUILDDIR%/coverage/python.txt.
+_results in %BUILDDIR%/coverage/python.txt.
 	goto end
 )
 

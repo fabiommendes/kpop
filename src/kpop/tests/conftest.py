@@ -1,16 +1,23 @@
 import pytest
 
-from kpop.individual import Individual
+from kpop import Population
 
 
 @pytest.fixture
-def popA():
-    return [Individual.random_biallelic([0.1] * 20, label='A%s' % (i + 1))
-            for i in range(10)]
+def numloci():
+    return 20
 
 
 @pytest.fixture
-def popB():
-    return [Individual.random_biallelic([0.9] * 20, label='A%s' % (i + 1))
-            for i in range(10)]
+def popA(numloci):
+    return Population.make_random(5, numloci, label='A', min_prob=0.1)
 
+
+@pytest.fixture
+def popB(numloci):
+    return Population.make_random(5, numloci, label='B', min_prob=0.9)
+
+
+@pytest.fixture
+def pop(popA, popB):
+    return popA + popB

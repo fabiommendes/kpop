@@ -1,0 +1,6 @@
+========
+Examples
+========
+
+Simulating synthetic populations
+================================

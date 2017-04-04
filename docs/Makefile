@@ -195,13 +195,13 @@ linkcheck:
 doctest:
 	$(SPHINXBUILD) -b doctest $(ALLSPHINXOPTS) $(BUILDDIR)/doctest
 	@echo "Testing of doctests in the sources finished, look at the " \
-	      "results in $(BUILDDIR)/doctest/output.txt."
+	      "_results in $(BUILDDIR)/doctest/output.txt."
 
 .PHONY: coverage
 coverage:
 	$(SPHINXBUILD) -b coverage $(ALLSPHINXOPTS) $(BUILDDIR)/coverage
 	@echo "Testing of coverage in the sources finished, look at the " \
-	      "results in $(BUILDDIR)/coverage/python.txt."
+	      "_results in $(BUILDDIR)/coverage/python.txt."
 
 .PHONY: xml
 xml:

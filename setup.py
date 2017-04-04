@@ -1,14 +1,16 @@
-# -*- coding: utf-8 -*-
-#
-# This file were created by Python Boilerplate. Use boilerplate to start simple
-# usable and best-practices compliant Python projects.
-#
-# Learn more about it at: http://github.com/fabiommendes/python-boilerplate/
-#
-
 import os
 import codecs
 from setuptools import setup, find_packages
+from distutils.extension import Extension
+
+try:
+    if 'BUILDC' in os.environ:
+        raise ImportError
+    from Cython.Distutils import build_ext
+    mod_ext = '.pyx'
+except ImportError:
+    mod_ext = '.c'
+    build_ext = None
 
 # Save version and author to __meta__.py
 version = open('VERSION').read().strip()
@@ -46,6 +48,13 @@ setup(
         'Topic :: Software Development :: Libraries',
     ],
 
+    # Entry points
+    entry_points={
+        'console_scripts': [
+            'kpop = kpop.__main__:main'
+        ],
+    },
+
     # Packages and dependencies
     package_dir={'': 'src'},
     packages=find_packages('src'),
@@ -56,12 +65,44 @@ setup(
         'sklearn',
         'maputil',
         'sequtil',
+        'pandas',
+        'pyplink',
+        'click',
+        'colorama',
     ],
     extras_require={
         'dev': [
             'python-boilerplate[dev]',
         ],
     },
+    cmdclass={"build_ext": build_ext} if build_ext else {},
+    ext_modules=[
+        Extension("kpop.admixture.linalg",
+                  ["src/kpop/admixture/linalg" + mod_ext],
+                  libraries=["m"],
+                  include_dirs=['src'],
+        ),
+        Extension("kpop.admixture.util",
+                  ["src/kpop/admixture/util" + mod_ext],
+                  libraries=["m"],
+                  include_dirs=['src'],
+        ),
+        Extension("kpop.admixture.objective",
+                  ["src/kpop/admixture/objective" + mod_ext],
+                  libraries=["m"],
+                  include_dirs=['src'],
+        ),
+        Extension("kpop.admixture.likelihood",
+                  ["src/kpop/admixture/likelihood" + mod_ext],
+                  libraries=["m"],
+                  include_dirs=['src'],
+        ),
+        Extension("kpop.admixture.em",
+                  ["src/kpop/admixture/em" + mod_ext],
+                  libraries=["m"],
+                  include_dirs=['src'],
+        ),
+    ],
 
     # Other configurations
     zip_safe=False,
