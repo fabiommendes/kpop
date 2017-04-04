@@ -20,7 +20,6 @@ before_install:
 
 # Package installation
 install:
-  - sudo apt-get install python3-numpy python3-dev
   - pip install --upgrade pip setuptools wheel
   - pip install --only-binary=numpy,scipy numpy, scipy
   - pip install tox codecov Cython
