@@ -1,3 +1,5 @@
 # Ignore folder content
 src/kpop/tests/*
 src/kpop/examples/**
+src/kpop/all.py
+tasks.py

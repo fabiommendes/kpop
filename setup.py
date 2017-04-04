@@ -3,14 +3,20 @@ import codecs
 from setuptools import setup, find_packages
 from distutils.extension import Extension
 
+# Cython support
 try:
-    if 'BUILDC' in os.environ:
-        raise ImportError
     from Cython.Distutils import build_ext
     mod_ext = '.pyx'
 except ImportError:
     mod_ext = '.c'
     build_ext = None
+
+# Include numpy headers
+try:
+    import numpy as np
+    INCLUDES = ['src', np.get_includes]
+except ImportError:
+    INCLUDES = ['src']
 
 # Save version and author to __meta__.py
 version = open('VERSION').read().strip()
@@ -80,27 +86,27 @@ setup(
         Extension("kpop.admixture.linalg",
                   ["src/kpop/admixture/linalg" + mod_ext],
                   libraries=["m"],
-                  include_dirs=['src'],
+                  include_dirs=INCLUDES,
         ),
         Extension("kpop.admixture.util",
                   ["src/kpop/admixture/util" + mod_ext],
                   libraries=["m"],
-                  include_dirs=['src'],
+                  include_dirs=INCLUDES,
         ),
         Extension("kpop.admixture.objective",
                   ["src/kpop/admixture/objective" + mod_ext],
                   libraries=["m"],
-                  include_dirs=['src'],
+                  include_dirs=INCLUDES,
         ),
         Extension("kpop.admixture.likelihood",
                   ["src/kpop/admixture/likelihood" + mod_ext],
                   libraries=["m"],
-                  include_dirs=['src'],
+                  include_dirs=INCLUDES,
         ),
         Extension("kpop.admixture.em",
                   ["src/kpop/admixture/em" + mod_ext],
                   libraries=["m"],
-                  include_dirs=['src'],
+                  include_dirs=INCLUDES,
         ),
     ],
 
