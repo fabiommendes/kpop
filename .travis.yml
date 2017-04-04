@@ -21,7 +21,7 @@ before_install:
 # Package installation
 install:
   - pip install --upgrade pip setuptools wheel
-  - pip install --only-binary=numpy,scipy numpy, scipy
+  - pip install --only-binary=numpy,scipy numpy scipy
   - pip install tox codecov Cython
 
 # Run tests
