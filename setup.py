@@ -14,7 +14,7 @@ except ImportError:
 # Include numpy headers
 try:
     import numpy as np
-    INCLUDES = ['src', np.get_includes]
+    INCLUDES = ['src', np.get_include()]
 except ImportError:
     INCLUDES = ['src']
 
