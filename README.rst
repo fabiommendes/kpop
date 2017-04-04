@@ -1,8 +1,8 @@
 .. image:: https://readthedocs.org/projects/kpop/badge/?version=latest
-   :target: kpop.rtfd.io/
+   :target: https://kpop.rtfd.io/
 
 .. image:: https://codecov.io/gh/fabiommendes/kpop/branch/master/graph/badge.svg
-   :target: https://codecov.io/gh/fabiommendes/kpop
+   :target: https://codecov.io/gh/fabiommendes/kpop
 
 .. image:: https://travis-ci.org/fabiommendes/kpop.svg?branch=master
    :target: https://travis-ci.org/fabiommendes/kpop
