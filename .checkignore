@@ -1,0 +1,3 @@
+# Ignore folder content
+src/kpop/tests/*
+src/kpop/examples/**

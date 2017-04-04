@@ -1,11 +1,22 @@
 .. image:: https://readthedocs.org/projects/kpop/badge/?version=latest
    :target: https://kpop.rtfd.io/
+   :alt: Read The Docs
 
 .. image:: https://codecov.io/gh/fabiommendes/kpop/branch/master/graph/badge.svg
    :target: https://codecov.io/gh/fabiommendes/kpop
+   :alt: Codecov
 
 .. image:: https://travis-ci.org/fabiommendes/kpop.svg?branch=master
    :target: https://travis-ci.org/fabiommendes/kpop
+   :alt: Travis-CI
+
+.. image:: https://codeclimate.com/github/fabiommendes/kpop/badges/gpa.svg
+   :target: https://codeclimate.com/github/fabiommendes/kpop
+   :alt: Code Climate
+
+.. image:: https://www.quantifiedcode.com/api/v1/project/989e3bf4fb4f4afe9fdf762d819b3fe4/badge.svg
+  :target: https://www.quantifiedcode.com/app/project/989e3bf4fb4f4afe9fdf762d819b3fe4
+  :alt: Code issues
 
 
 Kpop is a Python package to perform population genetics analysis that
@@ -75,7 +86,7 @@ itself.
 Pickle is fast and convenient, but it is not an archival and data exchange
 format. For that, Kpop uses simple CSV files. CSV is limited and is not the
 most efficient format both in terms of loading speed and disk usage. It is
-however very easy to produce and you can even use your favorite spreadsheet
+however easy to produce and you can even use your favorite spreadsheet
 program to create/edit an CSV file.
 
 Kpop expects that CSV files should have a certain structure. The :func:`kpop.load_csv`
