@@ -63,7 +63,7 @@ class Prob(collections.Mapping):
         return iter(self._data)
 
     def __repr__(self):
-        return '%s(%r)' % (self.__class__.__name__, self._data)
+        return '{0!s}({1!r})'.format(self.__class__.__name__, self._data)
 
     def __eq__(self, other):
         if isinstance(other, collections.Mapping):
@@ -104,7 +104,7 @@ class Prob(collections.Mapping):
         support = set(support)
         for x in self:
             if x not in support:
-                raise ValueError('%r not in support' % x)
+                raise ValueError('{0!r} not in support'.format(x))
         self.update_support(support)
 
     def entropy(self):

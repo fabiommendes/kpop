@@ -26,7 +26,7 @@ def export(pop, format=None, output=None, verbose=False):
     elif format == 'arlequin':
         return export_arlequin(pop, output)
     else:
-        raise ValueError('invalid format: %r' % format)
+        raise ValueError('invalid format: {0!r}'.format(format))
 
 
 def export_structure(pop, output, verbose):
@@ -41,7 +41,7 @@ def export_structure(pop, output, verbose):
     if not os.path.exists(folder):
         os.mkdir(folder)
     if not os.path.isdir(folder):
-        raise SystemExit('%s%s is not a folder' % (folder, os.sep))
+        raise SystemExit('{0!s}{1!s} is not a folder'.format(folder, os.sep))
 
     # Save params files
     printif(verbose, 'Creating param files')

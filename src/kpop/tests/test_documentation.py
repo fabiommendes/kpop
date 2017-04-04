@@ -37,7 +37,7 @@ def make_manuel_suite(ns):
     # Copy tests from the suite to the global namespace
     suite = manuel.testing.TestSuite(m, *files)
     for i, test in enumerate(suite):
-        name = 'test_doc_%s' % i
+        name = 'test_doc_{0!s}'.format(i)
         ns[name] = pytest.mark.documentation(_wrapped(test.runTest, name))
     return suite
 

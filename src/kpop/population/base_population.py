@@ -209,10 +209,10 @@ class PopulationBase(collections.Sequence):
 
         names = self.allele_names
         if names is None:
-            names = ['loci%s' % i for i in range(1, self.size + 1)]
+            names = ['loci{0!s}'.format(i) for i in range(1, self.size + 1)]
         header = 'label,' + ','.join(names)
         data = '\n'.join(x.render_csv(**kwargs) for x in self)
-        return '%s\n%s' % (header, data)
+        return '{0!s}\n{1!s}'.format(header, data)
 
     def render_ped(self):
         """
@@ -233,7 +233,7 @@ class PopulationBase(collections.Sequence):
 
         data = []
         for j in range(1, self.num_loci + 1):
-            data.append('1 snp%s 0 %s' % (j, j))
+            data.append('1 snp{0!s} 0 {1!s}'.format(j, j))
         return '\n'.join(data)
 
     def save(self, file, format='pickle', **kwargs):
@@ -256,7 +256,7 @@ class PopulationBase(collections.Sequence):
             with open(file, 'w') as F:
                 F.write(data)
         else:
-            raise ValueError('invalid file format: %r' % format)
+            raise ValueError('invalid file format: {0!r}'.format(format))
 
     @classmethod
     def load(cls, file, format='pickle', **kwargs):
@@ -417,7 +417,7 @@ class PopulationBase(collections.Sequence):
         children = []
         for i in range(size):
             father, mother = self.random(), population.random()
-            child = father.breed(mother, label='%s%s' % (label, i), **kwargs)
+            child = father.breed(mother, label='{0!s}{1!s}'.format(label, i), **kwargs)
             children.append(child)
         return kpop.Population(children, parent=parent, label=label)
 
@@ -637,7 +637,7 @@ class PopulationBase(collections.Sequence):
 
     def _next_label(self):
         self._last_label_index += 1
-        return '%s%s' % (self.label or 'ind', self._last_label_index)
+        return '{0!s}{1!s}'.format(self.label or 'ind', self._last_label_index)
 
 
 def freqs_to_matrix(freqs, num_alleles=None):
@@ -660,4 +660,4 @@ def _sub_population_label(label, n_gen):
     if label is None:
         return None
     else:
-        return '%s-gen%s' % (label, n_gen)
+        return '{0!s}-gen{1!s}'.format(label, n_gen)

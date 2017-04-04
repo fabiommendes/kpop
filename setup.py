@@ -17,9 +17,9 @@ version = open('VERSION').read().strip()
 dirname = os.path.dirname(__file__)
 path = os.path.join(dirname, 'src', 'kpop', '__meta__.py')
 meta = '''# Automatically created. Please do not edit.
-__version__ = '%s'
+__version__ = '{0!s}'
 __author__ = 'F\\xe1bio Mac\\xeado Mendes'
-''' % version
+'''.format(version)
 with open(path, 'w') as F:
     F.write(meta)
 
