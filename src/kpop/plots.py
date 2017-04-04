@@ -14,7 +14,7 @@ def unique_colors(n, colormap=cm.rainbow):
         try:
             colormap = getattr(cm, colormap)
         except AttributeError:
-            raise ValueError('invalid colormap: %r' % colormap)
+            raise ValueError('invalid colormap: {0!r}'.format(colormap))
     size = colormap.N
     yield colormap(0)
     if n > 1:
@@ -49,7 +49,7 @@ def _pop_sizes(pop_sizes, total):
         pop_sizes = np.array(pop_sizes, dtype=int)
         if sum(pop_sizes) != total:
             fmt = total, sum(pop_sizes)
-            raise ValueError('pop_sizes assumes %s individuals, got %s' % fmt)
+            raise ValueError('pop_sizes assumes {0!s} individuals, got {1!s}'.format(*fmt))
     return pop_sizes
 
 
@@ -57,8 +57,7 @@ def _pop_labels(pop_labels, n, fmt='pop-%s'):
     if pop_labels is None:
         pop_labels = [fmt % n for n in range(1, n + 1)]
     elif len(pop_labels) != n:
-        raise ValueError('expect %s populations, got %r' %
-                         (n, list(pop_labels)))
+        raise ValueError('expect {0!s} populations, got {1!r}'.format(n, list(pop_labels)))
     return pop_labels
 
 
@@ -74,8 +73,7 @@ def group_individuals(data, chunk_sizes=None):
         chunk_sizes = [len(data)]
 
     if sum(chunk_sizes) != len(data):
-        raise ValueError('expect %s individuals, got %s' %
-                         (sum(chunk_sizes), len(data)))
+        raise ValueError('expect {0!s} individuals, got {1!s}'.format(sum(chunk_sizes), len(data)))
 
     result = []
     data = iter(data)

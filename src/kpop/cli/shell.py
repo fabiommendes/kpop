@@ -113,7 +113,7 @@ def get_first_cell_source_for_notebook(path):
         ext = load_best_ext(exts)
         name = python_name(file)
         file = os.path.join(path, file + ext)
-        lines.append('%s = load(%r)' % (name, file))
+        lines.append('{0!s} = load({1!r})'.format(name, file))
 
     return '\n'.join(lines)
 
@@ -135,7 +135,7 @@ def start_shell_namespace(path, verbose=False):
         ext = load_best_ext(exts)
         name = python_name(file)
         file = os.path.join(path, file + ext)
-        printif(verbose, '    - %s from %r' % (name, file))
+        printif(verbose, '    - {0!s} from {1!r}'.format(name, file))
         result[name] = load(file)
     printif(verbose, '')
 
@@ -188,4 +188,4 @@ def python_name(name):
         if NAME_RE.match(name):
             return name
     else:
-        raise ValueError('canot convert to valid python name: %r' % old_name)
+        raise ValueError('canot convert to valid python name: {0!r}'.format(old_name))

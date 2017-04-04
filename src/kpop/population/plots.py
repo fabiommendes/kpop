@@ -24,7 +24,7 @@ class PlotAttribute:
         populations = (population or self._population).populations
         labels = []
         for i, pop in enumerate(populations):
-            label = pop.label if pop.label else 'pop-%s' % i
+            label = pop.label if pop.label else 'pop-{0!s}'.format(i)
             labels.append(label)
         return labels
 
@@ -63,7 +63,7 @@ class PlotAttribute:
         pop_sizes = [pop.num_loci for pop in populations]
         pop_labels = [pop.label or i for i, pop in enumerate(populations)]
         alleles = data.shape[1]
-        labels = ['allele-%s' % (i + 1) for i in range(alleles)]
+        labels = ['allele-{0!s}'.format((i + 1)) for i in range(alleles)]
         if sorted:
             data *= -1
             data.sort(axis=-1)

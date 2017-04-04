@@ -72,7 +72,7 @@ def admixture(x, f_pops, method='bayes'):
         else:
             return np.array([p, 1 - p])
     else:
-        raise ValueError('invalid method, %s' % method)
+        raise ValueError('invalid method, {0!s}'.format(method))
 
 
 def admixture_maxlike(x, f_pops, optimizer='slsqrp', q0=None):
@@ -175,7 +175,7 @@ def admixture_maxlike(x, f_pops, optimizer='slsqrp', q0=None):
     elif optimizer == 'slsqrp_f':
         return fmin(func, q0, eqcons=[eqcons], bounds=bounds, disp=1)
     else:
-        raise ValueError('unknown method: %s' % optimizer)
+        raise ValueError('unknown method: {0!s}'.format(optimizer))
 
 
 def admixture_maxlike_1D(x, f_pops, method='bound'):
@@ -233,7 +233,7 @@ def admixture_maxlike_1D(x, f_pops, method='bound'):
         q = 0.5 + arctan(u) / pi
 
     else:
-        raise ValueError('invalid method: %s' % method)
+        raise ValueError('invalid method: {0!s}'.format(method))
 
     return np.array([q, 1 - q])
 

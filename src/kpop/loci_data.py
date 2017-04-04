@@ -58,18 +58,18 @@ class Locus:
         self.allele_names[value] = name
 
     def __repr__(self):
-        return '%s(%r, num_alleles=%r)' % (self.name, self.num_alleles)
+        return '{0!s}({1!r}, num_alleles={2!r})'.format(self.name, self.num_alleles)
 
     def render_map(self):
         """
         Render locus data as a line in a .MAP file.
         """
 
-        return '%s %s %s %s' % (
+        return '{0!s} {1!s} {2!s} {3!s}'.format(
             self.chromosome or 0,
             self.name,
             self.position or 0,
-            self.genetic_distance or -1,
+            self.genetic_distance or -1
         )
 
 
@@ -82,7 +82,7 @@ class LociSequence(collections.Sequence):
                  positions=None, genetic_distances=None):
 
         if isinstance(names, int):
-            names = ['marker%s' % i for i in range(names)]
+            names = ['marker{0!s}'.format(i) for i in range(names)]
 
         self._data = data = []
         self._names_map = names_map = {}
@@ -99,7 +99,7 @@ class LociSequence(collections.Sequence):
                           genetic_distance=genetic_distances[i])
             data.append(locus)
             if name in names_map:
-                raise ValueError('repeated marker name: %r' % name)
+                raise ValueError('repeated marker name: {0!r}'.format(name))
             names_map[name] = i
 
     def __getitem__(self, index):

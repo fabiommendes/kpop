@@ -161,7 +161,7 @@ class Individual(collections.Sequence):
         return iter(self._data)
 
     def __repr__(self):
-        return '%s(%r)' % (self.__class__.__name__, self.render(limit=20))
+        return '{0!s}({1!r})'.format(self.__class__.__name__, self.render(limit=20))
 
     def __str__(self):
         return self.render()
@@ -247,7 +247,7 @@ class Individual(collections.Sequence):
         """
 
         data = '  '.join(' '.join(map(str, locus)) for locus in self.data)
-        return '%s  %s  %s %s  %s  %s  %s' % (
+        return '{0!s}  {1!s}  {2!s} {3!s}  {4!s}  {5!s}  {6!s}'.format(
             family_id, individual_id, paternal_id, maternal_id, sex, phenotype,
             data
         )
@@ -331,7 +331,7 @@ def label_from_parents(l1, l2):
     common = ''.join(common)
     l1 = l1[len(common):] or '_'
     l2 = l2[len(common):] or '_'
-    return '%s-%s,%s' % (common, l1, l2)
+    return '{0!s}-{1!s},{2!s}'.format(common, l1, l2)
 
 
 def random_data_from_freqs_matrix(freqs, ploidy=2):

@@ -51,7 +51,7 @@ class AdmixtureResult:
                                    num_loci=self.num_loci)
         for i, freqs in enumerate(self.freqs_vector_pop):
             if labels is None:
-                label = 'pop-%s' % (i + 1)
+                label = 'pop-{0!s}'.format((i + 1))
             else:
                 label = labels[i]
             pop = Population(freqs=freqs, ploidy=self.ploidy, label=label)
