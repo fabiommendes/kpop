@@ -14,7 +14,7 @@ matrix:
 
 # Package installation
 install:
-  - pip install tox codecov
+  - pip install tox codecov Cython
 
 # Run tests
 script:
