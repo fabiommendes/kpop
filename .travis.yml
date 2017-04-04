@@ -1,21 +1,26 @@
 language: python
 cache: pip
 sudo: false
-compiler:
-  - gcc
 
 # Test environments
 matrix:
   include:
-   - env: TOXENV=py34
-     python: 3.4
+   #- env: TOXENV=py34
+   #  python: 3.4
    - env: TOXENV=py35
      python: 3.5
-   - env: TOXENV=py36
-     python: 3.6
+   #- env: TOXENV=py36
+   #  python: 3.6
+
+# Prepare environment
+before_install:
+  - export CPATH=$HOME/.local/include
+  - export LIBRARY_PATH=$HOME/.local/lib
+  - export LD_LIBRARY_PATH=$HOME/.local/lib
 
 # Package installation
 install:
+  - sudo apt-get install python3-numpy python3-dev
   - pip install --upgrade pip setuptools wheel
   - pip install --only-binary=numpy,scipy numpy, scipy
   - pip install tox codecov Cython
