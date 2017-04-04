@@ -16,7 +16,6 @@ docs/_build/
 build/
 dist/
 programs/
-admixture/
 old/
 data/
 
