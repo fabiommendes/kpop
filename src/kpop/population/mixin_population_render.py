@@ -52,10 +52,10 @@ class RenderablePopulationMixin(abc.ABC):
 
         names = self.allele_names
         if names is None:
-            names = ['loci%s' % i for i in range(1, self.size + 1)]
+            names = ['loci{0!s}'.format(i) for i in range(1, self.size + 1)]
         header = 'label,' + ','.join(names)
         data = '\n'.join(x.render_csv(**kwargs) for x in self)
-        return '%s\n%s' % (header, data)
+        return '{0!s}\n{1!s}'.format(header, data)
 
     def render_ped(self):
         """
@@ -76,7 +76,7 @@ class RenderablePopulationMixin(abc.ABC):
 
         data = []
         for j in range(1, self.num_loci + 1):
-            data.append('1 snp%s 0 %s' % (j, j))
+            data.append('1 snp{0!s} 0 {1!s}'.format(j, j))
         return '\n'.join(data)
 
     def save(self, file, format='pickle', **kwargs):
@@ -99,4 +99,4 @@ class RenderablePopulationMixin(abc.ABC):
             with open(file, 'w') as F:
                 F.write(data)
         else:
-            raise ValueError('invalid file format: %r' % format)
+            raise ValueError('invalid file format: {0!r}'.format(format))

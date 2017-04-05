@@ -51,7 +51,7 @@ def run_admixture(pop, k, job_dir=None, disp=1, supervised=False):
                 if label is None:
                     F.write('-\n')
                 else:
-                    F.write('%s\n' % label)
+                    F.write('{0!s}\n'.format(label))
 
     # Convert everything to a binary format since it seems that ADMIXTURE does
     # not support the regular .ped files (?)
@@ -59,7 +59,7 @@ def run_admixture(pop, k, job_dir=None, disp=1, supervised=False):
     try:
         subprocess.run(cmd, stdout=PIPE, check=True, cwd=job_dir)
     except subprocess.CalledProcessError as ex:
-        msg = 'plink ended with runtime code %s.\n\n' % ex.returncode
+        msg = 'plink ended with runtime code {0!s}.\n\n'.format(ex.returncode)
         msg += ex.stdout.decode('utf8')
         raise RuntimeError(msg)
 
@@ -73,20 +73,20 @@ def run_admixture(pop, k, job_dir=None, disp=1, supervised=False):
     try:
         result = subprocess.run(cmd, stdout=PIPE, check=True, cwd=job_dir)
     except subprocess.CalledProcessError as ex:
-        msg = 'ADMIXTURE ended with runtime code %s.\n\n' % ex.returncode
+        msg = 'ADMIXTURE ended with runtime code {0!s}.\n\n'.format(ex.returncode)
         msg += ex.stdout.decode('utf8')
         raise RuntimeError(msg)
     admix_out = result.stdout.decode('utf8')
 
     # Read the output .P file with allele frequencies
-    with open(os.path.join(job_dir, 'job.%s.P' % k)) as F:
+    with open(os.path.join(job_dir, 'job.{0!s}.P'.format(k))) as F:
         data = []
         for line in F:
             data.append(list(map(float, line.strip().split())))
     freqs = np.array(data).T
 
     # Read the output .Q file with admixture coefficients
-    with open(os.path.join(job_dir, 'job.%s.Q' % k)) as F:
+    with open(os.path.join(job_dir, 'job.{0!s}.Q'.format(k))) as F:
         data = []
         for line in F:
             data.append(list(map(float, line.strip().split())))

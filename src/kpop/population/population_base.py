@@ -317,7 +317,7 @@ class PopulationBase(RenderablePopulationMixin, collections.Sequence):
         children = []
         for i in range(size):
             father, mother = self.random_individual(), population.random_individual()
-            child = father.breed(mother, label='%s%s' % (label, i), **kwargs)
+            child = father.breed(mother, label='{0!s}{1!s}'.format(label, i), **kwargs)
             children.append(child)
         return kpop.Population(children, parent=parent, label=label)
 
@@ -556,7 +556,7 @@ class PopulationBase(RenderablePopulationMixin, collections.Sequence):
 
     def _next_label(self):
         self._last_label_index += 1
-        return '%s%s' % (self.label or 'ind', self._last_label_index)
+        return '{0!s}{1!s}'.format(self.label or 'ind', self._last_label_index)
 
 
 def _sub_population_label(label, n_gen):
@@ -565,4 +565,4 @@ def _sub_population_label(label, n_gen):
     if label is None:
         return None
     else:
-        return '%s-gen%s' % (label, n_gen)
+        return '{0!s}-gen{1!s}'.format(label, n_gen)

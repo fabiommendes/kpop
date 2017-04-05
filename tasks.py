@@ -9,4 +9,4 @@ def configure(ctx):
     Instructions for preparing package for development.
     """
 
-    run("%s -m pip install .[dev] -r requirements.txt" % sys.executable)
+    run("{0!s} -m pip install .[dev] -r requirements.txt".format(sys.executable))

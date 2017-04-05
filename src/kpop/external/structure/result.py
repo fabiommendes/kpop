@@ -182,7 +182,7 @@ class StructureResult:
             missing_allele_freqs.append(missing_fraction)
             if n_alleles != len(lines):
                 raise ValueError(
-                    'unexpected number of alleles: %s' % n_alleles)
+                    'unexpected number of alleles: {0!s}'.format(n_alleles))
 
             parental_freqs = Counter()
             total_allele_freqs.append(parental_freqs)

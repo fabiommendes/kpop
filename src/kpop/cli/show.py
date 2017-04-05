@@ -15,4 +15,4 @@ def show(pop, method, verbose=False):
     if method == 'pca':
         pop.plot.pca()
     else:
-        raise SystemExit('invalid method: %r' % method)
+        raise SystemExit('invalid method: {0!r}'.format(method))
