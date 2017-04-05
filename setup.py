@@ -78,7 +78,10 @@ setup(
     ],
     extras_require={
         'dev': [
-            'python-boilerplate[dev]',
+            'python-boilerplate',
+            'pytest',
+            'pytest-cov',
+            'manuel',
         ],
     },
     cmdclass={"build_ext": build_ext} if build_ext else {},
