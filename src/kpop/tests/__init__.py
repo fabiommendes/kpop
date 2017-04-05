@@ -1,4 +1,6 @@
 import os as _os
 
 # Check if it is running on CI
-is_ci = _os.environ.get('CI', 'false') == 'true'
+is_travis = _os.environ.get('TRAVIS', 'false') != 'false'
+is_appveyor = _os.environ.get('APPVEYOR', 'false') != 'false'
+is_ci = is_travis or is_appveyor or _os.environ.get('CI', 'false') != 'false'
