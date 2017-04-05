@@ -132,4 +132,4 @@ def load(file):
     elif name.endswith('.pickle'):
         return load_pickle(file)
     else:
-        raise ValueError('could not determine file type for %r' % file)
+        raise ValueError('could not determine file type for {0!r}'.format(file))

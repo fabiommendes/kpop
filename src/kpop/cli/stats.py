@@ -13,8 +13,8 @@ def stats(pop, verbose=False, json=False):
     """
 
     click.echo('summary:')
-    click.echo('    size: %s' % pop.size)
-    click.echo('    num_loci: %s' % pop.num_loci)
-    click.echo('    ploidy: %s' % pop.ploidy)
-    click.echo('    num_alleles: %s' % pop.num_alleles)
-    click.echo('    missing_ratio: %.3e' % pop.missing_ratio)
+    click.echo('    size: {0!s}'.format(pop.size))
+    click.echo('    num_loci: {0!s}'.format(pop.num_loci))
+    click.echo('    ploidy: {0!s}'.format(pop.ploidy))
+    click.echo('    num_alleles: {0!s}'.format(pop.num_alleles))
+    click.echo('    missing_ratio: {0:.3e}'.format(pop.missing_ratio))

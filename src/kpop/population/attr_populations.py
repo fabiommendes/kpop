@@ -55,7 +55,7 @@ class PopulationsList(collections.MutableSequence):
                 if idx == pop.label:
                     return i
             else:
-                raise KeyError('invalid label: %r' % idx)
+                raise KeyError('invalid label: {0!r}'.format(idx))
 
     def labels(self, prefix='pop'):
         """

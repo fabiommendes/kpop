@@ -58,10 +58,10 @@ def run_structure(pop, k=2, *, method='parental', job_dir=None,
 
     # Display input files
     if disp >= 1:
-        print('Started structure analysis at %r' % job_dir)
+        print('Started structure analysis at {0!r}'.format(job_dir))
         for file in os.listdir(job_dir):
             size = os.path.getsize(os.path.join(job_dir, file))
-            print('    %s (%.2f kb)' % (file, size/1024))
+            print('    {0!s} ({1:.2f} kb)'.format(file, size/1024))
     if disp >= 2:
         print()
         print('MAINPARAMS\n' + '-' * 80, '\n' + main, '\n\n')
@@ -78,7 +78,7 @@ def run_structure(pop, k=2, *, method='parental', job_dir=None,
     # Execute
     error = subprocess.check_call(cmd, shell=True, cwd=job_dir)
     if error != 0:
-        raise RuntimeError('structure returned with error code: %s' % error)
+        raise RuntimeError('structure returned with error code: {0!s}'.format(error))
 
     # Read output file
     # (I don't know why Structure prepends an "_f" to the end of file)
@@ -256,5 +256,5 @@ def params_file(data):
 
     lst = []
     for k, v in sorted(data.items()):
-        lst.append('#define %s %s' % (k.upper(), normalize(v)))
+        lst.append('#define {0!s} {1!s}'.format(k.upper(), normalize(v)))
     return '\n'.join(sorted(lst))
