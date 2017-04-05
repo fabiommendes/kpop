@@ -4,13 +4,15 @@ sudo: false
 
 # Test environments
 matrix:
+  env:
+    CI=true
   include:
-   #- env: TOXENV=py34
-   #  python: 3.4
+   - env: TOXENV=py34
+     python: 3.4
    - env: TOXENV=py35
      python: 3.5
-   #- env: TOXENV=py36
-   #  python: 3.6
+   - env: TOXENV=py36
+     python: 3.6
 
 # Prepare environment
 before_install:

@@ -1,5 +1,5 @@
 .. image:: https://readthedocs.org/projects/kpop/badge/?version=latest
-   :target: https://kpop.rtfd.io/
+   :target: https://kpop.readthedocs.io/en/latest/
    :alt: Read The Docs
 
 .. image:: https://codecov.io/gh/fabiommendes/kpop/branch/master/graph/badge.svg
