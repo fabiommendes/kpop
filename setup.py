@@ -3,6 +3,7 @@ import codecs
 from setuptools import setup, find_packages
 from distutils.extension import Extension
 
+
 # Cython support
 try:
     from Cython.Distutils import build_ext
@@ -11,12 +12,14 @@ except ImportError:
     mod_ext = '.c'
     build_ext = None
 
+
 # Include numpy headers
 try:
     import numpy as np
     INCLUDES = ['src', np.get_include()]
 except ImportError:
     INCLUDES = ['src']
+
 
 # Save version and author to __meta__.py
 version = open('VERSION').read().strip()
@@ -29,8 +32,9 @@ __author__ = 'F\\xe1bio Mac\\xeado Mendes'
 with open(path, 'w') as F:
     F.write(meta)
 
+
+# Basic info
 setup(
-    # Basic info
     name='kpop',
     version=version,
     author='Fábio Macêdo Mendes',
@@ -75,6 +79,7 @@ setup(
         'pyplink',
         'click',
         'colorama',
+        'lazyutils',
     ],
     extras_require={
         'dev': [

@@ -4,7 +4,6 @@ import sys
 from collections import defaultdict
 
 import click
-import nbformat
 
 from kpop import __version__, load
 from .util import verbose, printif
@@ -49,7 +48,6 @@ def start_ipython_shell(verbose):
     namespace = start_shell_namespace(os.getcwd(), verbose)
     exec('from kpop.all import *', namespace)
     shell = Shell.instance()
-    print(namespace.keys())
     shell(local_ns=namespace)
 
 
@@ -69,6 +67,11 @@ def start_notebook(verbose, filename='kpop.ipynb'):
 
 
 def create_default_notebook_file(file_path):
+    """
+    Creates an empty kpop-powered notebook file.
+    """
+    import nbformat
+
     dirname = os.path.dirname(file_path)
     data = {
         'metadata': {
@@ -102,6 +105,9 @@ def create_default_notebook_file(file_path):
 
 
 def get_first_cell_source_for_notebook(path):
+    """
+    Create first cell of code that should be displayed on new notebooks.
+    """
     names_to_exts = get_name_to_exts_map(path)
     lines = ['from kpop.all import *', '']
 
@@ -143,6 +149,9 @@ def start_shell_namespace(path, verbose=False):
 
 
 def get_name_to_exts_map(path):
+    """
+    Map file names name to available extensions.
+    """
     valid_extensions = {'.csv', '.pickle'}
 
     # Map file names to possible extensions
