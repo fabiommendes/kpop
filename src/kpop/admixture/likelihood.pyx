@@ -1,9 +1,6 @@
-cimport numpy as np
-cimport cython
-import numpy
 import numpy as np
 
-from kpop.freqmatrix import flatten_frequencies, fill_frequencies
+from kpop.utils.frequencies import flatten_frequencies, fill_freqs_vector
 
 
 # Functions from C math lib
@@ -52,7 +49,7 @@ def loglike(x, freqs):
         form of a list of (log(f), log(1-f)) terms. The _results should be the
         same.
 
-        >>> loglike_logf(x, np.log(fill_frequencies(f2)))   # doctest: +ELLIPSIS
+        >>> loglike_logf(x, np.log(fill_freqs_vector(f2)))   # doctest: +ELLIPSIS
         -2.5370...
 
         Another convenience is loglike_mix(), which automatically mix the two

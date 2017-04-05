@@ -28,6 +28,16 @@ class PopulationsList(collections.MutableSequence):
     def __repr__(self):
         return repr(self._data)
 
+    def __eq__(self, other):
+        if isinstance(other, str):
+            return NotImplemented
+
+        if isinstance(other, collections.Sequence):
+            zipped = zip(self, other)
+            return len(self) == len(other) and all(x == y for x, y in zipped)
+
+        return NotImplemented
+
     def insert(self, index, value):
         index = self._conv_index(index)
         self._check_new_pop(value)
@@ -55,6 +65,7 @@ class PopulationsList(collections.MutableSequence):
         def gen():
             for i, pop in enumerate(self):
                 yield (prefix + str(i) if pop.label is None else pop.label)
+
         return list(gen())
 
 

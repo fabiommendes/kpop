@@ -3,7 +3,7 @@ import tempfile
 
 import subprocess
 
-from kpop.population.base_population import PopulationBase
+from kpop.population.population_base import PopulationBase
 from .result import StructureResult
 from .params import MAINPARAMS_DEFAULTS, EXTRAPARAMS_DEFAULTS
 

@@ -6,7 +6,7 @@ popB = popA.genetic_drift(10, 50, label='Brasil', sample_size=25)
 popC = popB.genetic_drift(10, 50, label='Colombia', sample_size=25)
 popC.fill(50)
 pop = popA + popB + popC
-ind = popB.random().breed(popC.random())
+ind = popB.random_individual().breed(popC.random_individual())
 print(pop.classify(popC[0]), pop.prob_classify(popC[0]))
 print(pop.classify(ind), pop.prob_classify(ind))
 print(pop.admixture(ind, method='maxlike'))

@@ -6,15 +6,17 @@ import numpy as np
 from lazyutils import lazy
 
 import kpop
-from kpop import Individual
-from kpop.freqmatrix import fill_frequencies
-from kpop.population.util import normalize_freqs_arg
-from kpop.prob import Prob
+from kpop.evolution import frequency_drift
+from .mixin_population_render import RenderablePopulationMixin
+from .utils import normalize_freqs_arg
+from ..individual import Individual
+from ..prob import Prob
+from ..utils.frequencies import fill_freqs_vector, freqs_to_matrix
 
 
-class PopulationBase(collections.Sequence):
+class PopulationBase(RenderablePopulationMixin, collections.Sequence):
     """
-    Base class for Population and Multipopulation.
+    Base class for Population and MultiPopulation.
     """
 
     @property
@@ -72,7 +74,7 @@ class PopulationBase(collections.Sequence):
 
     @property
     def plot(self):
-        from kpop.population.plots import PlotAttribute
+        from kpop.population.attr_plots import PlotAttribute
         return PlotAttribute(self)
 
     @property
@@ -104,15 +106,32 @@ class PopulationBase(collections.Sequence):
 
     population_class = population_class()
 
-    class multi_population_class:
-
+    class _multi_population_class_decriptor:
         def __get__(self, obj, cls=None):
             cls = PopulationBase.multi_population_class = kpop.MultiPopulation
             return cls
 
-    multi_population_class = multi_population_class()
+    multi_population_class = _multi_population_class_decriptor()
 
     is_multi_population = False
+
+    #
+    # Population constructors
+    #
+    @classmethod
+    def load(cls, file, format='pickle', **kwargs):
+        """
+        Loads population from file.
+        """
+
+        if format == 'pickle':
+            if isinstance(file, str):
+                with open(file, 'r+b') as F:
+                    return pickle.load(F)
+            else:
+                return pickle.load(file)
+        else:
+            raise NotImplementedError
 
     def __init__(self, freqs=None, allele_names=None, label=None, parent=None,
                  ploidy=None, num_loci=None, num_alleles=None):
@@ -126,7 +145,7 @@ class PopulationBase(collections.Sequence):
             elif freqs.ndim == 1:
                 self.freqs_vector = np.array(freqs)
                 self.num_alleles = 2
-                self.freqs_matrix = fill_frequencies(self.freqs_vector)
+                self.freqs_matrix = fill_freqs_vector(self.freqs_vector)
             else:
                 raise ValueError('invalid frequency data')
         if self._freqs:
@@ -152,7 +171,7 @@ class PopulationBase(collections.Sequence):
     def __str__(self):
         return self.render(label_align='best')
 
-    def compact_data(self, copy=False):
+    def as_array(self, copy=False):
         """
         Return all genotype data as a contiguous array.
 
@@ -167,111 +186,17 @@ class PopulationBase(collections.Sequence):
 
         return np.array([ind.data for ind in self])
 
+    #
+    # Statistics
+    #
     def allele_count(self, allele=1):
         """
         Return an array of (size, num_loci) with the counts for the number of
         times the given allele appears in each individual at each locus.
         """
 
-        data = self.compact_data()
+        data = self.as_array()
         return (data == allele).sum(axis=2)
-
-    def render(self, label_align=None, limit=None, ind_limit=None):
-        """
-        Renders population data to string.
-        """
-
-        size = len(self)
-        if ind_limit and size > ind_limit:
-            good_idx = set(range(limit // 2))
-            good_idx.update(range(size - limit // 2, size))
-        else:
-            good_idx = set(range(size))
-
-        # Find best align if no label align is set
-        if label_align == 'best':
-            label_align = max(len(x.label) + 1 for x in self)
-
-        # Render individuals
-        data = [x.render(label_align=label_align, limit=limit)
-                for i, x in enumerate(self) if i in good_idx]
-
-        # Add ellipsis for large data sets
-        if ind_limit and size > ind_limit:
-            data.insert(ind_limit // 2 + 1, '...')
-
-        return '\n'.join(data)
-
-    def render_csv(self, **kwargs):
-        """
-        Return population as CSV data.
-        """
-
-        names = self.allele_names
-        if names is None:
-            names = ['loci%s' % i for i in range(1, self.size + 1)]
-        header = 'label,' + ','.join(names)
-        data = '\n'.join(x.render_csv(**kwargs) for x in self)
-        return '%s\n%s' % (header, data)
-
-    def render_ped(self):
-        """
-        Renders population as a plink's .ped file.
-        """
-
-        lines = []
-        memo = {}
-        for i, ind in enumerate(self, start=1):
-            line = ind.render_ped(individual_id=i, memo=memo)
-            lines.append(line)
-        return '\n'.join(lines)
-
-    def render_map(self):
-        """
-        Renders population .map file for use with plink.
-        """
-
-        data = []
-        for j in range(1, self.num_loci + 1):
-            data.append('1 snp%s 0 %s' % (j, j))
-        return '\n'.join(data)
-
-    def save(self, file, format='pickle', **kwargs):
-        """
-        Saves population data to file.
-        """
-
-        if format == 'auto':
-            if file.endswith('.pickle'):
-                return self.save(file, 'pickle', **kwargs)
-            elif file.endswith('.csv'):
-                return self.save(file, 'csv', **kwargs)
-
-        if format == 'pickle':
-            with open(file, 'w+b') as F:
-                pickle.dump(self, F)
-        elif format in ['csv', 'ped', 'map']:
-            render = getattr(self, 'render_' + format)
-            data = render(**kwargs)
-            with open(file, 'w') as F:
-                F.write(data)
-        else:
-            raise ValueError('invalid file format: %r' % format)
-
-    @classmethod
-    def load(cls, file, format='pickle', **kwargs):
-        """
-        Loads population from file.
-        """
-
-        if format == 'pickle':
-            if isinstance(file, str):
-                with open(file, 'r+b') as F:
-                    return pickle.load(F)
-            else:
-                return pickle.load(file)
-        else:
-            raise NotImplementedError
 
     def empirical_freqs(self, alpha=0.0, as_matrix=False):
         """
@@ -301,6 +226,18 @@ class PopulationBase(collections.Sequence):
         else:
             return freqs
 
+    def non_biallelic(self, *, _data=None):
+        """
+        Return a list of all non biallelic loci.
+        """
+
+        data = np.array([ind.data for ind in self]) if _data is None else _data
+        num_alleles = data.max(axis=(0, 2))
+        return np.where(num_alleles > 2)[0]
+
+    #
+    # Simulation
+    #
     def genetic_drift(self, n_generations, population_size=None,
                       sample_size=None, label=None):
         """
@@ -338,17 +275,10 @@ class PopulationBase(collections.Sequence):
         population_size = population_size or self.size
         eff_size = self.ploidy * population_size
         label = label or _sub_population_label(self.label, n_generations)
-        if sample_size is None:
-            sample_size = self.size
+        sample_size = self.size if sample_size is None else sample_size
 
-        if not self.is_biallelic:
-            raise NotImplementedError
-        else:
-            freqs = self.freqs_vector
-            for _ in range(n_generations):
-                for j, f in enumerate(freqs):
-                    freqs[j] = np.random.binomial(eff_size, f) / eff_size
-            freqs = fill_frequencies(freqs)
+        # Compute drift
+        freqs = frequency_drift(self.freqs_matrix, n_generations, eff_size)
 
         # Create population
         from kpop import Population
@@ -364,39 +294,9 @@ class PopulationBase(collections.Sequence):
             pop.fill(sample_size)
         return pop
 
-    def new(self, label=None, **kwargs):
-        """
-        Return a new random individual respecting the population allele
-        frequencies.
-        """
-
-        kwargs['label'] = label or self._next_label()
-        ind = Individual.from_freqs(self._freqs_fastest,
-                                    population=self, **kwargs)
-        ind.num_alleles = self.num_alleles
-        return ind
-
-    def new_offspring(self, i=None, j=None, **kwargs):
-        """
-        Return a new offspring created by breeding two random elements in the
-        population.
-        """
-
-        size = len(self)
-        if i is None:
-            i = randrange(size)
-        if j is None:
-            j = randrange(size)
-        return self[i].breed(self[j], population=self, **kwargs)
-
-    def random(self):
-        """
-        Return a random individual from population.
-        """
-
-        i = randrange(len(self))
-        return self[i]
-
+    #
+    # New individuals
+    #
     def breed(self, population, size, label='breed', parent=None, **kwargs):
         """
         Breed individuals from both populations.
@@ -416,20 +316,48 @@ class PopulationBase(collections.Sequence):
 
         children = []
         for i in range(size):
-            father, mother = self.random(), population.random()
+            father, mother = self.random_individual(), population.random_individual()
             child = father.breed(mother, label='%s%s' % (label, i), **kwargs)
             children.append(child)
         return kpop.Population(children, parent=parent, label=label)
 
-    def structure(self):
+    def new(self, label=None, **kwargs):
         """
-        Not implemented
+        Return a new random individual respecting the population allele
+        frequencies.
         """
 
-    def structure_kmeans(self, k):
+        kwargs['label'] = label or self._next_label()
+        ind = Individual.from_freqs(self._freqs_fastest,
+                                    population=self, **kwargs)
+        ind.num_alleles = self.num_alleles
+        return ind
+
+    def new_offspring(self, i=None, j=None, **kwargs):
         """
-        Not implemented
+        Return a new offspring created by breeding two random elements in the
+        population.
+
+        This individual is not added to the population. If you want that,
+        just do:
+
+        >>> pop.add(pop.new_offspring())                        # doctest: +SKIP
         """
+
+        size = len(self)
+        if i is None:
+            i = randrange(size)
+        if j is None:
+            j = randrange(size)
+        return self[i].breed(self[j], population=self, **kwargs)
+
+    def random_individual(self):
+        """
+        Return a random individual from population.
+        """
+
+        i = randrange(len(self))
+        return self[i]
 
     def structure_admixture(self, k, pop_labels=None, parental_labels=None):
         """
@@ -446,7 +374,7 @@ class PopulationBase(collections.Sequence):
         if not self.is_biallelic:
             raise ValueError('ADMIXTURE only supports biallelic populations')
 
-        from kpop.external.admixture2 import run_admixture
+        from kpop.external.admixture.base import run_admixture
 
         kwargs = {}
         if pop_labels:
@@ -549,15 +477,6 @@ class PopulationBase(collections.Sequence):
         pca_coords_k = pca_coords[:k]
         return np.dot(cov_matrix, pca_coords_k.T)
 
-    def non_biallelic(self, *, _data=None):
-        """
-        Return a list of all non biallelic loci.
-        """
-
-        data = np.array([ind.data for ind in self]) if _data is None else _data
-        num_alleles = data.max(axis=(0, 2))
-        return np.where(num_alleles > 2)[0]
-
     def drop_non_biallelic(self, *, _data=None):
         """
         Creates a new population that remove all non-biallelic loci.
@@ -638,20 +557,6 @@ class PopulationBase(collections.Sequence):
     def _next_label(self):
         self._last_label_index += 1
         return '%s%s' % (self.label or 'ind', self._last_label_index)
-
-
-def freqs_to_matrix(freqs, num_alleles=None):
-    """
-    Convert a list of Probs() into a frequency matrix.
-    """
-
-    num_loci = len(freqs)
-    num_alleles = num_alleles or max(max(freq) for freq in freqs)
-    data = np.zeros((num_loci, num_alleles), dtype=float)
-    for i, distr in enumerate(freqs):
-        for k, p in distr.items():
-            data[i, k - 1] = p
-    return data
 
 
 def _sub_population_label(label, n_gen):

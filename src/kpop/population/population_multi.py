@@ -5,9 +5,9 @@ import kpop
 from kpop import admixture
 
 from kpop.admixture import likelihood
-from kpop.population.base_population import PopulationBase
-from kpop.population.population import Population
-from kpop.population.populations_list import PopulationsList
+from kpop.population.population_base import PopulationBase
+from kpop.population.population_single import Population
+from kpop.population.attr_populations import PopulationsList
 from kpop.prob import Prob
 
 

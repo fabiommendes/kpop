@@ -74,7 +74,6 @@ setup(
         'matplotlib',
         'sklearn',
         'maputil',
-        'sequtil',
         'pandas',
         'pyplink',
         'click',

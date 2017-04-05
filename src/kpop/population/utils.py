@@ -2,7 +2,6 @@ import collections
 
 import numpy as np
 
-from kpop.freqmatrix import fill_frequencies
 from kpop.prob import Prob
 
 
@@ -36,25 +35,6 @@ def normalize_freqs_arg(freqs):
                 data = enumerate(prob, start=1)
                 result.append(Prob(data))
         return result
-
-
-def random_frequencies(num_loci, alleles=2, clip=0.0, seed=None):
-    """
-    Return random frequency distributions over loci.
-    """
-
-    if alleles <= 1:
-        raise ValueError('needs at least 2 different alleles')
-    uniform = np.random.uniform
-    if seed:
-        np.random.seed(seed)
-    if alleles == 2:
-        return fill_frequencies(uniform(clip, 1 - clip, size=num_loci))
-    else:
-        data = uniform(0, 1, size=num_loci * alleles)
-        data = data.reshape((num_loci, alleles))
-        data /= data.sum(axis=1)[:, None]
-        return data
 
 
 def random_pop_data(size, freqs, ploidy=2, dtype=np.int8):

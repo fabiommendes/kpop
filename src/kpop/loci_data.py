@@ -1,6 +1,6 @@
 import collections
 from collections import defaultdict
-from sequtil import InvMap
+from maputil import InvMap
 
 null_getter = defaultdict(lambda: None)
 

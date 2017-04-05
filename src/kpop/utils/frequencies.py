@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def fill_frequencies(freqs):
+def fill_freqs_vector(freqs):
     """
     Return a Nx2 array with N tuples of (f, 1-f) for each element f of
     freqs_binomial.
@@ -54,4 +54,37 @@ def freqs_binomial(population, alpha=0.0, flat=False):
     if alpha:
         freqs += alpha
     freqs /= (size + 2 * alpha)
-    return freqs if flat else fill_frequencies(freqs)
+    return freqs if flat else fill_freqs_vector(freqs)
+
+
+def freqs_to_matrix(freqs, num_alleles=None):
+    """
+    Convert a list of Probs() into a frequency matrix.
+    """
+
+    num_loci = len(freqs)
+    num_alleles = num_alleles or max(max(freq) for freq in freqs)
+    data = np.zeros((num_loci, num_alleles), dtype=float)
+    for i, distr in enumerate(freqs):
+        for k, p in distr.items():
+            data[i, k - 1] = p
+    return data
+
+
+def random_frequencies(num_loci, alleles=2, clip=0.0, seed=None):
+    """
+    Return random frequency distributions over loci.
+    """
+
+    if alleles <= 1:
+        raise ValueError('needs at least 2 different alleles')
+    uniform = np.random.uniform
+    if seed:
+        np.random.seed(seed)
+    if alleles == 2:
+        return fill_freqs_vector(uniform(clip, 1 - clip, size=num_loci))
+    else:
+        data = uniform(0, 1, size=num_loci * alleles)
+        data = data.reshape((num_loci, alleles))
+        data /= data.sum(axis=1)[:, None]
+        return data

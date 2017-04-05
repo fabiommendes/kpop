@@ -9,23 +9,29 @@ def numloci():
 def test_multi_population(popA, popB):
     pop = popA + popB
     assert pop[0] == popA[0]
-    assert pop[5] == popB[0]
+    assert pop[len(popA)] == popB[0]
     assert len(pop) == len(popA) + len(popB)
     assert len(list(pop)) == len(popA) + len(popB)
 
 
-def test_classification(popA, popB, pop):
+#
+# Clusterization and classification
+#
+def test_sharp_classifier(popA, popB):
+    pop = popA + popB
     for ind in popA:
         assert pop.classify(ind) == 'A'
     for ind in popB:
         assert pop.classify(ind) == 'B'
 
 
-def test_admixture(popA, pop):
+def test_probabilistic_classifier(popA, popB):
+    pop = popA + popB
     pAs = []
+
     for ind in popA:
-        admx = pop.prob_classify(ind)
-        pA = admx['A']
+        prob = pop.prob_classify(ind)
+        pA = prob['A']
         pAs.append(pA)
 
     print(pAs)

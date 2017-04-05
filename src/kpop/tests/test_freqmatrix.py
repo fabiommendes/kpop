@@ -1,6 +1,7 @@
 import pytest
 from numpy.testing import assert_almost_equal
-from kpop.freqmatrix import *
+
+from kpop.utils.frequencies import *
 
 
 @pytest.fixture
@@ -14,8 +15,8 @@ def f_filled():
 
 
 def test_fill_frequencies(f_flat, f_filled):
-    assert_almost_equal(fill_frequencies(f_filled), f_filled)
-    assert_almost_equal(fill_frequencies(f_flat), f_filled)
+    assert_almost_equal(fill_freqs_vector(f_filled), f_filled)
+    assert_almost_equal(fill_freqs_vector(f_flat), f_filled)
 
 
 def test_flatten_frequencies(f_flat, f_filled):

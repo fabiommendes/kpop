@@ -2,8 +2,8 @@ import numpy as np
 import pytest
 from numpy.testing import assert_equal
 
-from kpop.freqmatrix import fill_frequencies
 from kpop.individual import Individual, label_from_parents
+from kpop.utils.frequencies import fill_freqs_vector
 
 
 @pytest.fixture()
@@ -103,7 +103,7 @@ def test_label_from_parents():
 def test_random_individual():
     f1 = [1.0, 0.0, 0.5]
     ind1 = Individual.from_freqs(f1, label='rand1')
-    ind2 = Individual.from_freqs(fill_frequencies(f1), label='rand2')
+    ind2 = Individual.from_freqs(fill_freqs_vector(f1), label='rand2')
 
     for ind in ind1, ind2:
         print(ind)

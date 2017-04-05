@@ -2,9 +2,9 @@ from lazyutils import lazy
 import numpy as np
 
 from kpop import Individual
-from kpop.population.base_population import PopulationBase
-from kpop.population.populations_list import ImmutablePopulationList
-from kpop.population.util import random_frequencies
+from kpop.population.population_base import PopulationBase
+from kpop.population.attr_populations import ImmutablePopulationList
+from kpop.utils.frequencies import random_frequencies
 
 
 class Population(PopulationBase):
@@ -127,7 +127,7 @@ class Population(PopulationBase):
             data = ind.data
             missing = np.where(data == 0)
             for i, j in zip(*missing):
-                data[i, j] = freqs[i].random()
+                data[i, j] = freqs[i].random_individual()
 
     _compose_class = None
 

@@ -1,15 +1,12 @@
-from math import log
-
-import numpy as np
-
 from kpop.admixture.likelihood import *
-from kpop.freqmatrix import fill_frequencies
+from kpop.utils import fill_freqs_vector
+from math import log
 
 
 def test_loglike():
     x = [[1, 1], [1, 2], [2, 2]]
     freqs = [0.2, 0.3, 0.4]
-    logfreqs = np.log(fill_frequencies(freqs))
+    logfreqs = np.log(fill_freqs_vector(freqs))
 
     result = (
         2 * log(0.2) + 0 * log(0.8) +
