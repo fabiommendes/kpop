@@ -61,7 +61,7 @@ def run_structure(pop, k=2, *, method='parental', job_dir=None,
         print('Started structure analysis at %r' % job_dir)
         for file in os.listdir(job_dir):
             size = os.path.getsize(os.path.join(job_dir, file))
-            print('    %s (%.2f kb)' % (file, size/1024))
+            print('    %s (%.2f kb)' % (file, size / 1024))
     if disp >= 2:
         print()
         print('MAINPARAMS\n' + '-' * 80, '\n' + main, '\n\n')

@@ -8,6 +8,7 @@ from .stats import stats
 from .cluster import cluster
 from .admix import admix
 from .shell import shell
+from .import_ import import_
 
 
 @click.group()
@@ -24,13 +25,14 @@ def main():
     """
 
     init()
-    cli.add_command(export)
-    cli.add_command(stats)
-    cli.add_command(show)
-    cli.add_command(cluster)
-    cli.add_command(admix)
+    # cli.add_command(admix)
+    # cli.add_command(cluster)
     cli.add_command(create)
+    cli.add_command(export)
     cli.add_command(shell)
+    cli.add_command(show)
+    cli.add_command(stats)
+    cli.add_command(import_)
     cli()
 
 

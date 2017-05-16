@@ -1,10 +1,10 @@
-from lazyutils import lazy
 import numpy as np
+from lazyutils import lazy
 
-from kpop import Individual
-from kpop.population.population_base import PopulationBase
-from kpop.population.attr_populations import ImmutablePopulationList
-from kpop.utils.frequencies import random_frequencies
+from .attr_populations import ImmutablePopulationList
+from .population_base import PopulationBase
+from ..individual import Individual
+from ..utils.frequencies import random_frequencies
 
 
 class Population(PopulationBase):
@@ -48,16 +48,15 @@ class Population(PopulationBase):
         pop.freqs_matrix = freqs
         return pop
 
-    def __init__(self, data=(), **kwargs):
-        if not all(ind._container is None for ind in data):
-            raise ValueError('individuals already belong to population.')
-
-        self._data = list(data)
-        super().__init__(**kwargs)
+    def __init__(self, data=(), copy=False, **kwargs):
+        self._data = []
+        for ind in prepare_string(data):
+            self.add(ind, copy=copy)
+        super(Population, self).__init__(**kwargs)
 
         # Recompute labels, if they are not given
         for ind in self._data:
-            if ind.label is None:
+            if getattr(ind, 'label', None) is None:
                 ind.label = self._next_label()
             ind.population = self
             ind._container = self
@@ -79,7 +78,7 @@ class Population(PopulationBase):
             return self._compose((self, other))
         return NotImplemented
 
-    def add(self, ind):
+    def add(self, ind, copy=False):
         """
         Adds individual to population.
         """
@@ -88,7 +87,11 @@ class Population(PopulationBase):
             ind = Individual(ind, population=self)
         else:
             if ind._container not in (self, None):
-                raise ValueError('individual already belongs to population')
+                if copy:
+                    ind = ind.copy()
+                else:
+                    raise ValueError(
+                        'individual already belongs to population')
             ind.population = self
             ind._container = self
         self._data.append(ind)
@@ -133,3 +136,9 @@ class Population(PopulationBase):
 
     def _compose(self, pops):
         return self._compose_class(pops)
+
+
+def prepare_string(data):
+    if isinstance(data, str):
+        return data.splitlines()
+    return data

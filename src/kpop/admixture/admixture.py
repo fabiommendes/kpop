@@ -101,7 +101,7 @@ def admixture_maxlike(x, f_pops, optimizer='slsqrp', q0=None):
 
     if len(f_pops) == 2 and optimizer in ['bound', 'brent', 'cg', 'ncg',
                                           'bfgs']:
-        return admixture_maxlike_1D(x, f_pops, method=optimizer)
+        return admixture_maxlike_1d(x, f_pops, method=optimizer)
 
     # Cache some values
     f_pops = np.asarray(f_pops)
@@ -178,7 +178,7 @@ def admixture_maxlike(x, f_pops, optimizer='slsqrp', q0=None):
         raise ValueError('unknown method: %s' % optimizer)
 
 
-def admixture_maxlike_1D(x, f_pops, method='bound'):
+def admixture_maxlike_1d(x, f_pops, method='bound'):
     """
     Find the maximum likelihood using one of many possible methods: 'bound',
     'brent', 'cg', 'ncg', 'bfgs'. Usually 'bound' is the fastest method.
@@ -253,9 +253,9 @@ def admixture_logbayes(x, f_pops, normalize=False):
         admixture_bayes: returns the normalized Bayes factors.
     """
 
-    D = {}
+    map = {}
     for i, logBF in enumerate(logbayes(x, f_pops)):
-        D[i] = logBF
+        map[i] = logBF
 
     for i in range(len(f_pops)):
         for j in range(i + 1, len(f_pops)):
@@ -272,12 +272,12 @@ def admixture_logbayes(x, f_pops, normalize=False):
                     p * (1 - p))
 
             Z, _ = scipy.integrate.quad(func, 0, 1)
-            D[i, j] = np.log(Z) + log_min
+            map[i, j] = np.log(Z) + log_min
 
     if normalize:
-        min_v = min(x for x in D.values() if not np.isinf(x))
-        D = {k: v - min_v for (k, v) in D.items()}
-    return D
+        min_v = min(x for x in map.values() if not np.isinf(x))
+        map = {k: v - min_v for (k, v) in map.items()}
+    return map
 
 
 def admixture_bayes(x, f_pops):
@@ -289,8 +289,8 @@ def admixture_bayes(x, f_pops):
         D[i, j] --> P("admixed between i and j"| x)
 
     """
-    D = admixture_logbayes(x, f_pops, normalize=True)
-    D = {k: np.exp(v) for (k, v) in D.items()}
-    Z = sum(D.values())
-    D = {k: v / Z for (k, v) in D.items()}
-    return D
+    map = admixture_logbayes(x, f_pops, normalize=True)
+    map = {k: np.exp(v) for (k, v) in map.items()}
+    norm = sum(map.values())
+    map = {k: v / norm for (k, v) in map.items()}
+    return map

@@ -8,9 +8,13 @@ from .util import printif, verbose, file_to_pop
 @click.command()
 @click.option('--format', '-f', prompt='structure, admixture, or arlequin?',
               help='output format (structure, admixture, or arlequin)')
+@click.option('--output', '-o', default=None,
+              help='output file')
+@click.option('--label', '-l', default=None,
+              help='population label')
 @verbose()
 @file_to_pop()
-def export(pop, format=None, output=None, verbose=False):
+def export(pop, format=None, output=None, verbose=False, label=None):
     """
     Export population to external formats.
     """
@@ -22,11 +26,11 @@ def export(pop, format=None, output=None, verbose=False):
     if format == 'structure':
         return export_structure(pop, output, verbose)
     elif format == 'admixture':
-        return export_admixture(pop, output)
+        return export_admixture(pop, output, label)
     elif format == 'arlequin':
-        return export_arlequin(pop, output)
+        return export_arlequin(pop, output, label)
     else:
-        raise ValueError('invalid format: %r' % format)
+        raise SystemExit('invalid format: %r' % format)
 
 
 def export_structure(pop, output, verbose):
@@ -58,8 +62,10 @@ def export_structure(pop, output, verbose):
         F.write('\n')
 
 
-def export_arlequin(pop, output):
-    pass
+def export_arlequin(pop, output, title):
+    from kpop.io import export_arlequin
+
+    export_arlequin(pop, output + '.arp', title=title)
 
 
 def export_admixture(pop, output):

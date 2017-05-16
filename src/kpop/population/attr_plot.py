@@ -1,8 +1,8 @@
 import numpy as np
 from matplotlib import pyplot as plt
 
-from kpop import plots as kpop_plots
-from kpop.plots import admixture_scatter, admixture_bars, group_individuals
+from kpop.plots import admixture_scatter, admixture_bars
+from kpop.plots.utils import group_individuals, _colors
 
 
 class PlotAttribute:
@@ -153,7 +153,7 @@ class PlotAttribute:
             pop_labels = [pop.label or i for i, pop in
                           enumerate(self._populations)]
 
-        colors = kpop_plots._colors(colors, len(coords_list))
+        colors = _colors(colors, len(coords_list))
 
         # Plot scattered elements
         ax = plt.axes()

@@ -74,7 +74,7 @@ class PopulationBase(RenderablePopulationMixin, collections.Sequence):
 
     @property
     def plot(self):
-        from kpop.population.attr_plots import PlotAttribute
+        from kpop.population.attr_plot import PlotAttribute
         return PlotAttribute(self)
 
     @property
@@ -107,6 +107,7 @@ class PopulationBase(RenderablePopulationMixin, collections.Sequence):
     population_class = population_class()
 
     class _multi_population_class_decriptor:
+
         def __get__(self, obj, cls=None):
             cls = PopulationBase.multi_population_class = kpop.MultiPopulation
             return cls
@@ -170,6 +171,17 @@ class PopulationBase(RenderablePopulationMixin, collections.Sequence):
 
     def __str__(self):
         return self.render(label_align='best')
+
+    def __eq__(self, other):
+        # Treat other as a sequence and compare each item.
+        try:
+            N = len(other)
+        except TypeError:
+            return NotImplemented
+
+        if len(self) != N:
+            return False
+        return all(x == y for (x, y) in zip(self, other))
 
     def as_array(self, copy=False):
         """
@@ -399,10 +411,10 @@ class PopulationBase(RenderablePopulationMixin, collections.Sequence):
         The principal axes are chosen from a singular value decomposition (SVD)
         of the population matrix. This can be done in 2 different ways:
 
-        1) The 'count' method simply counts the number of #1 alleles in each
+        1. The 'count' method simply counts the number of #1 alleles in each
            locus and creates a matrix C(n,j) of the number of #1 alleles for
            individual n in location j. This only works with biallelic data.
-        2) The 'flatten' method shuffle the alleles at each loci, flatten, and
+        2. The 'flatten' method shuffle the alleles at each loci, flatten, and
            creates a matrix C(n, j) with (N x 2J) elements. The rest of the
            algorithm proceeds identically.
 
@@ -414,7 +426,7 @@ class PopulationBase(RenderablePopulationMixin, collections.Sequence):
                 Number of principal components to consider
             method : 'count', 'flatten'
                 Genetic discrimination method. See description above.
-            norm : bool
+            norm (bool):
                 If True (default), normalizes each j component of the C(n, j)
                 matrix according to a measure of genetic drift. This procedure
                 is described at Patterson et. al., "Population Structure and

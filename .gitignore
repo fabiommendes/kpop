@@ -16,8 +16,10 @@ docs/_build/
 build/
 dist/
 programs/
+admixture/
 old/
 data/
+demos/
 
 # Python-boilerplate auto generated files
 src/pystructure/__meta__.py

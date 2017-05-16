@@ -15,6 +15,15 @@ def test_multi_population(popA, popB):
 
 
 #
+# Population attribute
+#
+def test_population_attribute_behaves_as_a_list(popA, popB):
+    pop = popA + popB
+    del pop.populations[1]
+    assert pop == popA
+
+
+#
 # Clusterization and classification
 #
 def test_sharp_classifier(popA, popB):

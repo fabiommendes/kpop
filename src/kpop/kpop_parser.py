@@ -2,13 +2,15 @@ import collections
 
 import numpy as np
 
+from kpop.exceptions import MissingDataError
+
 
 def check_valid_names(names):
     """
     Raises ValueError if names mapping contains invalid values.
     """
     if 0 in names or '0' in names:
-        raise ValueError('missing data should be represented by a dash')
+        raise MissingDataError('missing data should be represented by a dash')
 
 
 def tokenize_locus(st):
@@ -32,7 +34,7 @@ def update_names_map(names_map, tokens):
 
     names_map['-'] = 0
     if '0' in tokens:
-        raise ValueError(
+        raise MissingDataError(
             'missing data must be represented by a dash "-". Do not use zero '
             'directly.')
 

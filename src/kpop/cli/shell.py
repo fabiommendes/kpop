@@ -40,9 +40,9 @@ def shell(verbose=False, notebook=False):
 
 
 def start_ipython_shell(verbose):
-    from IPython.terminal.embed import InteractiveShellEmbed
+    from IPython.terminal.embed import InteractiveShellEmbed as _Shell
 
-    class Shell(InteractiveShellEmbed):
+    class Shell(_Shell):
         banner = BANNER
 
     namespace = start_shell_namespace(os.getcwd(), verbose)
@@ -52,7 +52,8 @@ def start_ipython_shell(verbose):
 
 
 def start_notebook(verbose, filename='kpop.ipynb'):
-    from kpop.cli.jupyter_app import ZMQTerminalKpopApp, KpopKernelManager
+    from notebook.notebookapp import NotebookApp
+    from jupyter_client import KernelManager
 
     file_path = os.path.join(os.getcwd(), filename)
     if not os.path.exists(file_path):
@@ -60,8 +61,8 @@ def start_notebook(verbose, filename='kpop.ipynb'):
 
     sys.argv[:] = ['notebook', 'kpop.ipynb']
 
-    ZMQTerminalKpopApp.launch_instance(
-        kernel_manager=KpopKernelManager,
+    NotebookApp.launch_instance(
+        kernel_manager=KernelManager,
         kernel_name='python',
     )
 
@@ -87,8 +88,7 @@ def create_default_notebook_file(file_path):
                 'metadata': {},
                 'source': (
                     '# Kpop notebook\n'
-                    'Execute next cell to initialize kpop and all populations.')
-                ,
+                    'Execute next cell to initialize kpop and all populations.'),
             },
             {
                 'cell_type': 'code',
@@ -136,15 +136,24 @@ def start_shell_namespace(path, verbose=False):
     names_to_exts = get_name_to_exts_map(path)
     result = {}
 
-    printif(verbose, 'Loading populations:')
+    printif(verbose, click.style('Loading populations:', bold=True, fg='green'))
     for file, exts in names_to_exts.items():
         ext = load_best_ext(exts)
         name = python_name(file)
-        file = os.path.join(path, file + ext)
-        printif(verbose, '    - %s from %r' % (name, file))
-        result[name] = load(file)
-    printif(verbose, '')
+        fpath = os.path.join(path, file + ext)
 
+        try:
+            result[name] = load(fpath)
+        except:
+            click.echo(
+                click.style('Invalid input: ', fg='red', bold=True) +
+                click.style(repr(file + ext), fg='green')
+            )
+        else:
+            click.echo(click.style(name, bold=True, fg='green'), nl=False)
+            click.echo(' from %r' % (file + ext))
+
+    click.echo('')
     return result
 
 
