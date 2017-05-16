@@ -1,8 +1,12 @@
+import sys
 import os
 import codecs
 from setuptools import setup, find_packages
 from distutils.extension import Extension
 
+
+# Include typing module in the dependencies
+typing_dep = [] if sys.version_info > (3, 4) else ['typing']
 
 # Cython support
 try:
@@ -68,7 +72,7 @@ setup(
     # Packages and dependencies
     package_dir={'': 'src'},
     packages=find_packages('src'),
-    install_requires=[
+    install_requires=typing_dep + [
         'numpy',
         'scipy',
         'matplotlib',
