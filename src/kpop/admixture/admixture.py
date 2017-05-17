@@ -3,7 +3,6 @@ import math
 import numpy as np
 import scipy.integrate
 import scipy.optimize
-
 from kpop.admixture.likelihood import loglike, loglike_mix, loglike_logf, \
     logbayes
 
@@ -42,7 +41,7 @@ def admixture(x, f_pops, method='bayes'):
     if method == 'maxlike':
         return admixture_maxlike(x, f_pops)
 
-    elif method == 'bayes' or method == 'fullbayes':
+    elif method in ('bayes', 'fullbayes'):
         full = method == 'fullbayes'
         alpha = 0.5
         f1, f2 = f_pops.T
@@ -257,10 +256,9 @@ def admixture_logbayes(x, f_pops, normalize=False):
     for i, logBF in enumerate(logbayes(x, f_pops)):
         map[i] = logBF
 
-    for i in range(len(f_pops)):
-        for j in range(i + 1, len(f_pops)):
-            f1, f2 = f_pops[i], f_pops[j]
-            samples = np.array([loglike(x, p * f1 + (1 - p) * f2) for p in
+    for i, fi in enumerate(f_pops):
+        for j, fj in enumerate(f_pops, i + 1):
+            samples = np.array([loglike(x, p * fi + (1 - p) * fj) for p in
                                 np.arange(0, 1.1, 0.25)])
             log_min = samples.min()
             if np.isinf(log_min):
@@ -268,7 +266,7 @@ def admixture_logbayes(x, f_pops, normalize=False):
 
             def func(p):
                 return np.exp(
-                    loglike(x, p * f1 + (1 - p) * f2) - log_min) / np.sqrt(
+                    loglike(x, p * fi + (1 - p) * fj) - log_min) / np.sqrt(
                     p * (1 - p))
 
             Z, _ = scipy.integrate.quad(func, 0, 1)

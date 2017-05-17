@@ -40,11 +40,9 @@ def shell(verbose=False, notebook=False):
 
 
 def start_ipython_shell(verbose):
-    from IPython.terminal.embed import InteractiveShellEmbed as _Shell
+    from IPython.terminal.embed import InteractiveShellEmbed as Shell
 
-    class Shell(_Shell):
-        banner = BANNER
-
+    Shell.banner = BANNER
     namespace = start_shell_namespace(os.getcwd(), verbose)
     exec('from kpop.all import *', namespace)
     shell = Shell.instance()

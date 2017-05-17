@@ -6,7 +6,7 @@ from distutils.extension import Extension
 
 
 # Include typing module in the dependencies
-typing_dep = [] if sys.version_info > (3, 4) else ['typing']
+typing_dep = [] if sys.version_info >= (3, 5) else ['typing']
 
 # Cython support
 try:

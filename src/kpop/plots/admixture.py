@@ -52,10 +52,9 @@ def admixture_bars(coeffs, colors=None, legend=True,
     ax.axis([0, num_individuals, 0, 1])
 
     # Create vertical lines for separating populations
-    if separaton_lines:
-        if pop_sizes is not None:
-            for x in np.add.accumulate(pop_sizes)[:-1]:
-                ax.plot([x, x], [0, 1], 'k--', lw=2)
+    if separaton_lines and pop_sizes is not None:
+        for x in np.add.accumulate(pop_sizes)[:-1]:
+            ax.plot([x, x], [0, 1], 'k--', lw=2)
 
     # Create additional graphic elements
     if legend:
