@@ -1,9 +1,9 @@
-import sys
-import os
 import codecs
-from setuptools import setup, find_packages
+import os
+import sys
 from distutils.extension import Extension
 
+from setuptools import setup, find_packages
 
 # Include typing module in the dependencies
 typing_dep = [] if sys.version_info >= (3, 5) else ['typing']
@@ -11,19 +11,19 @@ typing_dep = [] if sys.version_info >= (3, 5) else ['typing']
 # Cython support
 try:
     from Cython.Distutils import build_ext
+
     mod_ext = '.pyx'
 except ImportError:
     mod_ext = '.c'
     build_ext = None
 
-
 # Include numpy headers
 try:
     import numpy as np
+
     INCLUDES = ['src', np.get_include()]
 except ImportError:
     INCLUDES = ['src']
-
 
 # Save version and author to __meta__.py
 version = open('VERSION').read().strip()
@@ -35,7 +35,6 @@ __author__ = 'F\\xe1bio Mac\\xeado Mendes'
 ''' % version
 with open(path, 'w') as F:
     F.write(meta)
-
 
 # Basic info
 setup(
@@ -98,27 +97,27 @@ setup(
                   ["src/kpop/admixture/linalg" + mod_ext],
                   libraries=["m"],
                   include_dirs=INCLUDES,
-        ),
+                  ),
         Extension("kpop.admixture.util",
                   ["src/kpop/admixture/util" + mod_ext],
                   libraries=["m"],
                   include_dirs=INCLUDES,
-        ),
+                  ),
         Extension("kpop.admixture.objective",
                   ["src/kpop/admixture/objective" + mod_ext],
                   libraries=["m"],
                   include_dirs=INCLUDES,
-        ),
+                  ),
         Extension("kpop.admixture.likelihood",
                   ["src/kpop/admixture/likelihood" + mod_ext],
                   libraries=["m"],
                   include_dirs=INCLUDES,
-        ),
+                  ),
         Extension("kpop.admixture.em",
                   ["src/kpop/admixture/em" + mod_ext],
                   libraries=["m"],
                   include_dirs=INCLUDES,
-        ),
+                  ),
     ],
 
     # Other configurations

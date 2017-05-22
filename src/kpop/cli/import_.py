@@ -10,8 +10,6 @@ from kpop.io import load_pickle
 @click.argument('file')
 @click.option('--output', '-o', default=None,
               help='output file (.csv or .pickle)')
-@click.option('--label', '-l', default=None,
-              help='label for population')
 @click.option('--pop-col', '-p', default=None,
               help='index or name of the population column')
 @click.option('--ind-col', '-i', default=None,
@@ -22,6 +20,8 @@ from kpop.io import load_pickle
               help='a comma separated list of columns to ignore')
 @click.option('--skip-rows', '-r', default=None,
               help='a comma separated list of rows to ignore')
+@click.option('--label', '-l', default=None,
+              help='a string label that describes population')
 @click.option('--meta', default=None,
               help='a comma separated list of meta:col pairs mapping meta '
                    'information with their respective columns')
@@ -75,7 +75,8 @@ def import_(file, output=None, label=None,
         click.echo(click.style('Population data', bold=True))
         click.echo('\n' + repr(pop) + '\n')
         click.echo(click.style('Hint: ', bold=True), nl=False)
-        click.echo('use `-o FILE` option to determine the output file.')
+        click.echo('append `-o FILE` option to determine the output file.')
+        click.echo('    You may want to use the .pickle extension.')
 
 
 def error(msg):
