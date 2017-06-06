@@ -50,20 +50,21 @@ def create_header(pop, F=sys.stdout, title=None, missing='-'):
     F.write('DataType=STANDARD\n')
     F.write('GenotypicData=1\n')
     F.write('LocusSeparator=SPACE\n')
-    F.write('GeneticPhase=0\n')
+    F.write('GameticPhase=0\n')
     F.write('RecessiveData=0\n')
-    F.write('MissingData=%s\n' % missing)
+    F.write("MissingData='%s'\n" % missing)
 
 
 def create_sample_data(subpop, F, missing):
     labels = (ind.label or 'ind%s' % i for i, ind in enumerate(subpop))
     labels = ['    %s ' % label for label in labels]
     label_size = len(max(labels, key=len))
-    indent = ' ' * label_size
+    indent = ' ' * (label_size + 2)
 
     for label, ind in zip(labels, subpop):
         # First line
         F.write(label.ljust(label_size))
+        F.write('1 ')
         F.write(' '.join(render(ind[:, 0], missing=missing)))
         F.write('\n')
 
@@ -82,7 +83,7 @@ def create_data(pop, F=sys.stdout, names=None, missing='-'):
 
     for idx, subpop in enumerate(pop.populations):
         name = next(names) or subpop.label or 'pop%s' % idx
-        F.write('SampleName=%s\n' % name)
+        F.write('SampleName="%s"\n' % name.replace('"', ''))
         F.write('SampleSize=%s\n' % len(subpop))
         F.write('SampleData={\n')
         create_sample_data(subpop, F, missing)

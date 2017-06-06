@@ -26,29 +26,29 @@ NbSamples=2
 DataType=STANDARD
 GenotypicData=1
 LocusSeparator=SPACE
-GeneticPhase=0
+GameticPhase=0
 RecessiveData=0
-MissingData=-
+MissingData='-'
 
 
 [Data]
 [[Samples]]
-SampleName=popA
+SampleName="popA"
 SampleSize=2
 SampleData={
-    popA1 1 2 1 2
-          1 2 1 2
-    popA2 1 1 1 1
-          1 1 1 1
+    popA1 1 1 2 1 2
+            1 2 1 2
+    popA2 1 1 1 1 1
+            1 1 1 1
 }
 
-SampleName=popB
+SampleName="popB"
 SampleSize=2
 SampleData={
-    popB1 2 1 2 1
-          2 1 2 1
-    popB2 1 1 1 1
-          1 1 1 1
+    popB1 1 2 1 2 1
+            2 1 2 1
+    popB2 1 1 1 1 1
+            1 1 1 1
 }
 
 """
