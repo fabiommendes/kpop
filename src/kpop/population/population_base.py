@@ -12,6 +12,7 @@ from .utils import normalize_freqs_arg
 from ..individual import Individual
 from ..prob import Prob
 from ..utils.frequencies import fill_freqs_vector, freqs_to_matrix
+from ..statistics import biallelic_pairwise_fst
 
 
 class PopulationBase(RenderablePopulationMixin, collections.Sequence):
@@ -32,7 +33,17 @@ class PopulationBase(RenderablePopulationMixin, collections.Sequence):
     @property
     def freqs(self):
         if self._freqs is None:
-            self._freqs = self.empirical_freqs()
+            vars_ = self.__dict__
+            data = vars_.get('freqs_matrix') or vars_.get('freqs_vector')
+
+            if data is not None:
+                if data.ndim == 1:
+                    data = freqs_to_matrix(data)
+                self._freqs = [Prob(enumerate(locus)) for locus in data]
+
+            else:
+                self._freqs = self.empirical_freqs()
+
         return self._freqs
 
     @freqs.setter
@@ -47,10 +58,22 @@ class PopulationBase(RenderablePopulationMixin, collections.Sequence):
 
     @lazy
     def freqs_vector(self):
-        if not self.is_biallelic:
-            raise ValueError(
-                'only biallelic individuals define a freqs_vector')
+        """
+        Frequencies of the first allele.
+        """
         return np.ascontiguousarray(self.freqs_matrix[:, 0])
+
+    @lazy
+    def hfreqs_vector(self):
+        """
+        Vector of frequencies of heterozygotes.
+        """
+        if self.ploidy == 2:
+            data = np.array(self)
+            heterozygote = data[:, :, 0] != data[:, :, 1]
+            return heterozygote.mean(axis=0)
+        else:
+            raise NotImplementedError('require diploid populations')
 
     @lazy
     def is_biallelic(self):
@@ -247,6 +270,43 @@ class PopulationBase(RenderablePopulationMixin, collections.Sequence):
         num_alleles = data.max(axis=(0, 2))
         return np.where(num_alleles > 2)[0]
 
+    def fst_matrix(self, sizes=None):
+        """
+        Return the Fst divergence matrix for all sub-populations.
+
+        See Also:
+            :func:`kpop.statistics.biallelic_pairwise_fst`
+        """
+
+        pops = self.populations
+        sizes = list(map(len, pops)) if sizes is None else sizes
+        freqs = [pop.freqs_vector for pop in pops]
+        hfreqs = [pop.hfreqs_vector for pop in pops]
+        return biallelic_pairwise_fst(freqs, hfreqs, sizes)
+
+    def render_fst(self, sizes=None):
+        """
+        Returns a pretty string with the Fst divergence for population.
+
+        See Also:
+            :func:`.fst_matrix`
+        """
+
+        data = self.fst_matrix(sizes)
+        names = [pop.label for pop in self.populations]
+        colsize = max(map(len, names))
+        rownames = [name.ljust(colsize) for name in names[1:]]
+        colwidth = max(colsize, 9)
+        colnames = [name.rjust(colwidth) for name in names[:-1]]
+        lines = [' ' * (colsize + 2) + ' '.join(colnames)]
+
+        for i, rowname in enumerate(rownames):
+            row = ['%.6f' % x for x in data[i + 1][:i + 1]]
+            row = [x.rjust(colwidth) for x in row]
+            row = '%s: %s'% (rowname, ' '.join(row))
+            lines.append(row)
+
+        return '\n'.join(lines)
     #
     # Simulation
     #
@@ -300,6 +360,7 @@ class PopulationBase(RenderablePopulationMixin, collections.Sequence):
         pop.num_alleles = self.num_alleles
         pop.ploidy = self.ploidy
         pop.freqs_matrix = freqs
+        pop.freqs_vector = freqs[:, 0]
 
         # Fill with individuals
         if sample_size:

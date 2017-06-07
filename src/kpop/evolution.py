@@ -17,11 +17,11 @@ def frequency_drift_1D(freqs_vector, n_generations, size):
         size: effective size of population.
     """
 
-    freqs_vector = np.array(freqs_vector)
+    result = np.array(freqs_vector, copy=True)
     for _ in range(n_generations):
-        for j, f in enumerate(freqs_vector):
-            freqs_vector[j] = np.random.binomial(size, f) / size
-    return freqs_vector
+        for j, f in enumerate(result):
+            result[j] = np.random.binomial(size, f) / size
+    return result
 
 
 def frequency_drift(freqs, n_generations, size):
@@ -34,6 +34,9 @@ def frequency_drift(freqs, n_generations, size):
         n_generations: number of generations.
         size: effective size of population.
     """
+
+    if n_generations == 0:
+        return np.array(freqs, copy=True)
 
     freqs = np.asarray(freqs)
     if freqs.ndim == 1:

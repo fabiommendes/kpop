@@ -8,12 +8,18 @@ from .util import verbose, file_to_pop
               help='print results JSON instead of YAML')
 @click.option('--sub-populations', '-s', is_flag=True,
               help='detailed stats for each sub-population.')
+@click.option('--fst', '-f', is_flag=True,
+              help='Print the pairwise F_st statistics for sub-populations.')
 @verbose()
 @file_to_pop()
-def stats(pop, verbose=False, json=False, sub_populations=False):
+def stats(pop, verbose=False, json=False, sub_populations=False, fst=False):
     """
     Statistics about population.
     """
+
+    if fst:
+        print(pop.render_fst())
+        return
 
     click.echo(click.style('summary:', bold=True))
     pop_summary(pop)
