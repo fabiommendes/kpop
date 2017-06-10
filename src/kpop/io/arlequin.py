@@ -49,7 +49,7 @@ def create_header(pop, F=sys.stdout, title=None, missing='-'):
     F.write('NbSamples=%s\n' % len(pop.populations))
     F.write('DataType=STANDARD\n')
     F.write('GenotypicData=1\n')
-    F.write('LocusSeparator=SPACE\n')
+    F.write('LocusSeparator=WHITESPACE\n')
     F.write('GameticPhase=0\n')
     F.write('RecessiveData=0\n')
     F.write("MissingData='%s'\n" % missing)

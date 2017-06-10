@@ -9,6 +9,8 @@ from kpop import Population, Individual
 # Test rendering and attributes
 #
 class TestProperties:
+    "Test basic attributes that expose kpop population data"
+
     def test_population_basic_attributes(self, popA):
         assert popA.is_biallelic
         assert popA.num_alleles == 2
@@ -43,6 +45,10 @@ class TestProperties:
             'C: -0.028571  0.409558'
         )
 
+
+class TestRender:
+    "Test functions that render a population to string"
+
     def test_render_population(self, popA):
         assert popA.render() == '''
 A1: 11 22 12 12 12
@@ -54,6 +60,31 @@ A6: 11 22 21 22 21
 A7: 11 22 11 12 12
 A8: 11 22 21 22 12
     '''.strip()
+
+    def test_render_population_biallelic_freqs(self, popA, popB):
+        assert (popA + popB).render_biallelic_freqs() == '''
+locus    A     B
+   L1  1.0   0.0
+   L2  0.0  0.25
+   L3 0.75   0.5
+   L4 0.25 0.375
+   L5  0.5 0.375
+'''[1:]
+
+        assert (popA + popB).render_biallelic_freqs(sep=', ') == '''
+locus,    A,     B
+   L1,  1.0,   0.0
+   L2,  0.0,  0.25
+   L3, 0.75,   0.5
+   L4, 0.25, 0.375
+   L5,  0.5, 0.375
+'''[1:]
+
+
+    def _test_render_population_frequencies(self, popA, popB):
+        assert (popA + popB).render_biallelic_frequencies(sep=', ') == '''
+
+'''.strip()
 
 
 #

@@ -2,7 +2,7 @@
 Installation instructions
 =========================
 
-pystructure can be installed using pip::
+kpop can be installed using pip::
 
     $ python3 -m pip install kpop
 

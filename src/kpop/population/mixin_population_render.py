@@ -59,7 +59,7 @@ class RenderablePopulationMixin(abc.ABC):
 
     def render_ped(self):
         """
-        Renders population as a plink's .ped file.
+        Renders population as a PLINK's .ped file.
         """
 
         lines = []
@@ -71,7 +71,7 @@ class RenderablePopulationMixin(abc.ABC):
 
     def render_map(self):
         """
-        Renders population .map file for use with plink.
+        Renders population .map file for use with PLINK.
         """
 
         data = []

@@ -11,8 +11,8 @@ from .mixin_population_render import RenderablePopulationMixin
 from .utils import normalize_freqs_arg
 from ..individual import Individual
 from ..prob import Prob
-from ..utils.frequencies import fill_freqs_vector, freqs_to_matrix
 from ..statistics import biallelic_pairwise_fst
+from ..utils.frequencies import fill_freqs_vector, freqs_to_matrix
 
 
 class PopulationBase(RenderablePopulationMixin, collections.Sequence):
@@ -303,10 +303,45 @@ class PopulationBase(RenderablePopulationMixin, collections.Sequence):
         for i, rowname in enumerate(rownames):
             row = ['%.6f' % x for x in data[i + 1][:i + 1]]
             row = [x.rjust(colwidth) for x in row]
-            row = '%s: %s'% (rowname, ' '.join(row))
+            row = '%s: %s' % (rowname, ' '.join(row))
             lines.append(row)
 
         return '\n'.join(lines)
+
+    def render_biallelic_freqs(self, sep=' ', align=True, **kwargs):
+        """
+        Return a string with a list of frequencies of the first allele in a
+        CSV-compatible format.
+
+        Each line corresponds to a different loci and each column is a
+        different population.
+
+        Args:
+            sep (str):
+                String used to separate each item in a line.
+            align (bool):
+                If True (default), align columns to the right.
+            decimal_places (int):
+                Force all numeric data to be rendered with the given number
+                of decimal places.
+        """
+
+        from kpop.io import csv_lines
+
+        loci_names = self.allele_names
+        if loci_names is None:
+            loci_names = ['L%s' % (i + 1) for i in range(self.num_loci)]
+        columns = [pop.label for pop in self.populations]
+        columns.insert(0, 'locus')
+        freqs = [pop.freqs_vector for pop in self.populations]
+        data = list(zip(loci_names, *freqs))
+
+        # Call csv_lines with the prepared data
+        kwargs['align'] = align
+        kwargs['sep'] = sep
+        lines = csv_lines(data, columns=columns, **kwargs)
+        return ''.join(lines)
+
     #
     # Simulation
     #
