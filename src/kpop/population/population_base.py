@@ -308,7 +308,8 @@ class PopulationBase(RenderablePopulationMixin, collections.Sequence):
 
         return '\n'.join(lines)
 
-    def render_biallelic_freqs(self, sep=' ', align=True, **kwargs):
+    def render_biallelic_freqs(self, sep='  ', align=True,
+                               decimal_places=6, **kwargs):
         """
         Return a string with a list of frequencies of the first allele in a
         CSV-compatible format.
@@ -339,6 +340,7 @@ class PopulationBase(RenderablePopulationMixin, collections.Sequence):
         # Call csv_lines with the prepared data
         kwargs['align'] = align
         kwargs['sep'] = sep
+        kwargs['decimal_places'] = decimal_places
         lines = csv_lines(data, columns=columns, **kwargs)
         return ''.join(lines)
 
