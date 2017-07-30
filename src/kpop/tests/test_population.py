@@ -62,22 +62,23 @@ A8: 11 22 21 22 12
     '''.strip()
 
     def test_render_population_biallelic_freqs(self, popA, popB):
-        assert (popA + popB).render_biallelic_freqs() == '''
-locus    A     B
-   L1  1.0   0.0
-   L2  0.0  0.25
-   L3 0.75   0.5
-   L4 0.25 0.375
-   L5  0.5 0.375
+        freqs_render = (popA + popB).render_biallelic_freqs()
+        assert freqs_render == '''
+locus         A         B
+   L1  1.000000  0.000000
+   L2  0.000000  0.250000
+   L3  0.750000  0.500000
+   L4  0.250000  0.375000
+   L5  0.500000  0.375000
 '''[1:]
 
         assert (popA + popB).render_biallelic_freqs(sep=', ') == '''
-locus,    A,     B
-   L1,  1.0,   0.0
-   L2,  0.0,  0.25
-   L3, 0.75,   0.5
-   L4, 0.25, 0.375
-   L5,  0.5, 0.375
+locus,        A,        B
+   L1, 1.000000, 0.000000
+   L2, 0.000000, 0.250000
+   L3, 0.750000, 0.500000
+   L4, 0.250000, 0.375000
+   L5, 0.500000, 0.375000
 '''[1:]
 
 

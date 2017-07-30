@@ -329,9 +329,7 @@ class PopulationBase(RenderablePopulationMixin, collections.Sequence):
 
         from kpop.io import csv_lines
 
-        loci_names = self.allele_names
-        if loci_names is None:
-            loci_names = ['L%s' % (i + 1) for i in range(self.num_loci)]
+        loci_names = ['L%s' % (i + 1) for i in range(self.num_loci)]
         columns = [pop.label for pop in self.populations]
         columns.insert(0, 'locus')
         freqs = [pop.freqs_vector for pop in self.populations]
