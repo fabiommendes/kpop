@@ -1,24 +1,45 @@
 import collections
+import copy
 import pickle
-from random import randrange
+import operator as op
+from functools import reduce
+from random import randrange, shuffle
 
 import numpy as np
 from lazyutils import lazy
+from sidekick import _, F
 
 import kpop
-from kpop.evolution import frequency_drift
-from .mixin_population_render import RenderablePopulationMixin
+from .io import RenderableMixin
 from .utils import normalize_freqs_arg
+from ..evolution import frequency_drift
 from ..individual import Individual
 from ..prob import Prob
 from ..statistics import biallelic_pairwise_fst
 from ..utils.frequencies import fill_freqs_vector, freqs_to_matrix
+from ..utils.functional import fn_lazy, fn_property
 
 
-class PopulationBase(RenderablePopulationMixin, collections.Sequence):
+class PopulationBase(RenderableMixin, collections.Sequence):
     """
     Base class for Population and MultiPopulation.
+
+    Attrs:
+        freqs:
+            ??
+        freqs_matrix:
+            ??
+        freqs_vector:
+            Frequencies for allele 1. This is more useful for biallelic data, 
+            since the frequency of the second allele is simply the complement.
+        hfreqs_vector:
+            Vector of frequencies of heterozygotes.
+
+        
     """
+    
+    freqs_matrix = lazy(lambda _: freqs_to_matrix(_.freqs))
+    freqs_vector = lazy(lambda _: np.ascontiguousarray(_.freqs_matrix[:, 0])) 
 
     @property
     def _freqs_fastest(self):
@@ -53,21 +74,7 @@ class PopulationBase(RenderablePopulationMixin, collections.Sequence):
         del self.freqs_matrix
 
     @lazy
-    def freqs_matrix(self):
-        return freqs_to_matrix(self.freqs)
-
-    @lazy
-    def freqs_vector(self):
-        """
-        Frequencies of the first allele.
-        """
-        return np.ascontiguousarray(self.freqs_matrix[:, 0])
-
-    @lazy
     def hfreqs_vector(self):
-        """
-        Vector of frequencies of heterozygotes.
-        """
         if self.ploidy == 2:
             data = np.array(self)
             heterozygote = data[:, :, 0] != data[:, :, 1]
@@ -75,69 +82,37 @@ class PopulationBase(RenderablePopulationMixin, collections.Sequence):
         else:
             raise NotImplementedError('require diploid populations')
 
-    @lazy
-    def is_biallelic(self):
-        return self.num_alleles == 2
+    # General shape
+    size = property(len)
+    num_loci = lazy(lambda _: _[0].num_loci)
+    ploidy = lazy(lambda _: _[0].ploidy)
+    shape = property(lambda _: (_.size, _.num_loci, _.ploidy))
+    data_size = fn_property(_.size * _.num_loci * _.ploidy)
 
-    @lazy
-    def num_alleles(self):
-        return max(max(freq) for freq in self.freqs)
+    # Allele statistics
+    is_biallelic = fn_lazy(_.num_alleles == 2)
+    num_alleles = lazy(lambda _: max(max(freq) for freq in _.freqs))
 
-    @lazy
-    def ploidy(self):
-        return self[0].ploidy
-
-    @lazy
-    def num_loci(self):
-        return self[0].num_loci
-
-    @property
-    def size(self):
-        return len(self)
-
-    @property
-    def plot(self):
-        from kpop.population.attr_plot import PlotAttribute
-        return PlotAttribute(self)
-
-    @property
-    def has_missing(self):
-        return any(ind.has_missing for ind in self)
-
-    @property
-    def missing_ratio(self):
-        a, b, c = self.shape
-        return self.missing_total / (a * b * c)
-
-    @property
-    def missing_total(self):
-        return sum(ind.missing_total for ind in self)
-
-    @property
-    def num_populations(self):
-        return len(self.populations)
-
-    @property
-    def shape(self):
-        return self.size, self.num_loci, self.ploidy
-
-    class population_class:
-
-        def __get__(self, obj, cls=None):
-            cls = PopulationBase.population_class = kpop.Population
-            return cls
-
-    population_class = population_class()
-
-    class _multi_population_class_decriptor:
-
-        def __get__(self, obj, cls=None):
-            cls = PopulationBase.multi_population_class = kpop.MultiPopulation
-            return cls
-
-    multi_population_class = _multi_population_class_decriptor()
-
+    # Multi population
     is_multi_population = False
+    num_populations = fn_property(lambda _: len(_.populations))
+
+    # Missing data
+    has_missing = property(lambda _: any(ind.has_missing for ind in _))
+    missing_total = property(lambda _: sum(ind.missing_total for ind in _))
+    missing_ratio = fn_property(_.missing_total / _.data_size)
+
+    #
+    # Special attributes. These will be inserted later via monkey patching
+    #
+    populations = ()
+    plot = object()
+    clustering = object()
+    classification = object()
+    admixture = object()
+    projection = object()
+    stats = object()
+    io = object()
 
     #
     # Population constructors
@@ -429,7 +404,7 @@ class PopulationBase(RenderablePopulationMixin, collections.Sequence):
             children.append(child)
         return kpop.Population(children, parent=parent, label=label)
 
-    def new(self, label=None, **kwargs):
+    def new_individual(self, label=None, **kwargs):
         """
         Return a new random individual respecting the population allele
         frequencies.
@@ -494,96 +469,6 @@ class PopulationBase(RenderablePopulationMixin, collections.Sequence):
         out.admixture_result = result
         return out
 
-    def pca(self, k=2, *, method='flatten', norm=True):
-        """
-        Principal component analysis.
-
-        PCA helps classifying individuals by reducing the problem's
-        dimensionality from the number of loci to only the first K of principal
-        axis. Usually this simple re-parametrization is able to detect population
-        structure between data, i.e., the individuals of each sub-population are
-        very well separated in the "principal axes" coordinates.
-
-        The principal axes are chosen from a singular value decomposition (SVD)
-        of the population matrix. This can be done in 2 different ways:
-
-        1. The 'count' method simply counts the number of #1 alleles in each
-           locus and creates a matrix C(n,j) of the number of #1 alleles for
-           individual n in location j. This only works with biallelic data.
-        2. The 'flatten' method shuffle the alleles at each loci, flatten, and
-           creates a matrix C(n, j) with (N x 2J) elements. The rest of the
-           algorithm proceeds identically.
-
-        The matrix C is subjected to a SVD, and each individual is classified in
-        terms of their coordinates in the K most significant principal axis.
-
-        Args:
-            k (int):
-                Number of principal components to consider
-            method : 'count', 'flatten'
-                Genetic discrimination method. See description above.
-            norm (bool):
-                If True (default), normalizes each j component of the C(n, j)
-                matrix according to a measure of genetic drift. This procedure
-                is described at Patterson et. al., "Population Structure and
-                Eigenanalysis" and is recommended for SNPs subject to genetic
-                drift. It is not recommended to use this normalization to
-                micro-satellite data.
-
-        Returns:
-            A (size x k) matrix with the components of each individual in the
-            principal axis.
-
-        Examples:
-            Consider a random synthetic population with two sub-populations with
-            10 elements each. Each individual has 200 alleles.
-
-            >>> popA = Population.make_random(10, 200, label='A')
-            >>> popB = Population.make_random(10, 200, label='B')
-
-            Usually the the principal axis alone will be enough to classify
-            these individuals. Since the mean is zero, individuals of one
-            population will have negative coordinates and the other population
-            will have positive coordinates.
-
-            >>> pop = popA + popB
-            >>> coords = pop.pca()
-            >>> sign_p1 = coords[10:] > 0
-            >>> sign_p2 = coords[:10] > 0
-            >>> (sign_p1 != sign_p2).all()
-            True
-        """
-
-        # Compute covariance matrix for each feature
-        pop = np.array(self)
-        if method == 'count':
-            cov_matrix = (pop == 1).sum(axis=2)
-        elif method == 'flatten':
-            pop = np.copy(pop)
-            for ind in pop:
-                for locus in ind:
-                    np.random.shuffle(locus)
-            cov_matrix = np.array([ind.flatten() for ind in pop],
-                                  dtype=pop.dtype)
-        else:
-            raise ValueError(method)
-
-        # Remove bias and re-normalize, if desired
-        mu = cov_matrix.mean(axis=0)
-        if norm:
-            p = mu / 2
-            norm = np.sqrt(p * (1 - p))
-            # prevents problems with mean 0 or 1
-            norm = np.where(norm, norm, 1)
-            matrix = (cov_matrix - mu) / norm
-        else:
-            matrix = cov_matrix - mu
-
-        # Compute the singular value decomposition of the rescaled matrix and
-        # return the projections of each individual in this matrix
-        _, _, pca_coords = np.linalg.svd(matrix, False)
-        pca_coords_k = pca_coords[:k]
-        return np.dot(cov_matrix, pca_coords_k.T)
 
     def drop_non_biallelic(self, *, _data=None):
         """
@@ -654,13 +539,21 @@ class PopulationBase(RenderablePopulationMixin, collections.Sequence):
                 populations.append(pop)
             return self.multi_population_class(populations, **kwargs)
 
-    def shuffle_loci(self):
+    def shuffled_loci(self):
         """
-        Shuffle contents of each locus for each individual *inplace*.
+        Return a copy with shuffled contents of each locus.
         """
+        
+        pop = self.copy()
+        for ind in pop:
+            ind._ishuffle_loci()
+        return pop
 
-        for ind in self:
-            ind.shuffle_loci()
+    def copy(self):
+        """
+        Return a copy of population.
+        """
+        return copy.deepcopy(self)
 
     def _next_label(self):
         self._last_label_index += 1

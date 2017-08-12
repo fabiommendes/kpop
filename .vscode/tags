@@ -50,6 +50,7 @@ AsyncIterator	../.tox/flake8/lib/python3.6/_collections_abc.py	/^class AsyncIter
 AsyncIterator	../.tox/py36/lib/python3.6/_collections_abc.py	/^class AsyncIterator(AsyncIterable):$/;"	kind:class	line:173
 Awaitable	../.tox/flake8/lib/python3.6/_collections_abc.py	/^class Awaitable(metaclass=ABCMeta):$/;"	kind:class	line:99
 Awaitable	../.tox/py36/lib/python3.6/_collections_abc.py	/^class Awaitable(metaclass=ABCMeta):$/;"	kind:class	line:99
+B	../src/kpop/external/structure/base.py	/^    def B(x): return int(bool(x))                                      # noqa: E731$/;"	kind:function	line:186
 BEST	../old/genetic.py	/^BEST = [[3, 10, 24, 30, 32, 51, 67, 68, 69, 72, 82, 98],$/;"	kind:variable	line:964
 BLKTYPE	../.tox/flake8/lib/python3.6/tarfile.py	/^BLKTYPE = b"4"                  # block special device$/;"	kind:variable	line:94
 BLKTYPE	../.tox/py36/lib/python3.6/tarfile.py	/^BLKTYPE = b"4"                  # block special device$/;"	kind:variable	line:94
@@ -437,7 +438,6 @@ DOUBLESTAREQUAL	../.tox/flake8/lib/python3.6/token.py	/^DOUBLESTAREQUAL = 46$/;"
 DOUBLESTAREQUAL	../.tox/py36/lib/python3.6/token.py	/^DOUBLESTAREQUAL = 46$/;"	kind:variable	line:59
 Decnumber	../.tox/flake8/lib/python3.6/tokenize.py	/^Decnumber = r'(?:0(?:_?0)*|[1-9](?:_?[0-9])*)'$/;"	kind:variable	line:126
 Decnumber	../.tox/py36/lib/python3.6/tokenize.py	/^Decnumber = r'(?:0(?:_?0)*|[1-9](?:_?[0-9])*)'$/;"	kind:variable	line:126
-DescriptorMeta	../src/kpop/population/attr.py	/^class DescriptorMeta(type):$/;"	kind:class	line:1
 Dict	../src/kpop/io/loaders.py	/^from typing import List, Union, Dict$/;"	kind:namespace	line:5
 Double	../.tox/flake8/lib/python3.6/tokenize.py	/^Double = r'[^"\\\\]*(?:\\\\.[^"\\\\]*)*"'$/;"	kind:variable	line:162
 Double	../.tox/py36/lib/python3.6/tokenize.py	/^Double = r'[^"\\\\]*(?:\\\\.[^"\\\\]*)*"'$/;"	kind:variable	line:162
@@ -507,6 +507,7 @@ ExtensionFileLoader	../.tox/py36/lib/python3.6/importlib/machinery.py	/^from ._b
 ExtractError	../.tox/flake8/lib/python3.6/tarfile.py	/^class ExtractError(TarError):$/;"	kind:class	line:277
 ExtractError	../.tox/py36/lib/python3.6/tarfile.py	/^class ExtractError(TarError):$/;"	kind:class	line:277
 F	../old/lagrange.py	/^F = np.random.uniform(0, 1, size=J * K).reshape((J, K))$/;"	kind:variable	line:109
+F	../src/kpop/population/population_base.py	/^from sidekick import _, F$/;"	kind:namespace	line:10
 FBAR_CACHE	../old/lagrangean_test.py	/^FBAR_CACHE = G + 0.0$/;"	kind:variable	line:191
 FBAR_CACHE_	../old/lagrangean_test.py	/^FBAR_CACHE_ = G + 0.0$/;"	kind:variable	line:192
 FF_CACHE	../old/lagrangean_test.py	/^FF_CACHE = FF * 0.0$/;"	kind:variable	line:193
@@ -638,8 +639,8 @@ Ignore	../.tox/flake8/lib/python3.6/tokenize.py	/^Ignore = Whitespace + any(r'\\
 Ignore	../.tox/py36/lib/python3.6/tokenize.py	/^Ignore = Whitespace + any(r'\\\\\\r?\\n' + Whitespace) + maybe(Comment)$/;"	kind:variable	line:120
 Imagnumber	../.tox/flake8/lib/python3.6/tokenize.py	/^Imagnumber = group(r'[0-9](?:_?[0-9])*[jJ]', Floatnumber + r'[jJ]')$/;"	kind:variable	line:133
 Imagnumber	../.tox/py36/lib/python3.6/tokenize.py	/^Imagnumber = group(r'[0-9](?:_?[0-9])*[jJ]', Floatnumber + r'[jJ]')$/;"	kind:variable	line:133
-ImmutablePopulationList	../src/kpop/population/attr_populations.py	/^class ImmutablePopulationList(PopulationsList):$/;"	kind:class	line:72
-ImmutablePopulationList	../src/kpop/population/population_single.py	/^from .attr_populations import ImmutablePopulationList$/;"	kind:namespace	line:4
+ImmutablePopulationList	../src/kpop/population/population_single.py	/^from .populations import ImmutablePopulationList$/;"	kind:namespace	line:4
+ImmutablePopulationList	../src/kpop/population/populations.py	/^class ImmutablePopulationList(PopulationsList):$/;"	kind:class	line:72
 Import	../.tox/flake8/lib/python3.6/weakref.py	/^import collections  # Import after _weakref to avoid circular import.$/;"	kind:namespace	line:24
 Import	../.tox/py36/lib/python3.6/weakref.py	/^import collections  # Import after _weakref to avoid circular import.$/;"	kind:namespace	line:24
 IncrementalDecoder	../.tox/flake8/lib/python3.6/codecs.py	/^class IncrementalDecoder(object):$/;"	kind:class	line:253
@@ -1139,9 +1140,9 @@ IncrementalEncoder	../.tox/py36/lib/python3.6/encodings/utf_8_sig.py	/^class Inc
 IncrementalEncoder	../.tox/py36/lib/python3.6/encodings/uu_codec.py	/^class IncrementalEncoder(codecs.IncrementalEncoder):$/;"	kind:class	line:73
 IncrementalEncoder	../.tox/py36/lib/python3.6/encodings/zlib_codec.py	/^class IncrementalEncoder(codecs.IncrementalEncoder):$/;"	kind:class	line:27
 Individual	../src/kpop/__init__.py	/^from .individual import Individual$/;"	kind:namespace	line:2
-Individual	../src/kpop/individual.py	/^class Individual(collections.Sequence):$/;"	kind:class	line:11
+Individual	../src/kpop/individual.py	/^class Individual(collections.Sequence):$/;"	kind:class	line:13
 Individual	../src/kpop/io/loaders.py	/^from ..individual import Individual$/;"	kind:namespace	line:9
-Individual	../src/kpop/population/population_base.py	/^from ..individual import Individual$/;"	kind:namespace	line:12
+Individual	../src/kpop/population/population_base.py	/^from ..individual import Individual$/;"	kind:namespace	line:16
 Individual	../src/kpop/population/population_single.py	/^from ..individual import Individual$/;"	kind:namespace	line:6
 Individual	../src/kpop/tests/conftest.py	/^from kpop import Population, Individual$/;"	kind:namespace	line:3
 Individual	../src/kpop/tests/test_individual.py	/^from kpop.individual import Individual, label_from_parents$/;"	kind:namespace	line:5
@@ -1159,6 +1160,7 @@ Intnumber	../.tox/py36/lib/python3.6/tokenize.py	/^Intnumber = group(Hexnumber, 
 InvMap	../src/kpop/loci_data.py	/^from maputil import InvMap$/;"	kind:namespace	line:3
 InvalidHeaderError	../.tox/flake8/lib/python3.6/tarfile.py	/^class InvalidHeaderError(HeaderError):$/;"	kind:class	line:301
 InvalidHeaderError	../.tox/py36/lib/python3.6/tarfile.py	/^class InvalidHeaderError(HeaderError):$/;"	kind:class	line:301
+Io	../src/kpop/population/io.py	/^class Io:$/;"	kind:class	line:105
 ItemsView	../.tox/flake8/lib/python3.6/_collections_abc.py	/^class ItemsView(MappingView, Set):$/;"	kind:class	line:725
 ItemsView	../.tox/py36/lib/python3.6/_collections_abc.py	/^class ItemsView(MappingView, Set):$/;"	kind:class	line:725
 Iterable	../.tox/flake8/lib/python3.6/_collections_abc.py	/^class Iterable(metaclass=ABCMeta):$/;"	kind:class	line:243
@@ -1312,7 +1314,7 @@ NOT	../.tox/flake8/lib/python3.6/importlib/__init__.py	/^import _imp  # Just the
 NOT	../.tox/py36/lib/python3.6/importlib/__init__.py	/^import _imp  # Just the builtin component, NOT the full Python module$/;"	kind:namespace	line:12
 NOTEQUAL	../.tox/flake8/lib/python3.6/token.py	/^NOTEQUAL = 28$/;"	kind:variable	line:41
 NOTEQUAL	../.tox/py36/lib/python3.6/token.py	/^NOTEQUAL = 28$/;"	kind:variable	line:41
-NOT_GIVEN	../src/kpop/individual.py	/^NOT_GIVEN = object()$/;"	kind:variable	line:8
+NOT_GIVEN	../src/kpop/individual.py	/^NOT_GIVEN = object()$/;"	kind:variable	line:10
 NOT_GIVEN	../src/kpop/io/loaders.py	/^NOT_GIVEN = object()$/;"	kind:variable	line:12
 NPOP	../old/genetic.py	/^NPOP = 500$/;"	kind:variable	line:35
 NT_OFFSET	../.tox/flake8/lib/python3.6/token.py	/^NT_OFFSET = 256$/;"	kind:variable	line:71
@@ -1406,8 +1408,7 @@ Pattern	../.tox/flake8/lib/python3.6/sre_parse.py	/^class Pattern:$/;"	kind:clas
 Pattern	../.tox/py36/lib/python3.6/sre_parse.py	/^class Pattern:$/;"	kind:class	line:74
 PlainToken	../.tox/flake8/lib/python3.6/tokenize.py	/^PlainToken = group(Number, Funny, String, Name)$/;"	kind:variable	line:184
 PlainToken	../.tox/py36/lib/python3.6/tokenize.py	/^PlainToken = group(Number, Funny, String, Name)$/;"	kind:variable	line:184
-PlotAttribute	../src/kpop/population/attr_plot.py	/^class PlotAttribute:$/;"	kind:class	line:8
-PlotAttribute	../src/kpop/population/population_base.py	/^        from kpop.population.attr_plot import PlotAttribute$/;"	kind:namespace	line:100
+PlotAttribute	../src/kpop/population/plot.py	/^class PlotAttribute:$/;"	kind:class	line:8
 Pointfloat	../.tox/flake8/lib/python3.6/tokenize.py	/^Pointfloat = group(r'[0-9](?:_?[0-9])*\\.(?:[0-9](?:_?[0-9])*)?',$/;"	kind:variable	line:129
 Pointfloat	../.tox/py36/lib/python3.6/tokenize.py	/^Pointfloat = group(r'[0-9](?:_?[0-9])*\\.(?:[0-9](?:_?[0-9])*)?',$/;"	kind:variable	line:129
 Population	../old/lagrangean_test.py	/^    from kpop import Population$/;"	kind:namespace	line:216
@@ -1417,7 +1418,7 @@ Population	../src/kpop/external/admixture/result.py	/^from kpop import MultiPopu
 Population	../src/kpop/io/arlequin.py	/^from ..population import Population$/;"	kind:namespace	line:7
 Population	../src/kpop/io/loaders.py	/^from ..population import Population, MultiPopulation$/;"	kind:namespace	line:10
 Population	../src/kpop/population/__init__.py	/^from .population_single import Population$/;"	kind:namespace	line:1
-Population	../src/kpop/population/population_base.py	/^        from kpop import Population$/;"	kind:namespace	line:391
+Population	../src/kpop/population/population_base.py	/^        from kpop import Population$/;"	kind:namespace	line:366
 Population	../src/kpop/population/population_multi.py	/^from kpop.population.population_single import Population$/;"	kind:namespace	line:9
 Population	../src/kpop/population/population_single.py	/^class Population(PopulationBase):$/;"	kind:class	line:10
 Population	../src/kpop/tests/_test_admixture_calculation.py	/^from kpop import Population$/;"	kind:namespace	line:4
@@ -1426,17 +1427,20 @@ Population	../src/kpop/tests/test_converters.py	/^from kpop import Population$/;
 Population	../src/kpop/tests/test_population.py	/^from kpop import Population, Individual$/;"	kind:namespace	line:5
 PopulationBase	../src/kpop/cli/stats.py	/^from kpop.population.population_base import PopulationBase$/;"	kind:namespace	line:3
 PopulationBase	../src/kpop/external/structure/base.py	/^from kpop.population.population_base import PopulationBase$/;"	kind:namespace	line:6
-PopulationBase	../src/kpop/population/population_base.py	/^class PopulationBase(RenderablePopulationMixin, collections.Sequence):$/;"	kind:class	line:18
+PopulationBase	../src/kpop/population/population_base.py	/^class PopulationBase(RenderableMixin, collections.Sequence):$/;"	kind:class	line:23
 PopulationBase	../src/kpop/population/population_multi.py	/^from kpop.population.population_base import PopulationBase$/;"	kind:namespace	line:8
 PopulationBase	../src/kpop/population/population_single.py	/^from .population_base import PopulationBase$/;"	kind:namespace	line:5
-PopulationsList	../src/kpop/population/attr_populations.py	/^class PopulationsList(collections.MutableSequence):$/;"	kind:class	line:4
-PopulationsList	../src/kpop/population/population_multi.py	/^from kpop.population.attr_populations import PopulationsList$/;"	kind:namespace	line:10
+PopulationBase	../src/kpop/population/projection.py	/^from .population_base import PopulationBase$/;"	kind:namespace	line:6
+PopulationsList	../src/kpop/population/population_multi.py	/^from kpop.population.populations import PopulationsList$/;"	kind:namespace	line:10
+PopulationsList	../src/kpop/population/populations.py	/^class PopulationsList(collections.MutableSequence):$/;"	kind:class	line:4
 Prob	../src/kpop/external/admixture/result.py	/^from kpop.prob import Prob$/;"	kind:namespace	line:4
-Prob	../src/kpop/population/population_base.py	/^from ..prob import Prob$/;"	kind:namespace	line:13
+Prob	../src/kpop/population/population_base.py	/^from ..prob import Prob$/;"	kind:namespace	line:17
 Prob	../src/kpop/population/population_multi.py	/^from kpop.prob import Prob$/;"	kind:namespace	line:11
 Prob	../src/kpop/population/utils.py	/^from kpop.prob import Prob$/;"	kind:namespace	line:5
 Prob	../src/kpop/prob.py	/^class Prob(collections.Mapping):$/;"	kind:class	line:9
 Prob	../src/kpop/tests/test_prob.py	/^from kpop.prob import Prob$/;"	kind:namespace	line:2
+Projection	../src/kpop/population/__init__.py	/^from .projection import Projection$/;"	kind:namespace	line:3
+Projection	../src/kpop/population/projection.py	/^class Projection:$/;"	kind:class	line:9
 ProxyTypes	../.tox/flake8/lib/python3.6/weakref.py	/^ProxyTypes = (ProxyType, CallableProxyType)$/;"	kind:variable	line:28
 ProxyTypes	../.tox/py36/lib/python3.6/weakref.py	/^ProxyTypes = (ProxyType, CallableProxyType)$/;"	kind:variable	line:28
 PseudoExtras	../.tox/flake8/lib/python3.6/tokenize.py	/^PseudoExtras = group(r'\\\\\\r?\\n|\\Z', Comment, Triple)$/;"	kind:variable	line:192
@@ -1497,13 +1501,14 @@ RegexFlag	../.tox/flake8/lib/python3.6/re.py	/^class RegexFlag(enum.IntFlag):$/;
 RegexFlag	../.tox/py36/lib/python3.6/re.py	/^class RegexFlag(enum.IntFlag):$/;"	kind:class	line:142
 RegistryError	../.tox/flake8/lib/python3.6/shutil.py	/^class RegistryError(Exception):$/;"	kind:class	line:71
 RegistryError	../.tox/py36/lib/python3.6/shutil.py	/^class RegistryError(Exception):$/;"	kind:class	line:71
-RenderablePopulationMixin	../src/kpop/population/mixin_population_render.py	/^class RenderablePopulationMixin(abc.ABC):$/;"	kind:class	line:5
-RenderablePopulationMixin	../src/kpop/population/population_base.py	/^from .mixin_population_render import RenderablePopulationMixin$/;"	kind:namespace	line:10
+RenderableMixin	../src/kpop/population/io.py	/^class RenderableMixin(abc.ABC):$/;"	kind:class	line:5
+RenderableMixin	../src/kpop/population/population_base.py	/^from .io import RenderableMixin$/;"	kind:namespace	line:13
 Repr	../.tox/flake8/lib/python3.6/reprlib.py	/^class Repr:$/;"	kind:class	line:39
 Repr	../.tox/py36/lib/python3.6/reprlib.py	/^class Repr:$/;"	kind:class	line:39
 ResourceLoader	../.tox/flake8/lib/python3.6/importlib/abc.py	/^class ResourceLoader(Loader):$/;"	kind:class	line:170
 ResourceLoader	../.tox/py36/lib/python3.6/importlib/abc.py	/^class ResourceLoader(Loader):$/;"	kind:class	line:170
 Result	../old/optimizer.py	/^class Result(namedtuple('result', ['Q', 'F'])):$/;"	kind:class	line:8
+Result	../src/kpop/population/projection.py	/^class Result(np.ndarray):$/;"	kind:class	line:159
 Reversible	../.tox/flake8/lib/python3.6/_collections_abc.py	/^class Reversible(Iterable):$/;"	kind:class	line:293
 Reversible	../.tox/py36/lib/python3.6/_collections_abc.py	/^class Reversible(Iterable):$/;"	kind:class	line:293
 S	../.tox/flake8/lib/python3.6/re.py	/^    S = DOTALL$/;"	kind:variable	line:155
@@ -1694,6 +1699,7 @@ Single3	../.tox/flake8/lib/python3.6/tokenize.py	/^Single3 = r"[^'\\\\]*(?:(?:\\
 Single3	../.tox/py36/lib/python3.6/tokenize.py	/^Single3 = r"[^'\\\\]*(?:(?:\\\\.|'(?!''))[^'\\\\]*)*'''"$/;"	kind:variable	line:164
 Sized	../.tox/flake8/lib/python3.6/_collections_abc.py	/^class Sized(metaclass=ABCMeta):$/;"	kind:class	line:359
 Sized	../.tox/py36/lib/python3.6/_collections_abc.py	/^class Sized(metaclass=ABCMeta):$/;"	kind:class	line:359
+SklearnResult	../src/kpop/population/projection.py	/^class SklearnResult(Result):$/;"	kind:class	line:165
 SourceFileLoader	../.tox/flake8/lib/python3.6/importlib/_bootstrap_external.py	/^class SourceFileLoader(FileLoader, SourceLoader):$/;"	kind:class	line:836
 SourceFileLoader	../.tox/flake8/lib/python3.6/importlib/machinery.py	/^from ._bootstrap_external import SourceFileLoader$/;"	kind:namespace	line:14
 SourceFileLoader	../.tox/py36/lib/python3.6/importlib/_bootstrap_external.py	/^class SourceFileLoader(FileLoader, SourceLoader):$/;"	kind:class	line:836
@@ -2225,7 +2231,7 @@ String	../.tox/flake8/lib/python3.6/tokenize.py	/^String = group(StringPrefix + 
 String	../.tox/py36/lib/python3.6/tokenize.py	/^String = group(StringPrefix + r"'[^\\n'\\\\]*(?:\\\\.[^\\n'\\\\]*)*'",$/;"	kind:variable	line:169
 StringPrefix	../.tox/flake8/lib/python3.6/tokenize.py	/^StringPrefix = group(*_all_string_prefixes())$/;"	kind:variable	line:157
 StringPrefix	../.tox/py36/lib/python3.6/tokenize.py	/^StringPrefix = group(*_all_string_prefixes())$/;"	kind:variable	line:157
-StructureParser	../src/kpop/external/structure/parser.py	/^class StructureParser:$/;"	kind:class	line:21
+StructureParser	../src/kpop/external/structure/parser.py	/^class StructureParser:$/;"	kind:class	line:23
 StructureResult	../src/kpop/external/structure/base.py	/^from .result import StructureResult$/;"	kind:namespace	line:7
 StructureResult	../src/kpop/external/structure/result.py	/^class StructureResult:$/;"	kind:class	line:6
 SubPattern	../.tox/flake8/lib/python3.6/sre_parse.py	/^class SubPattern:$/;"	kind:class	line:109
@@ -2267,6 +2273,8 @@ TestBiallelicFst	../src/kpop/tests/test_statistics.py	/^class TestBiallelicFst:$
 TestCsvWriter	../src/kpop/tests/test_converters.py	/^class TestCsvWriter:$/;"	kind:class	line:66
 TestProperties	../src/kpop/tests/test_population.py	/^class TestProperties:$/;"	kind:class	line:11
 TestRender	../src/kpop/tests/test_population.py	/^class TestRender:$/;"	kind:class	line:49
+TestStructureParser	../src/kpop/tests/test_structure.py	/^class TestStructureParser:$/;"	kind:class	line:24
+TestStructureProgram	../src/kpop/tests/test_structure.py	/^class TestStructureProgram:$/;"	kind:class	line:14
 TextIOBase	../.tox/flake8/lib/python3.6/io.py	/^class TextIOBase(_io._TextIOBase, IOBase):$/;"	kind:class	line:81
 TextIOBase	../.tox/py36/lib/python3.6/io.py	/^class TextIOBase(_io._TextIOBase, IOBase):$/;"	kind:class	line:81
 TextIOWrapper	../.tox/flake8/lib/python3.6/tokenize.py	/^from io import TextIOWrapper$/;"	kind:namespace	line:30
@@ -2381,6 +2389,8 @@ XGLTYPE	../.tox/flake8/lib/python3.6/tarfile.py	/^XGLTYPE = b"g"                
 XGLTYPE	../.tox/py36/lib/python3.6/tarfile.py	/^XGLTYPE = b"g"                  # POSIX.1-2001 global header$/;"	kind:variable	line:104
 XHDTYPE	../.tox/flake8/lib/python3.6/tarfile.py	/^XHDTYPE = b"x"                  # POSIX.1-2001 extended header$/;"	kind:variable	line:103
 XHDTYPE	../.tox/py36/lib/python3.6/tarfile.py	/^XHDTYPE = b"x"                  # POSIX.1-2001 extended header$/;"	kind:variable	line:103
+_	../src/kpop/individual.py	/^from sidekick import _$/;"	kind:namespace	line:5
+_	../src/kpop/population/population_base.py	/^from sidekick import _, F$/;"	kind:namespace	line:10
 _85encode	../.tox/flake8/lib/python3.6/base64.py	/^def _85encode(b, chars, chars2, pad=False, foldnuls=False, foldspaces=False):$/;"	kind:function	line:286
 _85encode	../.tox/py36/lib/python3.6/base64.py	/^def _85encode(b, chars, chars2, pad=False, foldnuls=False, foldspaces=False):$/;"	kind:function	line:286
 _A85END	../.tox/flake8/lib/python3.6/base64.py	/^_A85END = b"~>"$/;"	kind:variable	line:284
@@ -2783,8 +2793,8 @@ __delitem__	../.tox/py36/lib/python3.6/os.py	/^    def __delitem__(self, key):$/
 __delitem__	../.tox/py36/lib/python3.6/sre_parse.py	/^    def __delitem__(self, index):$/;"	kind:member	line:161
 __delitem__	../.tox/py36/lib/python3.6/weakref.py	/^    def __delitem__(self, key):$/;"	kind:member	line:143
 __delitem__	../.tox/py36/lib/python3.6/weakref.py	/^    def __delitem__(self, key):$/;"	kind:member	line:389
-__delitem__	../src/kpop/population/attr_populations.py	/^    def __delitem__(self, idx):$/;"	kind:member	line:80
-__delitem__	../src/kpop/population/attr_populations.py	/^    def __delitem__(self, index):$/;"	kind:member	line:20
+__delitem__	../src/kpop/population/populations.py	/^    def __delitem__(self, idx):$/;"	kind:member	line:80
+__delitem__	../src/kpop/population/populations.py	/^    def __delitem__(self, index):$/;"	kind:member	line:20
 __dir__	../.tox/flake8/lib/python3.6/enum.py	/^    def __dir__(self):$/;"	kind:member	line:306
 __dir__	../.tox/flake8/lib/python3.6/enum.py	/^    def __dir__(self):$/;"	kind:member	line:555
 __dir__	../.tox/py36/lib/python3.6/enum.py	/^    def __dir__(self):$/;"	kind:member	line:306
@@ -2857,8 +2867,8 @@ __eq__	../.tox/py36/lib/python3.6/importlib/_bootstrap_external.py	/^    def __e
 __eq__	../.tox/py36/lib/python3.6/importlib/_bootstrap_external.py	/^    def __eq__(self, other):$/;"	kind:member	line:912
 __eq__	../.tox/py36/lib/python3.6/operator.py	/^__eq__ = eq$/;"	kind:variable	line:422
 __eq__	../.tox/py36/lib/python3.6/weakref.py	/^    def __eq__(self, other):$/;"	kind:member	line:73
-__eq__	../src/kpop/population/attr_populations.py	/^    def __eq__(self, other):$/;"	kind:member	line:31
-__eq__	../src/kpop/population/population_base.py	/^    def __eq__(self, other):$/;"	kind:member	line:198
+__eq__	../src/kpop/population/population_base.py	/^    def __eq__(self, other):$/;"	kind:member	line:173
+__eq__	../src/kpop/population/populations.py	/^    def __eq__(self, other):$/;"	kind:member	line:31
 __eq__	../src/kpop/prob.py	/^    def __eq__(self, other):$/;"	kind:member	line:68
 __exit__	../.tox/flake8/lib/python3.6/_dummy_thread.py	/^    def __exit__(self, typ, val, tb):$/;"	kind:member	line:128
 __exit__	../.tox/flake8/lib/python3.6/_weakrefset.py	/^    def __exit__(self, e, t, b):$/;"	kind:member	line:26
@@ -2918,9 +2928,6 @@ __get__	../.tox/flake8/lib/python3.6/functools.py	/^    def __get__(self, obj, c
 __get__	../.tox/flake8/lib/python3.6/types.py	/^    def __get__(self, instance, ownerclass=None):$/;"	kind:member	line:135
 __get__	../.tox/py36/lib/python3.6/functools.py	/^    def __get__(self, obj, cls):$/;"	kind:member	line:375
 __get__	../.tox/py36/lib/python3.6/types.py	/^    def __get__(self, instance, ownerclass=None):$/;"	kind:member	line:135
-__get__	../src/kpop/population/attr.py	/^    def __get__(self, instance, cls=None):$/;"	kind:member	line:6
-__get__	../src/kpop/population/population_base.py	/^        def __get__(self, obj, cls=None):$/;"	kind:member	line:126
-__get__	../src/kpop/population/population_base.py	/^        def __get__(self, obj, cls=None):$/;"	kind:member	line:134
 __get_builtin_constructor	../.tox/flake8/lib/python3.6/hashlib.py	/^def __get_builtin_constructor(name):$/;"	kind:function	line:73
 __get_builtin_constructor	../.tox/py36/lib/python3.6/hashlib.py	/^def __get_builtin_constructor(name):$/;"	kind:function	line:73
 __get_hash	../.tox/flake8/lib/python3.6/hashlib.py	/^    __get_hash = __get_builtin_constructor$/;"	kind:variable	line:166
@@ -2967,11 +2974,11 @@ __getitem__	../.tox/py36/lib/python3.6/os.py	/^    def __getitem__(self, key):$/
 __getitem__	../.tox/py36/lib/python3.6/sre_parse.py	/^    def __getitem__(self, index):$/;"	kind:member	line:163
 __getitem__	../.tox/py36/lib/python3.6/weakref.py	/^    def __getitem__(self, key):$/;"	kind:member	line:134
 __getitem__	../.tox/py36/lib/python3.6/weakref.py	/^    def __getitem__(self, key):$/;"	kind:member	line:393
-__getitem__	../src/kpop/individual.py	/^    def __getitem__(self, idx):$/;"	kind:member	line:157
+__getitem__	../src/kpop/individual.py	/^    def __getitem__(self, idx):$/;"	kind:member	line:137
 __getitem__	../src/kpop/loci_data.py	/^    def __getitem__(self, index):$/;"	kind:member	line:105
-__getitem__	../src/kpop/population/attr_populations.py	/^    def __getitem__(self, index):$/;"	kind:member	line:24
 __getitem__	../src/kpop/population/population_multi.py	/^    def __getitem__(self, idx):$/;"	kind:member	line:56
 __getitem__	../src/kpop/population/population_single.py	/^    def __getitem__(self, idx):$/;"	kind:member	line:67
+__getitem__	../src/kpop/population/populations.py	/^    def __getitem__(self, index):$/;"	kind:member	line:24
 __getitem__	../src/kpop/prob.py	/^    def __getitem__(self, key):$/;"	kind:member	line:56
 __getnewargs__	../.tox/flake8/lib/python3.6/collections/__init__.py	/^    def __getnewargs__(self):$/;"	kind:member	line:1117
 __getnewargs__	../.tox/py36/lib/python3.6/collections/__init__.py	/^    def __getnewargs__(self):$/;"	kind:member	line:1117
@@ -3232,17 +3239,20 @@ __init__	../old/lagrangean_test.py	/^    def __init__(self, data, k, freqs=None,
 __init__	../old/optimizer.py	/^    def __init__(self, *args, initial=0.0, final=0.0):$/;"	kind:member	line:13
 __init__	../old/tracker.py	/^    def __init__(self):$/;"	kind:member	line:12
 __init__	../src/kpop/external/admixture/result.py	/^    def __init__(self, out, freqs, q, ploidy):$/;"	kind:member	line:36
-__init__	../src/kpop/external/structure/parser.py	/^    def __init__(self, lines):$/;"	kind:member	line:28
+__init__	../src/kpop/external/structure/parser.py	/^    def __init__(self, lines):$/;"	kind:member	line:30
 __init__	../src/kpop/external/structure/result.py	/^    def __init__(self, body, job_dir=None):$/;"	kind:member	line:57
-__init__	../src/kpop/individual.py	/^    def __init__(self, data, copy=True, label=None, population=None,$/;"	kind:member	line:113
+__init__	../src/kpop/individual.py	/^    def __init__(self, data, copy=True, label=None, population=None,$/;"	kind:member	line:92
 __init__	../src/kpop/io/csv_writer.py	/^    def __init__(self, name=None, align=None, decimal_places=None):$/;"	kind:member	line:101
 __init__	../src/kpop/loci_data.py	/^    def __init__(self, name, num_alleles=2, chromosome=None, position=None,$/;"	kind:member	line:13
 __init__	../src/kpop/loci_data.py	/^    def __init__(self, names, num_alleles=None, chromosomes=None,$/;"	kind:member	line:81
-__init__	../src/kpop/population/attr_plot.py	/^    def __init__(self, population):$/;"	kind:member	line:17
-__init__	../src/kpop/population/attr_populations.py	/^    def __init__(self, data=()):$/;"	kind:member	line:9
-__init__	../src/kpop/population/population_base.py	/^    def __init__(self, freqs=None, allele_names=None, label=None, parent=None,$/;"	kind:member	line:160
+__init__	../src/kpop/population/io.py	/^    def __init__(self, pop):$/;"	kind:member	line:106
+__init__	../src/kpop/population/plot.py	/^    def __init__(self, population):$/;"	kind:member	line:17
+__init__	../src/kpop/population/population_base.py	/^    def __init__(self, freqs=None, allele_names=None, label=None, parent=None,$/;"	kind:member	line:135
 __init__	../src/kpop/population/population_multi.py	/^    def __init__(self, populations=None, freqs=None, **kwargs):$/;"	kind:member	line:43
 __init__	../src/kpop/population/population_single.py	/^    def __init__(self, data=(), copy=False, **kwargs):$/;"	kind:member	line:51
+__init__	../src/kpop/population/populations.py	/^    def __init__(self, data=()):$/;"	kind:member	line:9
+__init__	../src/kpop/population/projection.py	/^    def __init__(self, data, method, **kwargs):$/;"	kind:member	line:170
+__init__	../src/kpop/population/projection.py	/^    def __init__(self, population):$/;"	kind:member	line:16
 __init__	../src/kpop/prob.py	/^    def __init__(self, data, normalize=True, support=None):$/;"	kind:member	line:42
 __init__.py	../.tox/flake8/lib/python3.6/collections/__init__.py	1;"	kind:file	line:1
 __init__.py	../.tox/flake8/lib/python3.6/distutils/__init__.py	1;"	kind:file	line:1
@@ -3355,9 +3365,9 @@ __iter__	../.tox/py36/lib/python3.6/tempfile.py	/^    def __iter__(self):$/;"	ki
 __iter__	../.tox/py36/lib/python3.6/types.py	/^    def __iter__(self):$/;"	kind:member	line:205
 __iter__	../.tox/py36/lib/python3.6/weakref.py	/^    __iter__ = keys$/;"	kind:variable	line:225
 __iter__	../.tox/py36/lib/python3.6/weakref.py	/^    __iter__ = keys$/;"	kind:variable	line:452
-__iter__	../src/kpop/individual.py	/^    def __iter__(self):$/;"	kind:member	line:160
+__iter__	../src/kpop/individual.py	/^    def __iter__(self):$/;"	kind:member	line:140
 __iter__	../src/kpop/io/csv_writer.py	/^    def __iter__(self):$/;"	kind:member	line:107
-__iter__	../src/kpop/population/mixin_population_render.py	/^    def __iter__(self):$/;"	kind:member	line:19
+__iter__	../src/kpop/population/io.py	/^    def __iter__(self):$/;"	kind:member	line:19
 __iter__	../src/kpop/population/population_multi.py	/^    def __iter__(self):$/;"	kind:member	line:67
 __iter__	../src/kpop/population/population_single.py	/^    def __iter__(self):$/;"	kind:member	line:70
 __iter__	../src/kpop/prob.py	/^    def __iter__(self):$/;"	kind:member	line:62
@@ -3407,12 +3417,12 @@ __len__	../.tox/py36/lib/python3.6/os.py	/^    def __len__(self):$/;"	kind:membe
 __len__	../.tox/py36/lib/python3.6/sre_parse.py	/^    def __len__(self):$/;"	kind:member	line:159
 __len__	../.tox/py36/lib/python3.6/weakref.py	/^    def __len__(self):$/;"	kind:member	line:148
 __len__	../.tox/py36/lib/python3.6/weakref.py	/^    def __len__(self):$/;"	kind:member	line:396
-__len__	../src/kpop/individual.py	/^    def __len__(self):$/;"	kind:member	line:169
+__len__	../src/kpop/individual.py	/^    def __len__(self):$/;"	kind:member	line:149
 __len__	../src/kpop/loci_data.py	/^    def __len__(self):$/;"	kind:member	line:111
-__len__	../src/kpop/population/attr_populations.py	/^    def __len__(self):$/;"	kind:member	line:12
-__len__	../src/kpop/population/mixin_population_render.py	/^    def __len__(self):$/;"	kind:member	line:15
+__len__	../src/kpop/population/io.py	/^    def __len__(self):$/;"	kind:member	line:15
 __len__	../src/kpop/population/population_multi.py	/^    def __len__(self):$/;"	kind:member	line:53
 __len__	../src/kpop/population/population_single.py	/^    def __len__(self):$/;"	kind:member	line:64
+__len__	../src/kpop/population/populations.py	/^    def __len__(self):$/;"	kind:member	line:12
 __len__	../src/kpop/prob.py	/^    def __len__(self):$/;"	kind:member	line:59
 __lshift__	../.tox/flake8/lib/python3.6/operator.py	/^__lshift__ = lshift$/;"	kind:variable	line:434
 __lshift__	../.tox/py36/lib/python3.6/operator.py	/^__lshift__ = lshift$/;"	kind:variable	line:434
@@ -3630,10 +3640,10 @@ __repr__	../.tox/py36/lib/python3.6/weakref.py	/^    def __repr__(self):$/;"	kin
 __repr__	../.tox/py36/lib/python3.6/weakref.py	/^    def __repr__(self):$/;"	kind:member	line:403
 __repr__	../.tox/py36/lib/python3.6/weakref.py	/^    def __repr__(self):$/;"	kind:member	line:583
 __repr__	../old/optimizer.py	/^    def __repr__(self):$/;"	kind:member	line:25
-__repr__	../src/kpop/individual.py	/^    def __repr__(self):$/;"	kind:member	line:163
+__repr__	../src/kpop/individual.py	/^    def __repr__(self):$/;"	kind:member	line:143
 __repr__	../src/kpop/loci_data.py	/^    def __repr__(self):$/;"	kind:member	line:60
-__repr__	../src/kpop/population/attr_populations.py	/^    def __repr__(self):$/;"	kind:member	line:28
-__repr__	../src/kpop/population/population_base.py	/^    def __repr__(self):$/;"	kind:member	line:192
+__repr__	../src/kpop/population/population_base.py	/^    def __repr__(self):$/;"	kind:member	line:167
+__repr__	../src/kpop/population/populations.py	/^    def __repr__(self):$/;"	kind:member	line:28
 __repr__	../src/kpop/prob.py	/^    def __repr__(self):$/;"	kind:member	line:65
 __reversed__	../.tox/flake8/lib/python3.6/_collections_abc.py	/^    __reversed__ = None$/;"	kind:variable	line:689
 __reversed__	../.tox/flake8/lib/python3.6/_collections_abc.py	/^    def __reversed__(self):$/;"	kind:member	line:298
@@ -3702,8 +3712,8 @@ __setitem__	../.tox/py36/lib/python3.6/os.py	/^    def __setitem__(self, key, va
 __setitem__	../.tox/py36/lib/python3.6/sre_parse.py	/^    def __setitem__(self, index, code):$/;"	kind:member	line:167
 __setitem__	../.tox/py36/lib/python3.6/weakref.py	/^    def __setitem__(self, key, value):$/;"	kind:member	line:165
 __setitem__	../.tox/py36/lib/python3.6/weakref.py	/^    def __setitem__(self, key, value):$/;"	kind:member	line:406
-__setitem__	../src/kpop/population/attr_populations.py	/^    def __setitem__(self, idx, value):$/;"	kind:member	line:77
-__setitem__	../src/kpop/population/attr_populations.py	/^    def __setitem__(self, index, value):$/;"	kind:member	line:15
+__setitem__	../src/kpop/population/populations.py	/^    def __setitem__(self, idx, value):$/;"	kind:member	line:77
+__setitem__	../src/kpop/population/populations.py	/^    def __setitem__(self, index, value):$/;"	kind:member	line:15
 __setstate__	../.tox/flake8/lib/python3.6/functools.py	/^    def __setstate__(self, state):$/;"	kind:member	line:295
 __setstate__	../.tox/flake8/lib/python3.6/random.py	/^    def __setstate__(self, state):  # for pickle$/;"	kind:member	line:164
 __setstate__	../.tox/py36/lib/python3.6/functools.py	/^    def __setstate__(self, state):$/;"	kind:member	line:295
@@ -3798,8 +3808,8 @@ __str__	../.tox/py36/lib/python3.6/enum.py	/^    def __str__(self):$/;"	kind:mem
 __str__	../.tox/py36/lib/python3.6/sre_constants.py	/^    def __str__(self):$/;"	kind:member	line:49
 __str__	../.tox/py36/lib/python3.6/warnings.py	/^    def __str__(self):$/;"	kind:member	line:405
 __str__	../old/optimizer.py	/^    def __str__(self):$/;"	kind:member	line:18
-__str__	../src/kpop/individual.py	/^    def __str__(self):$/;"	kind:member	line:166
-__str__	../src/kpop/population/population_base.py	/^    def __str__(self):$/;"	kind:member	line:195
+__str__	../src/kpop/individual.py	/^    def __str__(self):$/;"	kind:member	line:146
+__str__	../src/kpop/population/population_base.py	/^    def __str__(self):$/;"	kind:member	line:170
 __str__	../src/kpop/population/population_single.py	/^    def __str__(self):$/;"	kind:member	line:73
 __sub__	../.tox/flake8/lib/python3.6/_collections_abc.py	/^    def __sub__(self, other):$/;"	kind:member	line:496
 __sub__	../.tox/flake8/lib/python3.6/_weakrefset.py	/^    __sub__ = difference$/;"	kind:variable	line:130
@@ -4054,7 +4064,7 @@ _check_name	../.tox/flake8/lib/python3.6/importlib/_bootstrap_external.py	/^def 
 _check_name	../.tox/py36/lib/python3.6/importlib/_bootstrap_external.py	/^def _check_name(method):$/;"	kind:function	line:385
 _check_name_wrapper	../.tox/flake8/lib/python3.6/importlib/_bootstrap_external.py	/^    def _check_name_wrapper(self, name=None, *args, **kwargs):$/;"	kind:function	line:393
 _check_name_wrapper	../.tox/py36/lib/python3.6/importlib/_bootstrap_external.py	/^    def _check_name_wrapper(self, name=None, *args, **kwargs):$/;"	kind:function	line:393
-_check_new_pop	../src/kpop/population/attr_populations.py	/^    def _check_new_pop(self, value):$/;"	kind:member	line:46
+_check_new_pop	../src/kpop/population/populations.py	/^    def _check_new_pop(self, value):$/;"	kind:member	line:46
 _check_unpack_options	../.tox/flake8/lib/python3.6/shutil.py	/^def _check_unpack_options(extensions, function, extra_args):$/;"	kind:function	line:821
 _check_unpack_options	../.tox/py36/lib/python3.6/shutil.py	/^def _check_unpack_options(extensions, function, extra_args):$/;"	kind:function	line:821
 _class_escape	../.tox/flake8/lib/python3.6/sre_parse.py	/^def _class_escape(source, escape):$/;"	kind:function	line:294
@@ -4125,7 +4135,7 @@ _collections_abc.py	../.tox/flake8/lib/python3.6/_collections_abc.py	1;"	kind:fi
 _collections_abc.py	../.tox/py36/lib/python3.6/_collections_abc.py	1;"	kind:file	line:1
 _colors	../src/kpop/plots/admixture.py	/^    sort_coeffs, group_individuals, admixture_coords$/;"	kind:namespace	line:5
 _colors	../src/kpop/plots/utils.py	/^def _colors(colors, n):$/;"	kind:function	line:35
-_colors	../src/kpop/population/attr_plot.py	/^from kpop.plots.utils import group_individuals, _colors$/;"	kind:namespace	line:5
+_colors	../src/kpop/population/plot.py	/^from kpop.plots.utils import group_individuals, _colors$/;"	kind:namespace	line:5
 _commit_removals	../.tox/flake8/lib/python3.6/_weakrefset.py	/^    def _commit_removals(self):$/;"	kind:member	line:52
 _commit_removals	../.tox/flake8/lib/python3.6/weakref.py	/^    def _commit_removals(self):$/;"	kind:member	line:125
 _commit_removals	../.tox/flake8/lib/python3.6/weakref.py	/^    def _commit_removals(self):$/;"	kind:member	line:371
@@ -4152,7 +4162,7 @@ _compose	../src/kpop/population/population_single.py	/^    def _compose(self, po
 _compose_class	../src/kpop/population/population_single.py	/^    _compose_class = None$/;"	kind:variable	line:135
 _compose_mro	../.tox/flake8/lib/python3.6/functools.py	/^def _compose_mro(cls, types):$/;"	kind:function	line:683
 _compose_mro	../.tox/py36/lib/python3.6/functools.py	/^def _compose_mro(cls, types):$/;"	kind:function	line:683
-_conv_index	../src/kpop/population/attr_populations.py	/^    def _conv_index(self, idx):$/;"	kind:member	line:50
+_conv_index	../src/kpop/population/populations.py	/^    def _conv_index(self, idx):$/;"	kind:member	line:50
 _convert	../.tox/flake8/lib/python3.6/enum.py	/^    def _convert(cls, name, module, filter, source=None):$/;"	kind:member	line:603
 _convert	../.tox/flake8/lib/python3.6/functools.py	/^_convert = {$/;"	kind:variable	line:178
 _convert	../.tox/py36/lib/python3.6/enum.py	/^    def _convert(cls, name, module, filter, source=None):$/;"	kind:member	line:603
@@ -4191,6 +4201,7 @@ _createenviron	../.tox/flake8/lib/python3.6/os.py	/^def _createenviron():$/;"	ki
 _createenviron	../.tox/py36/lib/python3.6/os.py	/^def _createenviron():$/;"	kind:function	line:723
 _current	../.tox/flake8/lib/python3.6/hmac.py	/^    def _current(self):$/;"	kind:member	line:108
 _current	../.tox/py36/lib/python3.6/hmac.py	/^    def _current(self):$/;"	kind:member	line:108
+_data	../src/kpop/population/projection.py	/^    _data = property(lambda _: np.array(_.population))$/;"	kind:variable	line:14
 _dbg	../.tox/flake8/lib/python3.6/tarfile.py	/^    def _dbg(self, level, msg):$/;"	kind:member	line:2419
 _dbg	../.tox/py36/lib/python3.6/tarfile.py	/^    def _dbg(self, level, msg):$/;"	kind:member	line:2419
 _decode	../.tox/flake8/lib/python3.6/encodings/cp65001.py	/^_decode = functools.partial(codecs.code_page_decode, 65001)$/;"	kind:variable	line:14
@@ -4330,7 +4341,7 @@ _formatwarnmsg	../.tox/flake8/lib/python3.6/warnings.py	/^def _formatwarnmsg(msg
 _formatwarnmsg	../.tox/py36/lib/python3.6/warnings.py	/^def _formatwarnmsg(msg):$/;"	kind:function	line:106
 _formatwarnmsg_impl	../.tox/flake8/lib/python3.6/warnings.py	/^def _formatwarnmsg_impl(msg):$/;"	kind:function	line:35
 _formatwarnmsg_impl	../.tox/py36/lib/python3.6/warnings.py	/^def _formatwarnmsg_impl(msg):$/;"	kind:function	line:35
-_freqs_fastest	../src/kpop/population/population_base.py	/^    def _freqs_fastest(self):$/;"	kind:member	line:24
+_freqs_fastest	../src/kpop/population/population_base.py	/^    def _freqs_fastest(self):$/;"	kind:member	line:45
 _from_iterable	../.tox/flake8/lib/python3.6/_collections_abc.py	/^    def _from_iterable(cls, it):$/;"	kind:member	line:466
 _from_iterable	../.tox/flake8/lib/python3.6/_collections_abc.py	/^    def _from_iterable(self, it):$/;"	kind:member	line:713
 _from_iterable	../.tox/flake8/lib/python3.6/_collections_abc.py	/^    def _from_iterable(self, it):$/;"	kind:member	line:730
@@ -4478,7 +4489,7 @@ _ignore_patterns	../.tox/flake8/lib/python3.6/shutil.py	/^    def _ignore_patter
 _ignore_patterns	../.tox/py36/lib/python3.6/shutil.py	/^    def _ignore_patterns(path, names):$/;"	kind:function	line:266
 _ignorecase_fixes	../.tox/flake8/lib/python3.6/sre_compile.py	/^_ignorecase_fixes = {i: tuple(j for j in t if i != j)$/;"	kind:variable	line:61
 _ignorecase_fixes	../.tox/py36/lib/python3.6/sre_compile.py	/^_ignorecase_fixes = {i: tuple(j for j in t if i != j)$/;"	kind:variable	line:61
-_immutable	../src/kpop/population/attr_populations.py	/^    def _immutable(self):$/;"	kind:member	line:86
+_immutable	../src/kpop/population/populations.py	/^    def _immutable(self):$/;"	kind:member	line:86
 _imp	../.tox/flake8/lib/python3.6/importlib/__init__.py	/^import _imp  # Just the builtin component, NOT the full Python module$/;"	kind:namespace	line:12
 _imp	../.tox/flake8/lib/python3.6/importlib/machinery.py	/^import _imp$/;"	kind:namespace	line:3
 _imp	../.tox/py36/lib/python3.6/importlib/__init__.py	/^import _imp  # Just the builtin component, NOT the full Python module$/;"	kind:namespace	line:12
@@ -4641,7 +4652,6 @@ _module_repr_from_spec	../.tox/flake8/lib/python3.6/importlib/_bootstrap.py	/^de
 _module_repr_from_spec	../.tox/py36/lib/python3.6/importlib/_bootstrap.py	/^def _module_repr_from_spec(spec):$/;"	kind:function	line:570
 _module_to_load	../.tox/flake8/lib/python3.6/importlib/util.py	/^def _module_to_load(name):$/;"	kind:function	line:107
 _module_to_load	../.tox/py36/lib/python3.6/importlib/util.py	/^def _module_to_load(name):$/;"	kind:function	line:107
-_multi_population_class_decriptor	../src/kpop/population/population_base.py	/^    class _multi_population_class_decriptor:$/;"	kind:class	line:132
 _name_sequence	../.tox/flake8/lib/python3.6/tempfile.py	/^_name_sequence = None$/;"	kind:variable	line:233
 _name_sequence	../.tox/py36/lib/python3.6/tempfile.py	/^_name_sequence = None$/;"	kind:variable	line:233
 _names	../.tox/flake8/lib/python3.6/os.py	/^_names = sys.builtin_module_names$/;"	kind:variable	line:29
@@ -4650,7 +4660,7 @@ _new_module	../.tox/flake8/lib/python3.6/importlib/_bootstrap.py	/^def _new_modu
 _new_module	../.tox/py36/lib/python3.6/importlib/_bootstrap.py	/^def _new_module(name):$/;"	kind:function	line:35
 _next_external_frame	../.tox/flake8/lib/python3.6/warnings.py	/^def _next_external_frame(frame):$/;"	kind:function	line:260
 _next_external_frame	../.tox/py36/lib/python3.6/warnings.py	/^def _next_external_frame(frame):$/;"	kind:function	line:260
-_next_label	../src/kpop/population/population_base.py	/^    def _next_label(self):$/;"	kind:member	line:665
+_next_label	../src/kpop/population/population_base.py	/^    def _next_label(self):$/;"	kind:member	line:558
 _non_norm	../old/lagrange.py	/^_non_norm = lambda: abs(Q.sum(1) - 1).mean()$/;"	kind:variable	line:86
 _nop	../.tox/flake8/lib/python3.6/shutil.py	/^    def _nop(*args, ns=None, follow_symlinks=None):$/;"	kind:function	line:180
 _nop	../.tox/py36/lib/python3.6/shutil.py	/^    def _nop(*args, ns=None, follow_symlinks=None):$/;"	kind:function	line:180
@@ -4723,11 +4733,11 @@ _pickle	../.tox/flake8/lib/python3.6/re.py	/^def _pickle(p):$/;"	kind:function	l
 _pickle	../.tox/py36/lib/python3.6/re.py	/^def _pickle(p):$/;"	kind:function	line:338
 _pop_labels	../src/kpop/plots/admixture.py	/^    sort_coeffs, group_individuals, admixture_coords$/;"	kind:namespace	line:5
 _pop_labels	../src/kpop/plots/utils.py	/^def _pop_labels(pop_labels, n, fmt='pop-%s'):$/;"	kind:function	line:53
-_pop_labels	../src/kpop/population/attr_plot.py	/^    def _pop_labels(self, population=None):$/;"	kind:member	line:23
+_pop_labels	../src/kpop/population/plot.py	/^    def _pop_labels(self, population=None):$/;"	kind:member	line:23
 _pop_sizes	../src/kpop/plots/admixture.py	/^    sort_coeffs, group_individuals, admixture_coords$/;"	kind:namespace	line:5
 _pop_sizes	../src/kpop/plots/utils.py	/^def _pop_sizes(pop_sizes, total):$/;"	kind:function	line:44
-_pop_sizes	../src/kpop/population/attr_plot.py	/^    def _pop_sizes(self):$/;"	kind:member	line:20
-_populations	../src/kpop/population/attr_plot.py	/^    def _populations(self):$/;"	kind:member	line:14
+_pop_sizes	../src/kpop/population/plot.py	/^    def _pop_sizes(self):$/;"	kind:member	line:20
+_populations	../src/kpop/population/plot.py	/^    def _populations(self):$/;"	kind:member	line:14
 _posix_split_name	../.tox/flake8/lib/python3.6/tarfile.py	/^    def _posix_split_name(self, name, encoding, errors):$/;"	kind:member	line:899
 _posix_split_name	../.tox/py36/lib/python3.6/tarfile.py	/^    def _posix_split_name(self, name, encoding, errors):$/;"	kind:member	line:899
 _possibly_sorted	../.tox/flake8/lib/python3.6/reprlib.py	/^def _possibly_sorted(x):$/;"	kind:function	line:154
@@ -4927,7 +4937,7 @@ _strip_padding	../.tox/flake8/lib/python3.6/locale.py	/^def _strip_padding(s, am
 _strip_padding	../.tox/py36/lib/python3.6/locale.py	/^def _strip_padding(s, amount):$/;"	kind:function	line:169
 _strxfrm	../.tox/flake8/lib/python3.6/locale.py	/^def _strxfrm(s):$/;"	kind:function	line:39
 _strxfrm	../.tox/py36/lib/python3.6/locale.py	/^def _strxfrm(s):$/;"	kind:function	line:39
-_sub_population_label	../src/kpop/population/population_base.py	/^def _sub_population_label(label, n_gen):$/;"	kind:function	line:670
+_sub_population_label	../src/kpop/population/population_base.py	/^def _sub_population_label(label, n_gen):$/;"	kind:function	line:563
 _subx	../.tox/flake8/lib/python3.6/re.py	/^def _subx(pattern, template):$/;"	kind:function	line:324
 _subx	../.tox/py36/lib/python3.6/re.py	/^def _subx(pattern, template):$/;"	kind:function	line:324
 _sys	../.tox/flake8/lib/python3.6/collections/__init__.py	/^import sys as _sys$/;"	kind:namespace	line:28
@@ -5025,7 +5035,7 @@ abc	../.tox/py36/lib/python3.6/importlib/abc.py	/^import abc$/;"	kind:namespace	
 abc	../.tox/py36/lib/python3.6/importlib/util.py	/^from . import abc$/;"	kind:namespace	line:2
 abc	../.tox/py36/lib/python3.6/io.py	/^import abc$/;"	kind:namespace	line:52
 abc	../.tox/py36/lib/python3.6/os.py	/^import abc$/;"	kind:namespace	line:25
-abc	../src/kpop/population/mixin_population_render.py	/^import abc$/;"	kind:namespace	line:1
+abc	../src/kpop/population/io.py	/^import abc$/;"	kind:namespace	line:1
 abc.py	../.tox/flake8/lib/python3.6/abc.py	1;"	kind:file	line:1
 abc.py	../.tox/flake8/lib/python3.6/collections/abc.py	1;"	kind:file	line:1
 abc.py	../.tox/flake8/lib/python3.6/importlib/abc.py	1;"	kind:file	line:1
@@ -5103,17 +5113,19 @@ admix	../src/kpop/cli/admix.py	/^def admix(pop, method, verbose=False):$/;"	kind
 admix	../src/kpop/cli/main.py	/^from .admix import admix$/;"	kind:namespace	line:9
 admix.py	../src/kpop/cli/admix.py	1;"	kind:file	line:1
 admixture	../src/kpop/admixture/admixture.py	/^def admixture(x, f_pops, method='bayes'):$/;"	kind:function	line:22
-admixture	../src/kpop/population/attr_plot.py	/^    def admixture(self, parental_labels=None,$/;"	kind:member	line:176
+admixture	../src/kpop/population/plot.py	/^    def admixture(self, parental_labels=None,$/;"	kind:member	line:176
+admixture	../src/kpop/population/population_base.py	/^    admixture = object()$/;"	kind:variable	line:112
 admixture	../src/kpop/population/population_multi.py	/^            def admixture(x, f_pops):$/;"	kind:function	line:198
 admixture	../src/kpop/population/population_multi.py	/^        from kpop.admixture import admixture$/;"	kind:namespace	line:252
 admixture	../src/kpop/population/population_multi.py	/^    def admixture(self, ind, method='maxlike'):$/;"	kind:member	line:143
 admixture	../src/kpop/population/population_multi.py	/^from kpop import admixture$/;"	kind:namespace	line:5
 admixture.py	../src/kpop/admixture/admixture.py	1;"	kind:file	line:1
 admixture.py	../src/kpop/plots/admixture.py	1;"	kind:file	line:1
+admixture.py	../src/kpop/population/admixture.py	1;"	kind:file	line:1
 admixture_bars	../src/kpop/admixture/util.pyx	/^    from kpop.plots import admixture_bars$/;"	kind:namespace	line:113
 admixture_bars	../src/kpop/plots/__init__.py	/^from .admixture import admixture_bars, admixture_scatter$/;"	kind:namespace	line:1
 admixture_bars	../src/kpop/plots/admixture.py	/^def admixture_bars(coeffs, colors=None, legend=True,$/;"	kind:function	line:8
-admixture_bars	../src/kpop/population/attr_plot.py	/^from kpop.plots import admixture_scatter, admixture_bars$/;"	kind:namespace	line:4
+admixture_bars	../src/kpop/population/plot.py	/^from kpop.plots import admixture_scatter, admixture_bars$/;"	kind:namespace	line:4
 admixture_bayes	../src/kpop/admixture/admixture.py	/^def admixture_bayes(x, f_pops):$/;"	kind:function	line:281
 admixture_classify	../src/kpop/population/population_multi.py	/^    def admixture_classify(self, pop, classifier='admixture',$/;"	kind:member	line:165
 admixture_coords	../src/kpop/plots/admixture.py	/^    sort_coeffs, group_individuals, admixture_coords$/;"	kind:namespace	line:5
@@ -5124,8 +5136,8 @@ admixture_maxlike	../src/kpop/admixture/admixture.py	/^def admixture_maxlike(x, 
 admixture_maxlike_1d	../src/kpop/admixture/admixture.py	/^def admixture_maxlike_1d(x, f_pops, method='bound'):$/;"	kind:function	line:180
 admixture_scatter	../src/kpop/plots/__init__.py	/^from .admixture import admixture_bars, admixture_scatter$/;"	kind:namespace	line:1
 admixture_scatter	../src/kpop/plots/admixture.py	/^def admixture_scatter(coeffs, colors=None, legend=True,$/;"	kind:function	line:73
-admixture_scatter	../src/kpop/population/attr_plot.py	/^from kpop.plots import admixture_scatter, admixture_bars$/;"	kind:namespace	line:4
-admixture_vector	../src/kpop/individual.py	/^    def admixture_vector(self):$/;"	kind:member	line:79
+admixture_scatter	../src/kpop/population/plot.py	/^from kpop.plots import admixture_scatter, admixture_bars$/;"	kind:namespace	line:4
+admixture_vector	../src/kpop/individual.py	/^    def admixture_vector(self):$/;"	kind:member	line:62
 advance	../demos/demo.py	/^def advance(pop_list, size):$/;"	kind:function	line:7
 advance	../old/lagrangean_test.py	/^    def advance(self, dt):$/;"	kind:member	line:27
 after	../.tox/flake8/lib/python3.6/weakref.py	/^import collections  # Import after _weakref to avoid circular import.$/;"	kind:namespace	line:24
@@ -5152,9 +5164,9 @@ all_feature_names	../.tox/flake8/lib/python3.6/__future__.py	/^all_feature_names
 all_feature_names	../.tox/py36/lib/python3.6/__future__.py	/^all_feature_names = [$/;"	kind:variable	line:50
 all_suffixes	../.tox/flake8/lib/python3.6/importlib/machinery.py	/^def all_suffixes():$/;"	kind:function	line:19
 all_suffixes	../.tox/py36/lib/python3.6/importlib/machinery.py	/^def all_suffixes():$/;"	kind:function	line:19
-allele_count	../src/kpop/population/population_base.py	/^    def allele_count(self, allele=1):$/;"	kind:member	line:227
-allele_names	../src/kpop/individual.py	/^    def allele_names(self):$/;"	kind:member	line:60
-allele_names	../src/kpop/population/mixin_population_render.py	/^    allele_names = {}$/;"	kind:variable	line:12
+allele_count	../src/kpop/population/population_base.py	/^    def allele_count(self, allele=1):$/;"	kind:member	line:202
+allele_names	../src/kpop/individual.py	/^    def allele_names(self):$/;"	kind:member	line:55
+allele_names	../src/kpop/population/io.py	/^    allele_names = {}$/;"	kind:variable	line:12
 allocate_lock	../.tox/flake8/lib/python3.6/_dummy_thread.py	/^def allocate_lock():$/;"	kind:function	line:74
 allocate_lock	../.tox/py36/lib/python3.6/_dummy_thread.py	/^def allocate_lock():$/;"	kind:function	line:74
 alpha	../src/kpop/external/structure/params.py	/^    alpha=1.0,$/;"	kind:variable	line:105
@@ -5190,7 +5202,9 @@ argparse	../.tox/flake8/lib/python3.6/tokenize.py	/^    import argparse$/;"	kind
 argparse	../.tox/py36/lib/python3.6/tarfile.py	/^    import argparse$/;"	kind:namespace	line:2457
 argparse	../.tox/py36/lib/python3.6/tokenize.py	/^    import argparse$/;"	kind:namespace	line:733
 arlequin.py	../src/kpop/io/arlequin.py	1;"	kind:file	line:1
-as_array	../src/kpop/population/population_base.py	/^    def as_array(self, copy=False):$/;"	kind:member	line:209
+as_array	../src/kpop/population/population_base.py	/^    def as_array(self, copy=False):$/;"	kind:member	line:184
+as_data	../src/kpop/population/projection.py	/^    def as_data(self, method='flatten', norm=None):$/;"	kind:member	line:19
+as_data	../src/kpop/population/projection.py	/^def as_data(population, method):$/;"	kind:function	line:189
 ascii.py	../.tox/flake8/lib/python3.6/encodings/ascii.py	1;"	kind:file	line:1
 ascii.py	../.tox/py36/lib/python3.6/encodings/ascii.py	1;"	kind:file	line:1
 asend	../.tox/flake8/lib/python3.6/_collections_abc.py	/^    async def asend(self, value):$/;"	kind:member	line:203
@@ -5214,14 +5228,8 @@ atof	../.tox/flake8/lib/python3.6/locale.py	/^def atof(string, func=float):$/;"	
 atof	../.tox/py36/lib/python3.6/locale.py	/^def atof(string, func=float):$/;"	kind:function	line:319
 atoi	../.tox/flake8/lib/python3.6/locale.py	/^def atoi(string):$/;"	kind:function	line:323
 atoi	../.tox/py36/lib/python3.6/locale.py	/^def atoi(string):$/;"	kind:function	line:323
-attr.py	../src/kpop/population/attr.py	1;"	kind:file	line:1
-attr_admixture.py	../src/kpop/population/attr_admixture.py	1;"	kind:file	line:1
-attr_cluster.py	../src/kpop/population/attr_cluster.py	1;"	kind:file	line:1
 attr_matches	../.tox/flake8/lib/python3.6/rlcompleter.py	/^    def attr_matches(self, text):$/;"	kind:member	line:130
 attr_matches	../.tox/py36/lib/python3.6/rlcompleter.py	/^    def attr_matches(self, text):$/;"	kind:member	line:130
-attr_plot.py	../src/kpop/population/attr_plot.py	1;"	kind:file	line:1
-attr_populations.py	../src/kpop/population/attr_populations.py	1;"	kind:file	line:1
-attr_reduction.py	../src/kpop/population/attr_reduction.py	1;"	kind:file	line:1
 attrgetter	../.tox/flake8/lib/python3.6/operator.py	/^class attrgetter:$/;"	kind:class	line:226
 attrgetter	../.tox/py36/lib/python3.6/operator.py	/^class attrgetter:$/;"	kind:class	line:226
 author	../docs/conf.py	/^author = 'F\\\\xe1bio Mac\\\\xeado Mendes'$/;"	kind:variable	line:56
@@ -5292,11 +5300,11 @@ betavariate	../.tox/py36/lib/python3.6/random.py	/^    def betavariate(self, alp
 betavariate	../.tox/py36/lib/python3.6/random.py	/^betavariate = _inst.betavariate$/;"	kind:variable	line:759
 beyond	../.tox/flake8/lib/python3.6/importlib/_bootstrap.py	/^        raise ValueError('attempted relative import beyond top-level package')$/;"	kind:namespace	line:847
 beyond	../.tox/py36/lib/python3.6/importlib/_bootstrap.py	/^        raise ValueError('attempted relative import beyond top-level package')$/;"	kind:namespace	line:847
-biallelic_fst	../src/kpop/statistics/__init__.py	/^from .fst import biallelic_pairwise_fst, biallelic_fst/;"	kind:namespace	line:1
+biallelic_fst	../src/kpop/statistics/__init__.py	/^from .fst import biallelic_pairwise_fst, biallelic_fst$/;"	kind:namespace	line:1
 biallelic_fst	../src/kpop/statistics/fst.py	/^def biallelic_fst(freqs1, freqs2, h_freqs1, h_freqs2, sizes):$/;"	kind:function	line:51
 biallelic_fst	../src/kpop/tests/test_statistics.py	/^from kpop.statistics import biallelic_pairwise_fst, biallelic_fst$/;"	kind:namespace	line:2
-biallelic_pairwise_fst	../src/kpop/population/population_base.py	/^from ..statistics import biallelic_pairwise_fst$/;"	kind:namespace	line:14
-biallelic_pairwise_fst	../src/kpop/statistics/__init__.py	/^from .fst import biallelic_pairwise_fst, biallelic_fst/;"	kind:namespace	line:1
+biallelic_pairwise_fst	../src/kpop/population/population_base.py	/^from ..statistics import biallelic_pairwise_fst$/;"	kind:namespace	line:18
+biallelic_pairwise_fst	../src/kpop/statistics/__init__.py	/^from .fst import biallelic_pairwise_fst, biallelic_fst$/;"	kind:namespace	line:1
 biallelic_pairwise_fst	../src/kpop/statistics/fst.py	/^def biallelic_pairwise_fst(freqs: np.ndarray,$/;"	kind:function	line:4
 biallelic_pairwise_fst	../src/kpop/tests/test_statistics.py	/^from kpop.statistics import biallelic_pairwise_fst, biallelic_fst$/;"	kind:namespace	line:2
 big5.py	../.tox/flake8/lib/python3.6/encodings/big5.py	1;"	kind:file	line:1
@@ -5333,8 +5341,8 @@ breaking	../.tox/py36/lib/python3.6/shutil.py	/^    import tarfile  # late impor
 breaking	../.tox/py36/lib/python3.6/shutil.py	/^    import tarfile  # late import for breaking circular dependency$/;"	kind:namespace	line:908
 breaking	../.tox/py36/lib/python3.6/shutil.py	/^    import zipfile  # late import for breaking circular dependency$/;"	kind:namespace	line:666
 breaking	../.tox/py36/lib/python3.6/shutil.py	/^    import zipfile  # late import for breaking circular dependency$/;"	kind:namespace	line:874
-breed	../src/kpop/individual.py	/^    def breed(self, other, label=None, **kwargs):$/;"	kind:member	line:264
-breed	../src/kpop/population/population_base.py	/^    def breed(self, population, size, label='breed', parent=None, **kwargs):$/;"	kind:member	line:408
+breed	../src/kpop/individual.py	/^    def breed(self, other, label=None, **kwargs):$/;"	kind:member	line:266
+breed	../src/kpop/population/population_base.py	/^    def breed(self, population, size, label='breed', parent=None, **kwargs):$/;"	kind:member	line:383
 build_ext	../.tox/flake8/lib/python3.6/distutils/__init__.py	/^    class build_ext(old_build_ext):$/;"	kind:class	line:37
 build_ext	../.tox/flake8/lib64/python3.6/distutils/__init__.py	/^    class build_ext(old_build_ext):$/;"	kind:class	line:37
 build_ext	../.tox/py36/lib/python3.6/distutils/__init__.py	/^    class build_ext(old_build_ext):$/;"	kind:class	line:37
@@ -5489,6 +5497,7 @@ circular	../.tox/py36/lib/python3.6/shutil.py	/^    import tarfile  # late impor
 circular	../.tox/py36/lib/python3.6/shutil.py	/^    import zipfile  # late import for breaking circular dependency$/;"	kind:namespace	line:666
 circular	../.tox/py36/lib/python3.6/shutil.py	/^    import zipfile  # late import for breaking circular dependency$/;"	kind:namespace	line:874
 circular	../.tox/py36/lib/python3.6/weakref.py	/^import collections  # Import after _weakref to avoid circular import.$/;"	kind:namespace	line:24
+classification	../src/kpop/population/population_base.py	/^    classification = object()$/;"	kind:variable	line:111
 classification_errors	../old/core.py	/^def classification_errors(*populations, f_pops=None):$/;"	kind:function	line:261
 classifiers	../setup.py	/^    classifiers=[$/;"	kind:variable	line:51
 classify	../src/kpop/population/population_multi.py	/^    def classify(self, ind, prior=None):$/;"	kind:member	line:104
@@ -5558,10 +5567,12 @@ closegroup	../.tox/py36/lib/python3.6/sre_parse.py	/^    def closegroup(self, gi
 cluster	../src/kpop/cli/cluster.py	/^def cluster(pop, method, verbose=False):$/;"	kind:function	line:10
 cluster	../src/kpop/cli/main.py	/^from .cluster import cluster$/;"	kind:namespace	line:8
 cluster.py	../src/kpop/cli/cluster.py	1;"	kind:file	line:1
+cluster.py	../src/kpop/population/cluster.py	1;"	kind:file	line:1
+clustering	../src/kpop/population/population_base.py	/^    clustering = object()$/;"	kind:variable	line:110
 clusterization_errors	../old/core.py	/^def clusterization_errors(pops):$/;"	kind:function	line:284
 clusterize	../old/kmeans.py	/^def clusterize(pop, K, method='count', n_runs=20, thresh=1e-5, sort=True):$/;"	kind:function	line:736
 cm	../src/kpop/plots/utils.py	/^from matplotlib import cm$/;"	kind:namespace	line:2
-cmdclass	../setup.py	/^    cmdclass={"build_ext": build_ext} if build_ext else {},$/;"	kind:variable	line:94
+cmdclass	../setup.py	/^    cmdclass={"build_ext": build_ext} if build_ext else {},$/;"	kind:variable	line:95
 cmp_to_key	../.tox/flake8/lib/python3.6/functools.py	/^    from _functools import cmp_to_key$/;"	kind:namespace	line:231
 cmp_to_key	../.tox/flake8/lib/python3.6/functools.py	/^def cmp_to_key(mycmp):$/;"	kind:function	line:211
 cmp_to_key	../.tox/py36/lib/python3.6/functools.py	/^    from _functools import cmp_to_key$/;"	kind:namespace	line:231
@@ -6078,8 +6089,8 @@ collections	../.tox/py36/lib/python3.6/weakref.py	/^import collections  # Import
 collections	../src/kpop/individual.py	/^import collections$/;"	kind:namespace	line:1
 collections	../src/kpop/kpop_parser.py	/^import collections$/;"	kind:namespace	line:1
 collections	../src/kpop/loci_data.py	/^import collections$/;"	kind:namespace	line:1
-collections	../src/kpop/population/attr_populations.py	/^import collections$/;"	kind:namespace	line:1
 collections	../src/kpop/population/population_base.py	/^import collections$/;"	kind:namespace	line:1
+collections	../src/kpop/population/populations.py	/^import collections$/;"	kind:namespace	line:1
 collections	../src/kpop/population/utils.py	/^import collections$/;"	kind:namespace	line:1
 collections	../src/kpop/prob.py	/^import collections$/;"	kind:namespace	line:1
 collisions_f	../old/lagrange.py	/^collisions_f = []$/;"	kind:variable	line:120
@@ -6154,7 +6165,9 @@ copy	../.tox/py36/lib/python3.6/shutil.py	/^def copy(src, dst, *, follow_symlink
 copy	../.tox/py36/lib/python3.6/tarfile.py	/^import copy$/;"	kind:namespace	line:49
 copy	../.tox/py36/lib/python3.6/weakref.py	/^    def copy(self):$/;"	kind:member	line:170
 copy	../.tox/py36/lib/python3.6/weakref.py	/^    def copy(self):$/;"	kind:member	line:409
-copy	../src/kpop/individual.py	/^    def copy(self, data=None, *, copy=True, meta=NOT_GIVEN, **kwargs):$/;"	kind:member	line:172
+copy	../src/kpop/individual.py	/^    def copy(self, data=None, *, copy=True, meta=NOT_GIVEN, **kwargs):$/;"	kind:member	line:174
+copy	../src/kpop/population/population_base.py	/^    def copy(self):$/;"	kind:member	line:552
+copy	../src/kpop/population/population_base.py	/^import copy$/;"	kind:namespace	line:2
 copy.py	../.tox/flake8/lib/python3.6/copy.py	1;"	kind:file	line:1
 copy.py	../.tox/py36/lib/python3.6/copy.py	1;"	kind:file	line:1
 copy2	../.tox/flake8/lib/python3.6/shutil.py	/^def copy2(src, dst, *, follow_symlinks=True):$/;"	kind:function	line:245
@@ -6317,9 +6330,9 @@ create_ustar_header	../.tox/py36/lib/python3.6/tarfile.py	/^    def create_ustar
 creator	../old/genetic.py	/^from deap import base, creator, tools$/;"	kind:namespace	line:1
 croullete	../old/kmeans_fast.pyx	/^cpdef int croullete(np.ndarray[double, ndim=1] cfracs):$/;"	kind:function	line:72
 csv	../src/kpop/io/loaders.py	/^import csv$/;"	kind:namespace	line:1
-csv_lines	../src/kpop/io/__init__.py	/^from .csv_writer import csv_lines/;"	kind:namespace	line:3
+csv_lines	../src/kpop/io/__init__.py	/^from .csv_writer import csv_lines$/;"	kind:namespace	line:3
 csv_lines	../src/kpop/io/csv_writer.py	/^def csv_lines(data, sep=',', columns=None, align=None, end=os.linesep,$/;"	kind:function	line:6
-csv_lines	../src/kpop/population/population_base.py	/^        from kpop.io import csv_lines$/;"	kind:namespace	line:330
+csv_lines	../src/kpop/population/population_base.py	/^        from kpop.io import csv_lines$/;"	kind:namespace	line:305
 csv_lines	../src/kpop/tests/test_converters.py	/^from kpop.io import export_arlequin, csv_lines$/;"	kind:namespace	line:6
 csv_writer.py	../src/kpop/io/csv_writer.py	1;"	kind:file	line:1
 curdir	../.tox/flake8/lib/python3.6/ntpath.py	/^curdir = '.'$/;"	kind:variable	line:24
@@ -6341,9 +6354,9 @@ cython	../src/kpop/admixture/physics.pyx	/^cimport cython$/;"	kind:namespace	lin
 cython	../src/kpop/admixture/util.pyx	/^cimport cython$/;"	kind:namespace	line:1
 d	../src/kpop/examples/teste.py	/^d = np.array(p1 + p2)$/;"	kind:variable	line:8
 data	../old/kmeans.py	/^    data = np.concatenate((D1.reshape((N, 2)), D2.reshape((N, 2))))$/;"	kind:variable	line:832
-data	../src/kpop/individual.py	/^    def data(self):$/;"	kind:member	line:56
 data_encoding	../.tox/flake8/lib/python3.6/codecs.py	/^    data_encoding = 'unknown'$/;"	kind:variable	line:769
 data_encoding	../.tox/py36/lib/python3.6/codecs.py	/^    data_encoding = 'unknown'$/;"	kind:variable	line:769
+data_size	../src/kpop/population/population_base.py	/^    data_size = fn_property(_.size * _.num_loci * _.ploidy)$/;"	kind:variable	line:90
 debug	../.tox/flake8/lib/python3.6/tarfile.py	/^    debug = 0                   # May be set from 0 (no msgs) to 3 (all msgs)$/;"	kind:variable	line:1386
 debug	../.tox/py36/lib/python3.6/tarfile.py	/^    debug = 0                   # May be set from 0 (no msgs) to 3 (all msgs)$/;"	kind:variable	line:1386
 decode	../.tox/flake8/lib/python3.6/base64.py	/^def decode(input, output):$/;"	kind:function	line:506
@@ -7127,12 +7140,12 @@ doctest	../old/kmeans.py	/^    import doctest$/;"	kind:namespace	line:788
 doctest	../src/kpop/tests/test_documentation.py	/^import manuel.doctest$/;"	kind:namespace	line:6
 dots	../.tox/flake8/lib/python3.6/encodings/idna.py	/^dots = re.compile("[\\u002E\\u3002\\uFF0E\\uFF61]")$/;"	kind:variable	line:7
 dots	../.tox/py36/lib/python3.6/encodings/idna.py	/^dots = re.compile("[\\u002E\\u3002\\uFF0E\\uFF61]")$/;"	kind:variable	line:7
-drop_markers	../src/kpop/population/population_base.py	/^    def drop_markers(self, indexes, *, _data=None):$/;"	kind:member	line:601
-drop_non_biallelic	../src/kpop/population/population_base.py	/^    def drop_non_biallelic(self, *, _data=None):$/;"	kind:member	line:588
+drop_markers	../src/kpop/population/population_base.py	/^    def drop_markers(self, indexes, *, _data=None):$/;"	kind:member	line:486
+drop_non_biallelic	../src/kpop/population/population_base.py	/^    def drop_non_biallelic(self, *, _data=None):$/;"	kind:member	line:473
 dt	../old/lagrange.py	/^dt = 5e-4$/;"	kind:variable	line:117
 dt1	../src/kpop/examples/mixture.py	/^dt1 = time() - t0$/;"	kind:variable	line:25
 dt2	../src/kpop/examples/mixture.py	/^dt2 = time() - t0$/;"	kind:variable	line:29
-dtype	../src/kpop/individual.py	/^    dtype = delegate_to('_data')$/;"	kind:variable	line:87
+dtype	../src/kpop/individual.py	/^    dtype = delegate_to('data')$/;"	kind:variable	line:45
 dump	../.tox/flake8/lib/python3.6/sre_constants.py	/^    def dump(f, d, prefix):$/;"	kind:function	line:181
 dump	../.tox/flake8/lib/python3.6/sre_parse.py	/^    def dump(self, level=0):$/;"	kind:member	line:117
 dump	../.tox/py36/lib/python3.6/sre_constants.py	/^    def dump(f, d, prefix):$/;"	kind:function	line:181
@@ -7145,7 +7158,7 @@ elements	../.tox/py36/lib/python3.6/collections/__init__.py	/^    def elements(s
 em	../src/kpop/admixture/em.pyx	/^def em(Q, F, G, accelerate=True, inplace=False, epsilon=1e-50):$/;"	kind:function	line:33
 em.pyx	../src/kpop/admixture/em.pyx	1;"	kind:file	line:1
 em_squarem	../src/kpop/admixture/em.pyx	/^def em_squarem(Q, F, G, inplace=False, stepper=em, args=(), kwargs=None, max_step=5):$/;"	kind:function	line:85
-empirical_freqs	../src/kpop/population/population_base.py	/^    def empirical_freqs(self, alpha=0.0, as_matrix=False):$/;"	kind:member	line:236
+empirical_freqs	../src/kpop/population/population_base.py	/^    def empirical_freqs(self, alpha=0.0, as_matrix=False):$/;"	kind:member	line:211
 enable_bounds	../old/lagrange.py	/^enable_bounds = True$/;"	kind:variable	line:133
 enable_normalization	../old/lagrange.py	/^enable_normalization = True$/;"	kind:variable	line:131
 encode	../.tox/flake8/lib/python3.6/base64.py	/^def encode(input, output):$/;"	kind:function	line:491
@@ -7862,6 +7875,7 @@ euc_kr.py	../.tox/py36/lib/python3.6/encodings/euc_kr.py	1;"	kind:file	line:1
 evolution.py	../src/kpop/evolution.py	1;"	kind:file	line:1
 exact_type	../.tox/flake8/lib/python3.6/tokenize.py	/^    def exact_type(self):$/;"	kind:member	line:106
 exact_type	../.tox/py36/lib/python3.6/tokenize.py	/^    def exact_type(self):$/;"	kind:member	line:106
+example	../src/kpop/tests/test_structure.py	/^    def example(self):$/;"	kind:member	line:26
 exceptions.py	../src/kpop/exceptions.py	1;"	kind:file	line:1
 exchange	../demos/demo.py	/^exchange = 1$/;"	kind:variable	line:38
 exchange	../demos/demo.py	/^exchange = 1$/;"	kind:variable	line:91
@@ -7932,7 +7946,7 @@ expovariate	../.tox/flake8/lib/python3.6/random.py	/^    def expovariate(self, l
 expovariate	../.tox/flake8/lib/python3.6/random.py	/^expovariate = _inst.expovariate$/;"	kind:variable	line:755
 expovariate	../.tox/py36/lib/python3.6/random.py	/^    def expovariate(self, lambd):$/;"	kind:member	line:431
 expovariate	../.tox/py36/lib/python3.6/random.py	/^expovariate = _inst.expovariate$/;"	kind:variable	line:755
-ext_modules	../setup.py	/^    ext_modules=[$/;"	kind:variable	line:95
+ext_modules	../setup.py	/^    ext_modules=[$/;"	kind:variable	line:96
 extend	../.tox/flake8/lib/python3.6/_collections_abc.py	/^    def extend(self, values):$/;"	kind:member	line:983
 extend	../.tox/flake8/lib/python3.6/collections/__init__.py	/^    def extend(self, other):$/;"	kind:member	line:1091
 extend	../.tox/py36/lib/python3.6/_collections_abc.py	/^    def extend(self, values):$/;"	kind:member	line:983
@@ -7949,8 +7963,8 @@ extractfile	../.tox/flake8/lib/python3.6/tarfile.py	/^    def extractfile(self, 
 extractfile	../.tox/py36/lib/python3.6/tarfile.py	/^    def extractfile(self, member):$/;"	kind:member	line:2064
 extraparams	../src/kpop/cli/export.py	/^        extraparams$/;"	kind:namespace	line:38
 extraparams	../src/kpop/external/structure/__init__.py	/^from .base import run_structure, mainparams, extraparams, structure_population$/;"	kind:namespace	line:1
-extraparams	../src/kpop/external/structure/base.py	/^def extraparams(pop, **kwargs):$/;"	kind:function	line:236
-extras_require	../setup.py	/^    extras_require={$/;"	kind:variable	line:86
+extraparams	../src/kpop/external/structure/base.py	/^def extraparams(pop, **kwargs):$/;"	kind:function	line:237
+extras_require	../setup.py	/^    extras_require={$/;"	kind:variable	line:87
 extsep	../.tox/flake8/lib/python3.6/ntpath.py	/^extsep = '.'$/;"	kind:variable	line:26
 extsep	../.tox/flake8/lib/python3.6/os.py	/^from os.path import (curdir, pardir, sep, pathsep, defpath, extsep, altsep,$/;"	kind:namespace	line:92
 extsep	../.tox/flake8/lib/python3.6/posixpath.py	/^extsep = '.'$/;"	kind:variable	line:32
@@ -7962,6 +7976,7 @@ f_filled	../src/kpop/tests/test_freqmatrix.py	/^def f_filled():$/;"	kind:functio
 f_flat	../src/kpop/tests/test_freqmatrix.py	/^def f_flat():$/;"	kind:function	line:8
 factory	../.tox/flake8/lib/python3.6/importlib/util.py	/^    def factory(cls, loader):$/;"	kind:member	line:264
 factory	../.tox/py36/lib/python3.6/importlib/util.py	/^    def factory(cls, loader):$/;"	kind:member	line:264
+factory	../src/kpop/io/loaders.py	/^        def factory(x): return Population(x[1], label=x[0])$/;"	kind:function	line:121
 fdopen	../.tox/flake8/lib/python3.6/os.py	/^def fdopen(fd, *args, **kwargs):$/;"	kind:function	line:1011
 fdopen	../.tox/py36/lib/python3.6/os.py	/^def fdopen(fd, *args, **kwargs):$/;"	kind:function	line:1011
 feed_data	../src/kpop/io/csv_writer.py	/^    def feed_data(self, data):$/;"	kind:member	line:136
@@ -7987,7 +8002,7 @@ fileobject	../.tox/py36/lib/python3.6/tarfile.py	/^    fileobject = ExFileObject
 fill	../src/kpop/population/population_single.py	/^    def fill(self, size, seed=None):$/;"	kind:member	line:110
 fill_freqs_vector	../src/kpop/admixture/likelihood.pyx	/^from kpop.utils.frequencies import flatten_frequencies, fill_freqs_vector$/;"	kind:namespace	line:3
 fill_freqs_vector	../src/kpop/evolution.py	/^from kpop.utils import fill_freqs_vector, flatten_frequencies$/;"	kind:namespace	line:6
-fill_freqs_vector	../src/kpop/population/population_base.py	/^from ..utils.frequencies import fill_freqs_vector, freqs_to_matrix$/;"	kind:namespace	line:15
+fill_freqs_vector	../src/kpop/population/population_base.py	/^from ..utils.frequencies import fill_freqs_vector, freqs_to_matrix$/;"	kind:namespace	line:19
 fill_freqs_vector	../src/kpop/tests/test_individual.py	/^from kpop.utils.frequencies import fill_freqs_vector$/;"	kind:namespace	line:6
 fill_freqs_vector	../src/kpop/tests/test_likelihood.py	/^from kpop.utils import fill_freqs_vector$/;"	kind:namespace	line:2
 fill_freqs_vector	../src/kpop/utils/frequencies.py	/^def fill_freqs_vector(freqs):$/;"	kind:function	line:4
@@ -8068,7 +8083,9 @@ fixclasspath	../.tox/flake8/lib/python3.6/site.py	/^def fixclasspath():$/;"	kind
 fixclasspath	../.tox/py36/lib/python3.6/site.py	/^def fixclasspath():$/;"	kind:function	line:646
 fixup	../.tox/flake8/lib/python3.6/sre_compile.py	/^                def fixup(literal, flags=flags):$/;"	kind:function	line:102
 fixup	../.tox/py36/lib/python3.6/sre_compile.py	/^                def fixup(literal, flags=flags):$/;"	kind:function	line:102
-flatten	../src/kpop/individual.py	/^    flatten = delegate_to('_data')$/;"	kind:variable	line:86
+flag	../src/kpop/external/structure/parser.py	/^        def flag(x): return bool(int(x))$/;"	kind:function	line:305
+flag	../src/kpop/external/structure/parser.py	/^        def flag(x): return bool(int(x))$/;"	kind:function	line:371
+flatten	../src/kpop/individual.py	/^    flatten = delegate_to('data')$/;"	kind:variable	line:44
 flatten_frequencies	../src/kpop/admixture/likelihood.pyx	/^from kpop.utils.frequencies import flatten_frequencies, fill_freqs_vector$/;"	kind:namespace	line:3
 flatten_frequencies	../src/kpop/evolution.py	/^from kpop.utils import fill_freqs_vector, flatten_frequencies$/;"	kind:namespace	line:6
 flatten_frequencies	../src/kpop/utils/frequencies.py	/^def flatten_frequencies(freqs):$/;"	kind:function	line:19
@@ -8079,6 +8096,15 @@ flush	../.tox/flake8/lib/python3.6/tempfile.py	/^    def flush(self):$/;"	kind:m
 flush	../.tox/py36/lib/python3.6/tarfile.py	/^    def flush(self):$/;"	kind:member	line:640
 flush	../.tox/py36/lib/python3.6/tempfile.py	/^    def flush(self):$/;"	kind:member	line:708
 fmt	../src/kpop/io/csv_writer.py	/^    def fmt(self, value):$/;"	kind:member	line:127
+fn	../src/kpop/utils/functional.py	/^from sidekick import fn$/;"	kind:namespace	line:1
+fn_lazy	../src/kpop/individual.py	/^from kpop.utils import fn_lazy, fn_property$/;"	kind:namespace	line:8
+fn_lazy	../src/kpop/population/population_base.py	/^from ..utils.functional import fn_lazy, fn_property$/;"	kind:namespace	line:20
+fn_lazy	../src/kpop/utils/__init__.py	/^from .functional import fn_lazy, fn_property/;"	kind:namespace	line:5
+fn_lazy	../src/kpop/utils/functional.py	/^fn_lazy = lambda x: lazy(fn(x)._)$/;"	kind:variable	line:5
+fn_property	../src/kpop/individual.py	/^from kpop.utils import fn_lazy, fn_property$/;"	kind:namespace	line:8
+fn_property	../src/kpop/population/population_base.py	/^from ..utils.functional import fn_lazy, fn_property$/;"	kind:namespace	line:20
+fn_property	../src/kpop/utils/__init__.py	/^from .functional import fn_lazy, fn_property/;"	kind:namespace	line:5
+fn_property	../src/kpop/utils/functional.py	/^fn_property = lambda x: property(fn(x)._)$/;"	kind:variable	line:4
 fnmatch	../.tox/flake8/lib/python3.6/fnmatch.py	/^def fnmatch(name, pat):$/;"	kind:function	line:19
 fnmatch	../.tox/flake8/lib/python3.6/shutil.py	/^import fnmatch$/;"	kind:namespace	line:10
 fnmatch	../.tox/py36/lib/python3.6/fnmatch.py	/^def fnmatch(name, pat):$/;"	kind:function	line:19
@@ -8127,23 +8153,23 @@ fprime_u	../src/kpop/admixture/admixture.py	/^    def fprime_u(u):$/;"	kind:func
 fpriormean	../src/kpop/external/structure/params.py	/^    fpriormean=0.01,$/;"	kind:variable	line:110
 fpriorsd	../src/kpop/external/structure/params.py	/^    fpriorsd=0.05,$/;"	kind:variable	line:111
 freqs	../src/kpop/external/admixture/result.py	/^    def freqs(self):$/;"	kind:member	line:33
-freqs	../src/kpop/population/attr_plot.py	/^    def freqs(self, merge=False, title='Alelle frequencies',$/;"	kind:member	line:31
-freqs	../src/kpop/population/population_base.py	/^    def freqs(self):$/;"	kind:member	line:34
-freqs	../src/kpop/population/population_base.py	/^    def freqs(self, value):$/;"	kind:member	line:50
+freqs	../src/kpop/population/plot.py	/^    def freqs(self, merge=False, title='Alelle frequencies',$/;"	kind:member	line:31
+freqs	../src/kpop/population/population_base.py	/^    def freqs(self):$/;"	kind:member	line:55
+freqs	../src/kpop/population/population_base.py	/^    def freqs(self, value):$/;"	kind:member	line:71
 freqs_binomial	../src/kpop/utils/frequencies.py	/^def freqs_binomial(population, alpha=0.0, flat=False):$/;"	kind:function	line:30
-freqs_matrix	../src/kpop/population/population_base.py	/^    def freqs_matrix(self):$/;"	kind:member	line:56
+freqs_matrix	../src/kpop/population/population_base.py	/^    freqs_matrix = lazy(lambda _: freqs_to_matrix(_.freqs))$/;"	kind:variable	line:41
 freqs_matrix_pop	../src/kpop/population/population_multi.py	/^    def freqs_matrix_pop(self):$/;"	kind:member	line:26
 freqs_pop	../src/kpop/population/population_multi.py	/^    def freqs_pop(self):$/;"	kind:member	line:30
-freqs_to_matrix	../src/kpop/population/population_base.py	/^from ..utils.frequencies import fill_freqs_vector, freqs_to_matrix$/;"	kind:namespace	line:15
+freqs_to_matrix	../src/kpop/population/population_base.py	/^from ..utils.frequencies import fill_freqs_vector, freqs_to_matrix$/;"	kind:namespace	line:19
 freqs_to_matrix	../src/kpop/utils/frequencies.py	/^def freqs_to_matrix(freqs, num_alleles=None):$/;"	kind:function	line:60
-freqs_vector	../src/kpop/population/population_base.py	/^    def freqs_vector(self):$/;"	kind:member	line:60
+freqs_vector	../src/kpop/population/population_base.py	/^    freqs_vector = lazy(lambda _: np.ascontiguousarray(_.freqs_matrix[:, 0])) $/;"	kind:variable	line:42
 freqs_vector_pop	../src/kpop/population/population_multi.py	/^    def freqs_vector_pop(self):$/;"	kind:member	line:22
 freqscorr	../src/kpop/external/structure/params.py	/^    freqscorr=1,$/;"	kind:variable	line:101
 frequencies.py	../src/kpop/utils/frequencies.py	1;"	kind:file	line:1
 frequency_drift	../src/kpop/evolution.py	/^def frequency_drift(freqs, n_generations, size):$/;"	kind:function	line:27
-frequency_drift	../src/kpop/population/population_base.py	/^from kpop.evolution import frequency_drift$/;"	kind:namespace	line:9
+frequency_drift	../src/kpop/population/population_base.py	/^from ..evolution import frequency_drift$/;"	kind:namespace	line:15
 frequency_drift_1D	../src/kpop/evolution.py	/^def frequency_drift_1D(freqs_vector, n_generations, size):$/;"	kind:function	line:9
-from_freqs	../src/kpop/individual.py	/^    def from_freqs(cls, freqs, ploidy=2, **kwargs):$/;"	kind:member	line:90
+from_freqs	../src/kpop/individual.py	/^    def from_freqs(cls, freqs, ploidy=2, **kwargs):$/;"	kind:member	line:69
 from_spec	../src/kpop/io/csv_writer.py	/^    def from_spec(cls, spec):$/;"	kind:member	line:87
 frombuf	../.tox/flake8/lib/python3.6/tarfile.py	/^    def frombuf(cls, buf, encoding, errors):$/;"	kind:member	line:1022
 frombuf	../.tox/py36/lib/python3.6/tarfile.py	/^    def frombuf(cls, buf, encoding, errors):$/;"	kind:member	line:1022
@@ -8165,7 +8191,7 @@ fspath	../.tox/flake8/lib/python3.6/os.py	/^    fspath = _fspath$/;"	kind:variab
 fspath	../.tox/py36/lib/python3.6/os.py	/^    fspath = _fspath$/;"	kind:variable	line:1052
 fst	../src/kpop/external/admixture/result.py	/^    fst = delegate_to('_parsed')$/;"	kind:variable	line:14
 fst.py	../src/kpop/statistics/fst.py	1;"	kind:file	line:1
-fst_matrix	../src/kpop/population/population_base.py	/^    def fst_matrix(self, sizes=None):$/;"	kind:member	line:273
+fst_matrix	../src/kpop/population/population_base.py	/^    def fst_matrix(self, sizes=None):$/;"	kind:member	line:248
 full	../.tox/flake8/lib/python3.6/importlib/__init__.py	/^import _imp  # Just the builtin component, NOT the full Python module$/;"	kind:namespace	line:12
 full	../.tox/py36/lib/python3.6/importlib/__init__.py	/^import _imp  # Just the builtin component, NOT the full Python module$/;"	kind:namespace	line:12
 full_objective_F	../src/kpop/admixture/objective.pyx	/^def full_objective_F(double[:, :] Q, double[:, :] F, int[:, :] G, epislon=1e-50):$/;"	kind:function	line:570
@@ -8187,6 +8213,7 @@ func_q	../src/kpop/admixture/admixture.py	/^    def func_q(q):$/;"	kind:function
 func_u	../src/kpop/admixture/admixture.py	/^    def func_u(u):$/;"	kind:function	line:203
 func_wrapper	../.tox/flake8/lib/python3.6/tempfile.py	/^            def func_wrapper(*args, **kwargs):$/;"	kind:function	line:482
 func_wrapper	../.tox/py36/lib/python3.6/tempfile.py	/^            def func_wrapper(*args, **kwargs):$/;"	kind:function	line:482
+functional.py	../src/kpop/utils/functional.py	1;"	kind:file	line:1
 functools	../.tox/flake8/lib/python3.6/encodings/cp65001.py	/^import functools$/;"	kind:namespace	line:6
 functools	../.tox/flake8/lib/python3.6/fnmatch.py	/^import functools$/;"	kind:namespace	line:15
 functools	../.tox/flake8/lib/python3.6/importlib/util.py	/^import functools$/;"	kind:namespace	line:14
@@ -8229,7 +8256,7 @@ gc	../.tox/flake8/lib/python3.6/weakref.py	/^                import gc$/;"	kind:
 gc	../.tox/py36/lib/python3.6/weakref.py	/^                import gc$/;"	kind:namespace	line:607
 ge	../.tox/flake8/lib/python3.6/operator.py	/^def ge(a, b):$/;"	kind:function	line:43
 ge	../.tox/py36/lib/python3.6/operator.py	/^def ge(a, b):$/;"	kind:function	line:43
-gen	../src/kpop/population/attr_populations.py	/^        def gen():$/;"	kind:function	line:65
+gen	../src/kpop/population/populations.py	/^        def gen():$/;"	kind:function	line:65
 gene_kmeans	../old/core.py	/^def gene_kmeans(data, k, iter=20, thresh=1e-5):$/;"	kind:function	line:110
 gene_kmeans_worker	../old/core.py	/^def gene_kmeans_worker(data_a0, data_a1, guess, thresh):$/;"	kind:function	line:136
 gene_vq	../old/core.py	/^def gene_vq(data_a0, data_a1, codes):$/;"	kind:function	line:161
@@ -8252,7 +8279,7 @@ genericpath	../.tox/py36/lib/python3.6/posixpath.py	/^import genericpath$/;"	kin
 genericpath.py	../.tox/flake8/lib/python3.6/genericpath.py	1;"	kind:file	line:1
 genericpath.py	../.tox/py36/lib/python3.6/genericpath.py	1;"	kind:file	line:1
 genetic.py	../old/genetic.py	1;"	kind:file	line:1
-genetic_drift	../src/kpop/population/population_base.py	/^    def genetic_drift(self, n_generations, population_size=None,$/;"	kind:member	line:348
+genetic_drift	../src/kpop/population/population_base.py	/^    def genetic_drift(self, n_generations, population_size=None,$/;"	kind:member	line:323
 gensback	../src/kpop/external/structure/params.py	/^    gensback=2,$/;"	kind:variable	line:122
 get	../.tox/flake8/lib/python3.6/_collections_abc.py	/^    def get(self, key, default=None):$/;"	kind:member	line:657
 get	../.tox/flake8/lib/python3.6/collections/__init__.py	/^    def get(self, key, default=None):$/;"	kind:member	line:887
@@ -8727,9 +8754,10 @@ group	../.tox/flake8/lib/python3.6/tokenize.py	/^def group(*choices): return '('
 group	../.tox/py36/lib/python3.6/tokenize.py	/^def group(*choices): return '(' + '|'.join(choices) + ')'$/;"	kind:function	line:112
 group_individuals	../src/kpop/plots/admixture.py	/^    sort_coeffs, group_individuals, admixture_coords$/;"	kind:namespace	line:5
 group_individuals	../src/kpop/plots/utils.py	/^def group_individuals(data, chunk_sizes=None):$/;"	kind:function	line:62
-group_individuals	../src/kpop/population/attr_plot.py	/^from kpop.plots.utils import group_individuals, _colors$/;"	kind:namespace	line:5
+group_individuals	../src/kpop/population/plot.py	/^from kpop.plots.utils import group_individuals, _colors$/;"	kind:namespace	line:5
 groups	../.tox/flake8/lib/python3.6/sre_parse.py	/^    def groups(self):$/;"	kind:member	line:82
 groups	../.tox/py36/lib/python3.6/sre_parse.py	/^    def groups(self):$/;"	kind:member	line:82
+groups	../src/kpop/external/structure/parser.py	/^        def groups(x): return regex.match(x).groups()$/;"	kind:function	line:248
 grp	../.tox/flake8/lib/python3.6/tarfile.py	/^    grp = None$/;"	kind:variable	line:59
 grp	../.tox/flake8/lib/python3.6/tarfile.py	/^    import grp$/;"	kind:namespace	line:57
 grp	../.tox/py36/lib/python3.6/tarfile.py	/^    grp = None$/;"	kind:variable	line:59
@@ -8741,15 +8769,15 @@ gzip	../.tox/flake8/lib/python3.6/tarfile.py	/^            import gzip$/;"	kind:
 gzip	../.tox/py36/lib/python3.6/tarfile.py	/^            import gzip$/;"	kind:namespace	line:1627
 gzopen	../.tox/flake8/lib/python3.6/tarfile.py	/^    def gzopen(cls, name, mode="r", fileobj=None, compresslevel=9, **kwargs):$/;"	kind:member	line:1619
 gzopen	../.tox/py36/lib/python3.6/tarfile.py	/^    def gzopen(cls, name, mode="r", fileobj=None, compresslevel=9, **kwargs):$/;"	kind:member	line:1619
-haplotypes	../src/kpop/individual.py	/^    def haplotypes(self):$/;"	kind:member	line:295
+haplotypes	../src/kpop/individual.py	/^    def haplotypes(self):$/;"	kind:member	line:152
 has_deadlock	../.tox/flake8/lib/python3.6/importlib/_bootstrap.py	/^    def has_deadlock(self):$/;"	kind:member	line:65
 has_deadlock	../.tox/py36/lib/python3.6/importlib/_bootstrap.py	/^    def has_deadlock(self):$/;"	kind:member	line:65
 has_location	../.tox/flake8/lib/python3.6/importlib/_bootstrap.py	/^    def has_location(self):$/;"	kind:member	line:411
 has_location	../.tox/flake8/lib/python3.6/importlib/_bootstrap.py	/^    def has_location(self, value):$/;"	kind:member	line:415
 has_location	../.tox/py36/lib/python3.6/importlib/_bootstrap.py	/^    def has_location(self):$/;"	kind:member	line:411
 has_location	../.tox/py36/lib/python3.6/importlib/_bootstrap.py	/^    def has_location(self, value):$/;"	kind:member	line:415
-has_missing	../src/kpop/individual.py	/^    def has_missing(self):$/;"	kind:member	line:67
-has_missing	../src/kpop/population/population_base.py	/^    def has_missing(self):$/;"	kind:member	line:104
+has_missing	../src/kpop/individual.py	/^    has_missing = fn_property(lambda _: 0 in _.data)$/;"	kind:variable	line:41
+has_missing	../src/kpop/population/population_base.py	/^    has_missing = property(lambda _: any(ind.has_missing for ind in _))$/;"	kind:variable	line:101
 hashlib.py	../.tox/flake8/lib/python3.6/hashlib.py	1;"	kind:file	line:1
 hashlib.py	../.tox/py36/lib/python3.6/hashlib.py	1;"	kind:file	line:1
 heapify	../.tox/flake8/lib/python3.6/heapq.py	/^def heapify(x):$/;"	kind:function	line:168
@@ -8796,7 +8824,7 @@ hex_encode	../.tox/flake8/lib/python3.6/encodings/hex_codec.py	/^def hex_encode(
 hex_encode	../.tox/py36/lib/python3.6/encodings/hex_codec.py	/^def hex_encode(input, errors='strict'):$/;"	kind:function	line:13
 hexdigest	../.tox/flake8/lib/python3.6/hmac.py	/^    def hexdigest(self):$/;"	kind:member	line:127
 hexdigest	../.tox/py36/lib/python3.6/hmac.py	/^    def hexdigest(self):$/;"	kind:member	line:127
-hfreqs_vector	../src/kpop/population/population_base.py	/^    def hfreqs_vector(self):$/;"	kind:member	line:67
+hfreqs_vector	../src/kpop/population/population_base.py	/^    def hfreqs_vector(self):$/;"	kind:member	line:77
 hint	../src/kpop/cli/import_.py	/^def hint(msg):$/;"	kind:function	line:88
 hmac.py	../.tox/flake8/lib/python3.6/hmac.py	1;"	kind:file	line:1
 hmac.py	../.tox/py36/lib/python3.6/hmac.py	1;"	kind:file	line:1
@@ -8859,11 +8887,11 @@ importlib	../.tox/py36/lib/python3.6/imp.py	/^        import importlib.machinery
 importlib	../.tox/py36/lib/python3.6/imp.py	/^import importlib$/;"	kind:namespace	line:24
 imul	../.tox/flake8/lib/python3.6/operator.py	/^def imul(a, b):$/;"	kind:function	line:370
 imul	../.tox/py36/lib/python3.6/operator.py	/^def imul(a, b):$/;"	kind:function	line:370
-include_dirs	../setup.py	/^                  include_dirs=INCLUDES,$/;"	kind:variable	line:104
-include_dirs	../setup.py	/^                  include_dirs=INCLUDES,$/;"	kind:variable	line:109
-include_dirs	../setup.py	/^                  include_dirs=INCLUDES,$/;"	kind:variable	line:114
-include_dirs	../setup.py	/^                  include_dirs=INCLUDES,$/;"	kind:variable	line:119
-include_dirs	../setup.py	/^                  include_dirs=INCLUDES,$/;"	kind:variable	line:99
+include_dirs	../setup.py	/^                  include_dirs=INCLUDES,$/;"	kind:variable	line:100
+include_dirs	../setup.py	/^                  include_dirs=INCLUDES,$/;"	kind:variable	line:105
+include_dirs	../setup.py	/^                  include_dirs=INCLUDES,$/;"	kind:variable	line:110
+include_dirs	../setup.py	/^                  include_dirs=INCLUDES,$/;"	kind:variable	line:115
+include_dirs	../setup.py	/^                  include_dirs=INCLUDES,$/;"	kind:variable	line:120
 inconsistent_length_error	../src/kpop/io/loaders.py	/^def inconsistent_length_error(data, row_map, col_map):$/;"	kind:function	line:227
 ind	../src/kpop/examples/demo.py	/^ind = popB.random_individual().breed(popC.random_individual())$/;"	kind:variable	line:9
 ind	../src/kpop/tests/test_individual.py	/^def ind():$/;"	kind:function	line:10
@@ -8900,8 +8928,8 @@ insert	../.tox/flake8/lib/python3.6/sre_parse.py	/^    def insert(self, index, c
 insert	../.tox/py36/lib/python3.6/_collections_abc.py	/^    def insert(self, index, value):$/;"	kind:member	line:961
 insert	../.tox/py36/lib/python3.6/collections/__init__.py	/^    def insert(self, i, item): self.data.insert(i, item)$/;"	kind:member	line:1082
 insert	../.tox/py36/lib/python3.6/sre_parse.py	/^    def insert(self, index, code):$/;"	kind:member	line:169
-insert	../src/kpop/population/attr_populations.py	/^    def insert(self, index, value):$/;"	kind:member	line:41
-insert	../src/kpop/population/attr_populations.py	/^    def insert(self, index, value):$/;"	kind:member	line:83
+insert	../src/kpop/population/populations.py	/^    def insert(self, index, value):$/;"	kind:member	line:41
+insert	../src/kpop/population/populations.py	/^    def insert(self, index, value):$/;"	kind:member	line:83
 insertion_sort	../.tox/flake8/lib/python3.6/encodings/punycode.py	/^def insertion_sort(base, extended, errors):$/;"	kind:function	line:157
 insertion_sort	../.tox/py36/lib/python3.6/encodings/punycode.py	/^def insertion_sort(base, extended, errors):$/;"	kind:function	line:157
 insertion_unsort	../.tox/flake8/lib/python3.6/encodings/punycode.py	/^def insertion_unsort(str, extended):$/;"	kind:function	line:48
@@ -8942,9 +8970,11 @@ io	../.tox/flake8/lib/python3.6/tarfile.py	/^import io$/;"	kind:namespace	line:4
 io	../.tox/py36/lib/python3.6/os.py	/^    import io$/;"	kind:namespace	line:1014
 io	../.tox/py36/lib/python3.6/os.py	/^    import subprocess, io$/;"	kind:namespace	line:973
 io	../.tox/py36/lib/python3.6/tarfile.py	/^import io$/;"	kind:namespace	line:44
+io	../src/kpop/population/population_base.py	/^    io = object()$/;"	kind:variable	line:115
 io	../src/kpop/tests/test_converters.py	/^import io$/;"	kind:namespace	line:1
 io.py	../.tox/flake8/lib/python3.6/io.py	1;"	kind:file	line:1
 io.py	../.tox/py36/lib/python3.6/io.py	1;"	kind:file	line:1
+io.py	../src/kpop/population/io.py	1;"	kind:file	line:1
 ior	../.tox/flake8/lib/python3.6/operator.py	/^def ior(a, b):$/;"	kind:function	line:380
 ior	../.tox/py36/lib/python3.6/operator.py	/^def ior(a, b):$/;"	kind:function	line:380
 ipow	../.tox/flake8/lib/python3.6/operator.py	/^def ipow(a, b):$/;"	kind:function	line:385
@@ -8957,11 +8987,11 @@ is	../.tox/py36/lib/python3.6/distutils/__init__.py	/^import opcode # opcode is 
 is_	../.tox/flake8/lib/python3.6/operator.py	/^def is_(a, b):$/;"	kind:function	line:61
 is_	../.tox/py36/lib/python3.6/operator.py	/^def is_(a, b):$/;"	kind:function	line:61
 is_appveyor	../src/kpop/tests/__init__.py	/^is_appveyor = _os.environ.get('APPVEYOR', 'false') != 'false'$/;"	kind:variable	line:5
-is_biallelic	../src/kpop/individual.py	/^    def is_biallelic(self):$/;"	kind:member	line:52
-is_biallelic	../src/kpop/population/population_base.py	/^    def is_biallelic(self):$/;"	kind:member	line:79
+is_biallelic	../src/kpop/individual.py	/^    is_biallelic = fn_lazy(_.num_alleles == 2)$/;"	kind:variable	line:40
+is_biallelic	../src/kpop/population/population_base.py	/^    is_biallelic = fn_lazy(_.num_alleles == 2)$/;"	kind:variable	line:93
 is_ci	../src/kpop/tests/__init__.py	/^is_ci = is_travis or is_appveyor or _os.environ.get('CI', 'false') != 'false'$/;"	kind:variable	line:6
-is_ci	../src/kpop/tests/test_structure.py	/^from kpop.tests import is_ci$/;"	kind:namespace	line:4
-is_multi_population	../src/kpop/population/population_base.py	/^    is_multi_population = False$/;"	kind:variable	line:140
+is_ci	../src/kpop/tests/test_structure.py	/^from kpop.tests import is_ci$/;"	kind:namespace	line:7
+is_multi_population	../src/kpop/population/population_base.py	/^    is_multi_population = False$/;"	kind:variable	line:97
 is_multi_population	../src/kpop/population/population_multi.py	/^    is_multi_population = True$/;"	kind:variable	line:19
 is_not	../.tox/flake8/lib/python3.6/operator.py	/^def is_not(a, b):$/;"	kind:function	line:65
 is_not	../.tox/py36/lib/python3.6/operator.py	/^def is_not(a, b):$/;"	kind:function	line:65
@@ -9186,7 +9216,7 @@ koi8_t.py	../.tox/flake8/lib/python3.6/encodings/koi8_t.py	1;"	kind:file	line:1
 koi8_t.py	../.tox/py36/lib/python3.6/encodings/koi8_t.py	1;"	kind:file	line:1
 koi8_u.py	../.tox/flake8/lib/python3.6/encodings/koi8_u.py	1;"	kind:file	line:1
 koi8_u.py	../.tox/py36/lib/python3.6/encodings/koi8_u.py	1;"	kind:file	line:1
-kpop	../src/kpop/population/population_base.py	/^import kpop$/;"	kind:namespace	line:8
+kpop	../src/kpop/population/population_base.py	/^import kpop$/;"	kind:namespace	line:12
 kpop	../src/kpop/population/population_multi.py	/^import kpop$/;"	kind:namespace	line:4
 kpop_parser.py	../src/kpop/kpop_parser.py	1;"	kind:file	line:1
 kwlist	../.tox/flake8/lib/python3.6/keyword.py	/^kwlist = [$/;"	kind:variable	line:15
@@ -9194,13 +9224,13 @@ kwlist	../.tox/py36/lib/python3.6/keyword.py	/^kwlist = [$/;"	kind:variable	line
 kz1048.py	../.tox/flake8/lib/python3.6/encodings/kz1048.py	1;"	kind:file	line:1
 kz1048.py	../.tox/py36/lib/python3.6/encodings/kz1048.py	1;"	kind:file	line:1
 label	../src/kpop/external/structure/params.py	/^    label=1,$/;"	kind:variable	line:47
-label_from_parents	../src/kpop/individual.py	/^def label_from_parents(l1, l2):$/;"	kind:function	line:313
+label_from_parents	../src/kpop/individual.py	/^def label_from_parents(l1, l2):$/;"	kind:function	line:298
 label_from_parents	../src/kpop/tests/test_individual.py	/^from kpop.individual import Individual, label_from_parents$/;"	kind:namespace	line:5
 label_items	../old/kmeans.py	/^    def label_items(self, centroids, data=None):$/;"	kind:member	line:271
 label_items	../old/kmeans.py	/^def label_items(data, centroids, labels, distances, extra=None):$/;"	kind:function	line:16
 label_items	../old/kmeans_fast.pyx	/^def label_items(np.ndarray[double, ndim=2] data, $/;"	kind:function	line:85
 label_items_maxlike	../old/kmeans_fast.pyx	/^def label_items_maxlike(np.ndarray[char, ndim=3] data, $/;"	kind:function	line:262
-labels	../src/kpop/population/attr_populations.py	/^    def labels(self, prefix='pop'):$/;"	kind:member	line:60
+labels	../src/kpop/population/populations.py	/^    def labels(self, prefix='pop'):$/;"	kind:member	line:60
 lagrange.py	../old/lagrange.py	1;"	kind:file	line:1
 lagrangean_test.py	../old/lagrangean_test.py	1;"	kind:file	line:1
 language	../docs/conf.py	/^language = None$/;"	kind:variable	line:73
@@ -9218,9 +9248,11 @@ latin_1.py	../.tox/flake8/lib/python3.6/encodings/latin_1.py	1;"	kind:file	line:
 latin_1.py	../.tox/py36/lib/python3.6/encodings/latin_1.py	1;"	kind:file	line:1
 lazy	../src/kpop/external/admixture/result.py	/^from lazyutils import delegate_to, lazy$/;"	kind:namespace	line:1
 lazy	../src/kpop/individual.py	/^from lazyutils import delegate_to, lazy$/;"	kind:namespace	line:4
-lazy	../src/kpop/population/population_base.py	/^from lazyutils import lazy$/;"	kind:namespace	line:6
+lazy	../src/kpop/population/population_base.py	/^from lazyutils import lazy$/;"	kind:namespace	line:9
 lazy	../src/kpop/population/population_multi.py	/^from lazyutils import lazy$/;"	kind:namespace	line:2
 lazy	../src/kpop/population/population_single.py	/^from lazyutils import lazy$/;"	kind:namespace	line:2
+lazy	../src/kpop/population/projection.py	/^from lazyutils import lazy$/;"	kind:namespace	line:3
+lazy	../src/kpop/utils/functional.py	/^from lazyutils import lazy$/;"	kind:namespace	line:2
 lazycache	../.tox/flake8/lib/python3.6/linecache.py	/^def lazycache(filename, module_globals):$/;"	kind:function	line:147
 lazycache	../.tox/py36/lib/python3.6/linecache.py	/^def lazycache(filename, module_globals):$/;"	kind:function	line:147
 le	../.tox/flake8/lib/python3.6/operator.py	/^def le(a, b):$/;"	kind:function	line:31
@@ -9233,11 +9265,11 @@ lexists	../.tox/flake8/lib/python3.6/ntpath.py	/^def lexists(path):$/;"	kind:fun
 lexists	../.tox/flake8/lib/python3.6/posixpath.py	/^def lexists(path):$/;"	kind:function	line:176
 lexists	../.tox/py36/lib/python3.6/ntpath.py	/^def lexists(path):$/;"	kind:function	line:259
 lexists	../.tox/py36/lib/python3.6/posixpath.py	/^def lexists(path):$/;"	kind:function	line:176
-libraries	../setup.py	/^                  libraries=["m"],$/;"	kind:variable	line:103
-libraries	../setup.py	/^                  libraries=["m"],$/;"	kind:variable	line:108
-libraries	../setup.py	/^                  libraries=["m"],$/;"	kind:variable	line:113
-libraries	../setup.py	/^                  libraries=["m"],$/;"	kind:variable	line:118
-libraries	../setup.py	/^                  libraries=["m"],$/;"	kind:variable	line:98
+libraries	../setup.py	/^                  libraries=["m"],$/;"	kind:variable	line:104
+libraries	../setup.py	/^                  libraries=["m"],$/;"	kind:variable	line:109
+libraries	../setup.py	/^                  libraries=["m"],$/;"	kind:variable	line:114
+libraries	../setup.py	/^                  libraries=["m"],$/;"	kind:variable	line:119
+libraries	../setup.py	/^                  libraries=["m"],$/;"	kind:variable	line:99
 like	../src/kpop/admixture/likelihood.pyx	/^def like(x, freqs):$/;"	kind:function	line:95
 likelihood	../src/kpop/population/population_multi.py	/^from kpop.admixture import likelihood$/;"	kind:namespace	line:7
 likelihood.pyx	../src/kpop/admixture/likelihood.pyx	1;"	kind:file	line:1
@@ -9269,7 +9301,7 @@ load	../src/kpop/cli/shell.py	/^from kpop import __version__, load$/;"	kind:name
 load	../src/kpop/cli/util.py	/^from .. import load$/;"	kind:namespace	line:4
 load	../src/kpop/io/__init__.py	/^from .loaders import load, load_csv, load_pickle$/;"	kind:namespace	line:1
 load	../src/kpop/io/loaders.py	/^def load(file):$/;"	kind:function	line:140
-load	../src/kpop/population/population_base.py	/^    def load(cls, file, format='pickle', **kwargs):$/;"	kind:member	line:146
+load	../src/kpop/population/population_base.py	/^    def load(cls, file, format='pickle', **kwargs):$/;"	kind:member	line:121
 load_best_ext	../src/kpop/cli/shell.py	/^def load_best_ext(exts):$/;"	kind:function	line:175
 load_compiled	../.tox/flake8/lib/python3.6/imp.py	/^def load_compiled(name, pathname, file=None):$/;"	kind:function	line:185
 load_compiled	../.tox/py36/lib/python3.6/imp.py	/^def load_compiled(name, pathname, file=None):$/;"	kind:function	line:185
@@ -9425,7 +9457,7 @@ main	../src/kpop/cli/main.py	/^def main():$/;"	kind:function	line:22
 main.py	../src/kpop/cli/main.py	1;"	kind:file	line:1
 mainparams	../src/kpop/cli/export.py	/^        extraparams$/;"	kind:namespace	line:38
 mainparams	../src/kpop/external/structure/__init__.py	/^from .base import run_structure, mainparams, extraparams, structure_population$/;"	kind:namespace	line:1
-mainparams	../src/kpop/external/structure/base.py	/^def mainparams(pop, infile='data.txt', **kwargs):$/;"	kind:function	line:220
+mainparams	../src/kpop/external/structure/base.py	/^def mainparams(pop, infile='data.txt', **kwargs):$/;"	kind:function	line:221
 make_admixture_labels	../src/kpop/external/admixture/result.py	/^    def make_admixture_labels(self, individuals):$/;"	kind:member	line:61
 make_archive	../.tox/flake8/lib/python3.6/shutil.py	/^def make_archive(base_name, format, root_dir=None, base_dir=None, verbose=0,$/;"	kind:function	line:755
 make_archive	../.tox/py36/lib/python3.6/shutil.py	/^def make_archive(base_name, format, root_dir=None, base_dir=None, verbose=0,$/;"	kind:function	line:755
@@ -9456,6 +9488,7 @@ maketrans	../.tox/py36/lib/python3.6/collections/__init__.py	/^    maketrans = s
 makeunknown	../.tox/flake8/lib/python3.6/tarfile.py	/^    def makeunknown(self, tarinfo, targetpath):$/;"	kind:member	line:2170
 makeunknown	../.tox/py36/lib/python3.6/tarfile.py	/^    def makeunknown(self, tarinfo, targetpath):$/;"	kind:member	line:2170
 man_pages	../docs/conf.py	/^man_pages = [$/;"	kind:variable	line:263
+manifold	../src/kpop/population/projection.py	/^from sklearn import manifold$/;"	kind:namespace	line:4
 manuel	../src/kpop/tests/test_documentation.py	/^import manuel.codeblock$/;"	kind:namespace	line:5
 manuel	../src/kpop/tests/test_documentation.py	/^import manuel.doctest$/;"	kind:namespace	line:6
 manuel	../src/kpop/tests/test_documentation.py	/^import manuel.ignore$/;"	kind:namespace	line:4
@@ -9471,7 +9504,7 @@ match	../.tox/flake8/lib/python3.6/re.py	/^def match(pattern, string, flags=0):$
 match	../.tox/flake8/lib/python3.6/sre_parse.py	/^    def match(self, char):$/;"	kind:member	line:248
 match	../.tox/py36/lib/python3.6/re.py	/^def match(pattern, string, flags=0):$/;"	kind:function	line:169
 match	../.tox/py36/lib/python3.6/sre_parse.py	/^    def match(self, char):$/;"	kind:member	line:248
-match	../src/kpop/external/structure/parser.py	/^def match(re, st):$/;"	kind:function	line:16
+match	../src/kpop/external/structure/parser.py	/^def match(re, st):$/;"	kind:function	line:17
 matcher	../src/kpop/external/structure/parser.py	/^def matcher(regex):$/;"	kind:function	line:11
 math	../src/kpop/admixture/admixture.py	/^import math$/;"	kind:namespace	line:1
 matmul	../.tox/flake8/lib/python3.6/operator.py	/^def matmul(a, b):$/;"	kind:function	line:108
@@ -9539,6 +9572,7 @@ mbcs_decode	../.tox/flake8/lib/python3.6/encodings/mbcs.py	/^from codecs import 
 mbcs_decode	../.tox/py36/lib/python3.6/encodings/mbcs.py	/^from codecs import mbcs_encode, mbcs_decode$/;"	kind:namespace	line:12
 mbcs_encode	../.tox/flake8/lib/python3.6/encodings/mbcs.py	/^from codecs import mbcs_encode, mbcs_decode$/;"	kind:namespace	line:12
 mbcs_encode	../.tox/py36/lib/python3.6/encodings/mbcs.py	/^from codecs import mbcs_encode, mbcs_decode$/;"	kind:namespace	line:12
+mds	../src/kpop/population/projection.py	/^    def mds(self, k=2, *, method='count', norm=False, **kwargs):$/;"	kind:member	line:139
 mean_hellinger	../old/core.py	/^def mean_hellinger(f1, f2):$/;"	kind:function	line:312
 mean_stat_distance	../old/core.py	/^def mean_stat_distance(f1, f2):$/;"	kind:function	line:318
 merge	../.tox/flake8/lib/python3.6/heapq.py	/^def merge(*iterables, key=None, reverse=False):$/;"	kind:function	line:314
@@ -9559,11 +9593,10 @@ minimize	../src/kpop/population/population_multi.py	/^            from scipy.opt
 minimize_by_constraint	../old/lagrange.py	/^minimize_by_constraint = False$/;"	kind:variable	line:136
 minimize_by_damping	../old/lagrange.py	/^minimize_by_damping = False$/;"	kind:variable	line:135
 missing	../src/kpop/external/structure/params.py	/^    missing=-9,$/;"	kind:variable	line:41
-missing_ratio	../src/kpop/individual.py	/^    def missing_ratio(self):$/;"	kind:member	line:71
-missing_ratio	../src/kpop/population/population_base.py	/^    def missing_ratio(self):$/;"	kind:member	line:108
-missing_total	../src/kpop/individual.py	/^    def missing_total(self):$/;"	kind:member	line:75
-missing_total	../src/kpop/population/population_base.py	/^    def missing_total(self):$/;"	kind:member	line:113
-mixin_population_render.py	../src/kpop/population/mixin_population_render.py	1;"	kind:file	line:1
+missing_ratio	../src/kpop/individual.py	/^    missing_ratio = fn_property(_.missing_total \/ (_.num_loci * _.ploidy))$/;"	kind:variable	line:43
+missing_ratio	../src/kpop/population/population_base.py	/^    missing_ratio = fn_property(_.missing_total \/ _.data_size)$/;"	kind:variable	line:103
+missing_total	../src/kpop/individual.py	/^    missing_total = fn_property(lambda _: (_.data == 0).sum())$/;"	kind:variable	line:42
+missing_total	../src/kpop/population/population_base.py	/^    missing_total = property(lambda _: sum(ind.missing_total for ind in _))$/;"	kind:variable	line:102
 mixture	../src/kpop/prob.py	/^    def mixture(cls, coeffs, probs):$/;"	kind:member	line:18
 mixture.py	../src/kpop/examples/mixture.py	1;"	kind:file	line:1
 mkdtemp	../.tox/flake8/lib/python3.6/tempfile.py	/^def mkdtemp(suffix=None, prefix=None, dir=None):$/;"	kind:function	line:345
@@ -9613,7 +9646,6 @@ move_to_end	../.tox/flake8/lib/python3.6/collections/__init__.py	/^    def move_
 move_to_end	../.tox/py36/lib/python3.6/collections/__init__.py	/^    def move_to_end(self, key, last=True):$/;"	kind:member	line:182
 mul	../.tox/flake8/lib/python3.6/operator.py	/^def mul(a, b):$/;"	kind:function	line:104
 mul	../.tox/py36/lib/python3.6/operator.py	/^def mul(a, b):$/;"	kind:function	line:104
-multi_population_class	../src/kpop/population/population_base.py	/^    multi_population_class = _multi_population_class_decriptor()$/;"	kind:variable	line:138
 n_iter	../demos/demo.py	/^n_iter = 100$/;"	kind:variable	line:33
 n_iter	../demos/demo.py	/^n_iter = 20$/;"	kind:variable	line:86
 n_iter	../old/lagrange.py	/^n_iter = 5000$/;"	kind:variable	line:119
@@ -9652,15 +9684,15 @@ new	../.tox/flake8/lib/python3.6/hashlib.py	/^    new = __py_new$/;"	kind:variab
 new	../.tox/flake8/lib/python3.6/hmac.py	/^def new(key, msg = None, digestmod = None):$/;"	kind:function	line:133
 new	../.tox/py36/lib/python3.6/hashlib.py	/^    new = __py_new$/;"	kind:variable	line:165
 new	../.tox/py36/lib/python3.6/hmac.py	/^def new(key, msg = None, digestmod = None):$/;"	kind:function	line:133
-new	../src/kpop/population/population_base.py	/^    def new(self, label=None, **kwargs):$/;"	kind:member	line:432
 new_admixed_population	../src/kpop/population/population_multi.py	/^    def new_admixed_population(self, coeffs, size=0, label=None, **kwargs):$/;"	kind:member	line:299
 new_child	../.tox/flake8/lib/python3.6/collections/__init__.py	/^    def new_child(self, m=None):                # like Django's Context.push()$/;"	kind:member	line:918
 new_child	../.tox/py36/lib/python3.6/collections/__init__.py	/^    def new_child(self, m=None):                # like Django's Context.push()$/;"	kind:member	line:918
 new_class	../.tox/flake8/lib/python3.6/types.py	/^def new_class(name, bases=(), kwds=None, exec_body=None):$/;"	kind:function	line:57
 new_class	../.tox/py36/lib/python3.6/types.py	/^def new_class(name, bases=(), kwds=None, exec_body=None):$/;"	kind:function	line:57
+new_individual	../src/kpop/population/population_base.py	/^    def new_individual(self, label=None, **kwargs):$/;"	kind:member	line:407
 new_module	../.tox/flake8/lib/python3.6/imp.py	/^def new_module(name):$/;"	kind:function	line:48
 new_module	../.tox/py36/lib/python3.6/imp.py	/^def new_module(name):$/;"	kind:function	line:48
-new_offspring	../src/kpop/population/population_base.py	/^    def new_offspring(self, i=None, j=None, **kwargs):$/;"	kind:member	line:444
+new_offspring	../src/kpop/population/population_base.py	/^    def new_offspring(self, i=None, j=None, **kwargs):$/;"	kind:member	line:419
 new_sys_path	../.tox/flake8/bin/activate_this.py	/^new_sys_path = []$/;"	kind:variable	line:29
 new_sys_path	../.tox/py36/bin/activate_this.py	/^new_sys_path = []$/;"	kind:variable	line:29
 newlines	../.tox/flake8/lib/python3.6/tempfile.py	/^    def newlines(self):$/;"	kind:member	line:729
@@ -9674,16 +9706,16 @@ nlargest	../.tox/py36/lib/python3.6/heapq.py	/^def nlargest(n, iterable, key=Non
 no	../.tox/flake8/lib/python3.6/importlib/_bootstrap.py	/^            raise ImportError('attempted relative import with no known parent '$/;"	kind:namespace	line:918
 no	../.tox/py36/lib/python3.6/importlib/_bootstrap.py	/^            raise ImportError('attempted relative import with no known parent '$/;"	kind:namespace	line:918
 noadmix	../src/kpop/external/structure/params.py	/^    noadmix=0,$/;"	kind:variable	line:97
-non_biallelic	../src/kpop/population/population_base.py	/^    def non_biallelic(self, *, _data=None):$/;"	kind:member	line:264
+non_biallelic	../src/kpop/population/population_base.py	/^    def non_biallelic(self, *, _data=None):$/;"	kind:member	line:239
 non_norm	../old/lagrange.py	/^non_norm = []$/;"	kind:variable	line:127
 normalize	../.tox/flake8/lib/python3.6/locale.py	/^def normalize(localename):$/;"	kind:function	line:379
 normalize	../.tox/py36/lib/python3.6/locale.py	/^def normalize(localename):$/;"	kind:function	line:379
-normalize	../src/kpop/external/structure/base.py	/^    def normalize(x):$/;"	kind:function	line:252
+normalize	../src/kpop/external/structure/base.py	/^    def normalize(x):$/;"	kind:function	line:253
 normalize_coeffs	../src/kpop/plots/admixture.py	/^    sort_coeffs, group_individuals, admixture_coords$/;"	kind:namespace	line:5
 normalize_coeffs	../src/kpop/plots/utils.py	/^def normalize_coeffs(coeffs):$/;"	kind:function	line:25
 normalize_encoding	../.tox/flake8/lib/python3.6/encodings/__init__.py	/^def normalize_encoding(encoding):$/;"	kind:function	line:43
 normalize_encoding	../.tox/py36/lib/python3.6/encodings/__init__.py	/^def normalize_encoding(encoding):$/;"	kind:function	line:43
-normalize_freqs_arg	../src/kpop/population/population_base.py	/^from .utils import normalize_freqs_arg$/;"	kind:namespace	line:11
+normalize_freqs_arg	../src/kpop/population/population_base.py	/^from .utils import normalize_freqs_arg$/;"	kind:namespace	line:14
 normalize_freqs_arg	../src/kpop/population/utils.py	/^def normalize_freqs_arg(freqs):$/;"	kind:function	line:8
 normalize_list	../src/kpop/cli/import_.py	/^def normalize_list(seq):$/;"	kind:function	line:107
 normalvariate	../.tox/flake8/lib/python3.6/random.py	/^    def normalvariate(self, mu, sigma):$/;"	kind:member	line:394
@@ -9745,10 +9777,11 @@ np	../src/kpop/io/loaders.py	/^import numpy as np$/;"	kind:namespace	line:7
 np	../src/kpop/kpop_parser.py	/^import numpy as np$/;"	kind:namespace	line:3
 np	../src/kpop/plots/admixture.py	/^import numpy as np$/;"	kind:namespace	line:1
 np	../src/kpop/plots/utils.py	/^import numpy as np$/;"	kind:namespace	line:1
-np	../src/kpop/population/attr_plot.py	/^import numpy as np$/;"	kind:namespace	line:1
-np	../src/kpop/population/population_base.py	/^import numpy as np$/;"	kind:namespace	line:5
+np	../src/kpop/population/plot.py	/^import numpy as np$/;"	kind:namespace	line:1
+np	../src/kpop/population/population_base.py	/^import numpy as np$/;"	kind:namespace	line:8
 np	../src/kpop/population/population_multi.py	/^import numpy as np$/;"	kind:namespace	line:1
 np	../src/kpop/population/population_single.py	/^import numpy as np$/;"	kind:namespace	line:1
+np	../src/kpop/population/projection.py	/^import numpy as np$/;"	kind:namespace	line:1
 np	../src/kpop/population/utils.py	/^import numpy as np$/;"	kind:namespace	line:3
 np	../src/kpop/prob.py	/^import numpy as np$/;"	kind:namespace	line:6
 np	../src/kpop/statistics/fst.py	/^import numpy as np$/;"	kind:namespace	line:1
@@ -9769,8 +9802,8 @@ ntpath.py	../.tox/py36/lib/python3.6/ntpath.py	1;"	kind:file	line:1
 nts	../.tox/flake8/lib/python3.6/tarfile.py	/^def nts(s, encoding, errors):$/;"	kind:function	line:166
 nts	../.tox/py36/lib/python3.6/tarfile.py	/^def nts(s, encoding, errors):$/;"	kind:function	line:166
 null_getter	../src/kpop/loci_data.py	/^null_getter = defaultdict(lambda: None)$/;"	kind:variable	line:5
-num_alleles	../src/kpop/individual.py	/^    def num_alleles(self):$/;"	kind:member	line:45
-num_alleles	../src/kpop/population/population_base.py	/^    def num_alleles(self):$/;"	kind:member	line:83
+num_alleles	../src/kpop/individual.py	/^    def num_alleles(self):$/;"	kind:member	line:48
+num_alleles	../src/kpop/population/population_base.py	/^    num_alleles = lazy(lambda _: max(max(freq) for freq in _.freqs))$/;"	kind:variable	line:94
 num_ind	../src/kpop/examples/mixture.py	/^num_ind = 100$/;"	kind:variable	line:4
 num_individuals	../src/kpop/external/admixture/result.py	/^    def num_individuals(self):$/;"	kind:member	line:21
 num_inds	../src/kpop/external/structure/result.py	/^    def num_inds(self):$/;"	kind:member	line:54
@@ -9779,10 +9812,10 @@ num_loci	../demos/demo.py	/^num_loci = 100$/;"	kind:variable	line:35
 num_loci	../demos/demo.py	/^num_loci = 100$/;"	kind:variable	line:88
 num_loci	../src/kpop/examples/mixture.py	/^num_loci = 104$/;"	kind:variable	line:5
 num_loci	../src/kpop/external/admixture/result.py	/^    def num_loci(self):$/;"	kind:member	line:17
-num_loci	../src/kpop/individual.py	/^    def num_loci(self):$/;"	kind:member	line:37
-num_loci	../src/kpop/population/population_base.py	/^    def num_loci(self):$/;"	kind:member	line:91
+num_loci	../src/kpop/individual.py	/^    num_loci = fn_lazy(_.data.shape[0])$/;"	kind:variable	line:38
+num_loci	../src/kpop/population/population_base.py	/^    num_loci = lazy(lambda _: _[0].num_loci)$/;"	kind:variable	line:87
 num_loci	../src/kpop/tests/conftest.py	/^def num_loci():$/;"	kind:function	line:47
-num_populations	../src/kpop/population/population_base.py	/^    def num_populations(self):$/;"	kind:member	line:117
+num_populations	../src/kpop/population/population_base.py	/^    num_populations = fn_property(lambda _: len(_.populations))$/;"	kind:variable	line:98
 number_or_text	../src/kpop/cli/import_.py	/^def number_or_text(x, inc=0):$/;"	kind:function	line:93
 numboxes	../src/kpop/external/structure/params.py	/^    numboxes=1000,$/;"	kind:variable	line:144
 numinds	../src/kpop/external/structure/params.py	/^    numinds='<N:int>',$/;"	kind:variable	line:32
@@ -9831,6 +9864,7 @@ onerror	../.tox/flake8/lib/python3.6/shutil.py	/^        def onerror(*args):$/;"
 onerror	../.tox/py36/lib/python3.6/shutil.py	/^        def onerror(*args):$/;"	kind:function	line:457
 onerror	../.tox/py36/lib/python3.6/shutil.py	/^        def onerror(*args):$/;"	kind:function	line:460
 op	../src/kpop/io/loaders.py	/^import operator as op$/;"	kind:namespace	line:2
+op	../src/kpop/population/population_base.py	/^import operator as op$/;"	kind:namespace	line:4
 opcode	../.tox/flake8/lib/python3.6/distutils/__init__.py	/^import opcode # opcode is not a virtualenv module, so we can use it to find the stdlib$/;"	kind:namespace	line:5
 opcode	../.tox/flake8/lib64/python3.6/distutils/__init__.py	/^import opcode # opcode is not a virtualenv module, so we can use it to find the stdlib$/;"	kind:namespace	line:5
 opcode	../.tox/py36/lib/python3.6/distutils/__init__.py	/^import opcode # opcode is not a virtualenv module, so we can use it to find the stdlib$/;"	kind:namespace	line:5
@@ -9896,6 +9930,7 @@ os	../src/kpop/external/admixture/base.py	/^import os$/;"	kind:namespace	line:1
 os	../src/kpop/external/structure/base.py	/^import os$/;"	kind:namespace	line:1
 os	../src/kpop/io/csv_writer.py	/^import os$/;"	kind:namespace	line:1
 os	../src/kpop/tests/test_documentation.py	/^import os$/;"	kind:namespace	line:1
+os	../src/kpop/tests/test_structure.py	/^import os$/;"	kind:namespace	line:1
 os.py	../.tox/flake8/lib/python3.6/os.py	1;"	kind:file	line:1
 os.py	../.tox/py36/lib/python3.6/os.py	1;"	kind:file	line:1
 out	../old/kmeans.py	/^    out = kmeans(pop, 3, method=MaxLike, whiten=False, disp=1, itermin=10,$/;"	kind:variable	line:812
@@ -9911,7 +9946,7 @@ packages	../setup.py	/^    packages=find_packages('src'),$/;"	kind:variable	line
 palmos.py	../.tox/flake8/lib/python3.6/encodings/palmos.py	1;"	kind:file	line:1
 palmos.py	../.tox/py36/lib/python3.6/encodings/palmos.py	1;"	kind:file	line:1
 params.py	../src/kpop/external/structure/params.py	1;"	kind:file	line:1
-params_file	../src/kpop/external/structure/base.py	/^def params_file(data):$/;"	kind:function	line:246
+params_file	../src/kpop/external/structure/base.py	/^def params_file(data):$/;"	kind:function	line:247
 pardir	../.tox/flake8/lib/python3.6/ntpath.py	/^pardir = '..'$/;"	kind:variable	line:25
 pardir	../.tox/flake8/lib/python3.6/os.py	/^from os.path import (curdir, pardir, sep, pathsep, defpath, extsep, altsep,$/;"	kind:namespace	line:92
 pardir	../.tox/flake8/lib/python3.6/posixpath.py	/^pardir = '..'$/;"	kind:variable	line:31
@@ -9931,23 +9966,24 @@ paretovariate	../.tox/py36/lib/python3.6/random.py	/^    def paretovariate(self,
 paretovariate	../.tox/py36/lib/python3.6/random.py	/^paretovariate = _inst.paretovariate$/;"	kind:variable	line:760
 parse	../.tox/flake8/lib/python3.6/sre_parse.py	/^def parse(str, flags=0, pattern=None):$/;"	kind:function	line:845
 parse	../.tox/py36/lib/python3.6/sre_parse.py	/^def parse(str, flags=0, pattern=None):$/;"	kind:function	line:845
-parse_F	../src/kpop/external/structure/parser.py	/^    def parse_F(self):$/;"	kind:member	line:262
-parse_Q	../src/kpop/external/structure/parser.py	/^    def parse_Q(self):$/;"	kind:member	line:237
-parse_avg_heterozygosity	../src/kpop/external/structure/parser.py	/^    def parse_avg_heterozygosity(self):$/;"	kind:member	line:201
-parse_config	../src/kpop/external/structure/parser.py	/^    def parse_config(self):$/;"	kind:member	line:116
-parse_data	../src/kpop/external/structure/parser.py	/^    def parse_data(self, re, func=str):$/;"	kind:member	line:74
-parse_dict	../src/kpop/external/structure/parser.py	/^    def parse_dict(self, line, converters={}):$/;"	kind:member	line:380
-parse_divergence	../src/kpop/external/structure/parser.py	/^    def parse_divergence(self):$/;"	kind:member	line:184
-parse_file	../src/kpop/external/structure/parser.py	/^def parse_file(file, parser=StructureParser):$/;"	kind:function	line:398
-parse_fst	../src/kpop/external/structure/parser.py	/^    def parse_fst(self):$/;"	kind:member	line:228
-parse_header	../src/kpop/external/structure/parser.py	/^    def parse_header(self):$/;"	kind:member	line:109
-parse_likelihood	../src/kpop/external/structure/parser.py	/^    def parse_likelihood(self):$/;"	kind:member	line:211
-parse_lines	../src/kpop/external/structure/parser.py	/^def parse_lines(lines, parser=StructureParser):$/;"	kind:function	line:390
-parse_membership	../src/kpop/external/structure/parser.py	/^    def parse_membership(self):$/;"	kind:member	line:154
-parse_options	../src/kpop/external/structure/parser.py	/^    def parse_options(self):$/;"	kind:member	line:299
-parse_re	../src/kpop/external/structure/parser.py	/^    def parse_re(self, re):$/;"	kind:member	line:56
+parse_F	../src/kpop/external/structure/parser.py	/^    def parse_F(self):$/;"	kind:member	line:265
+parse_Q	../src/kpop/external/structure/parser.py	/^    def parse_Q(self):$/;"	kind:member	line:239
+parse_avg_heterozygosity	../src/kpop/external/structure/parser.py	/^    def parse_avg_heterozygosity(self):$/;"	kind:member	line:203
+parse_config	../src/kpop/external/structure/parser.py	/^    def parse_config(self):$/;"	kind:member	line:118
+parse_data	../src/kpop/external/structure/parser.py	/^    def parse_data(self, re, func=str):$/;"	kind:member	line:76
+parse_dict	../src/kpop/external/structure/parser.py	/^    def parse_dict(self, line, converters={}):$/;"	kind:member	line:383
+parse_divergence	../src/kpop/external/structure/parser.py	/^    def parse_divergence(self):$/;"	kind:member	line:186
+parse_file	../src/kpop/external/structure/parser.py	/^def parse_file(file, parser=StructureParser):$/;"	kind:function	line:400
+parse_file	../src/kpop/tests/test_structure.py	/^from kpop.external.structure.parser import parse_file$/;"	kind:namespace	line:6
+parse_fst	../src/kpop/external/structure/parser.py	/^    def parse_fst(self):$/;"	kind:member	line:230
+parse_header	../src/kpop/external/structure/parser.py	/^    def parse_header(self):$/;"	kind:member	line:111
+parse_likelihood	../src/kpop/external/structure/parser.py	/^    def parse_likelihood(self):$/;"	kind:member	line:213
+parse_lines	../src/kpop/external/structure/parser.py	/^def parse_lines(lines, parser=StructureParser):$/;"	kind:function	line:392
+parse_membership	../src/kpop/external/structure/parser.py	/^    def parse_membership(self):$/;"	kind:member	line:156
+parse_options	../src/kpop/external/structure/parser.py	/^    def parse_options(self):$/;"	kind:member	line:302
+parse_re	../src/kpop/external/structure/parser.py	/^    def parse_re(self, re):$/;"	kind:member	line:58
 parse_section	../src/kpop/external/structure/result.py	/^        def parse_section():$/;"	kind:function	line:95
-parse_strat	../src/kpop/external/structure/parser.py	/^    def parse_strat(self):$/;"	kind:member	line:367
+parse_strat	../src/kpop/external/structure/parser.py	/^    def parse_strat(self):$/;"	kind:member	line:370
 parse_template	../.tox/flake8/lib/python3.6/sre_parse.py	/^def parse_template(source, pattern):$/;"	kind:function	line:877
 parse_template	../.tox/py36/lib/python3.6/sre_parse.py	/^def parse_template(source, pattern):$/;"	kind:function	line:877
 parser.py	../src/kpop/external/structure/parser.py	1;"	kind:file	line:1
@@ -9968,6 +10004,7 @@ path	../.tox/py36/lib/python3.6/os.py	/^    import ntpath as path$/;"	kind:names
 path	../.tox/py36/lib/python3.6/os.py	/^    import posixpath as path$/;"	kind:namespace	line:57
 path	../.tox/py36/lib/python3.6/tarfile.py	/^    path = property(_getpath, _setpath)$/;"	kind:variable	line:768
 path	../setup.py	/^path = os.path.join(dirname, 'src', 'kpop', '__meta__.py')$/;"	kind:variable	line:31
+path	../src/kpop/external/structure/base.py	/^        def path(x): return os.path.join(save_dir, x)                  # noqa: E731$/;"	kind:function	line:209
 path_hook	../.tox/flake8/lib/python3.6/importlib/_bootstrap_external.py	/^    def path_hook(cls, *loader_details):$/;"	kind:member	line:1313
 path_hook	../.tox/py36/lib/python3.6/importlib/_bootstrap_external.py	/^    def path_hook(cls, *loader_details):$/;"	kind:member	line:1313
 path_hook_for_FileFinder	../.tox/flake8/lib/python3.6/importlib/_bootstrap_external.py	/^        def path_hook_for_FileFinder(path):$/;"	kind:function	line:1322
@@ -9992,8 +10029,8 @@ pbkdf2_hmac	../.tox/flake8/lib/python3.6/hashlib.py	/^    def pbkdf2_hmac(hash_n
 pbkdf2_hmac	../.tox/flake8/lib/python3.6/hashlib.py	/^    from _hashlib import pbkdf2_hmac$/;"	kind:namespace	line:170
 pbkdf2_hmac	../.tox/py36/lib/python3.6/hashlib.py	/^    def pbkdf2_hmac(hash_name, password, salt, iterations, dklen=None):$/;"	kind:function	line:175
 pbkdf2_hmac	../.tox/py36/lib/python3.6/hashlib.py	/^    from _hashlib import pbkdf2_hmac$/;"	kind:namespace	line:170
-pca	../src/kpop/population/attr_plot.py	/^    def pca(self, method='flatten', norm=False, merge=False, colors=None,$/;"	kind:member	line:97
-pca	../src/kpop/population/population_base.py	/^    def pca(self, k=2, *, method='flatten', norm=True):$/;"	kind:member	line:497
+pca	../src/kpop/population/plot.py	/^    def pca(self, method='flatten', norm=False, merge=False, colors=None,$/;"	kind:member	line:97
+pca	../src/kpop/population/projection.py	/^    def pca(self, k=2, *, method='count', norm=True):$/;"	kind:member	line:56
 pd	../src/kpop/external/structure/parser.py	/^import pandas as pd$/;"	kind:namespace	line:7
 pdf	../src/kpop/admixture/admixture.py	/^        def pdf(p):$/;"	kind:function	line:52
 peek	../.tox/flake8/lib/python3.6/weakref.py	/^    def peek(self):$/;"	kind:member	line:558
@@ -10013,23 +10050,24 @@ phi_qi	../src/kpop/admixture/objective.pyx	/^def phi_qi(i, Qi, F, G, epsilon=1e-
 physics.pyx	../src/kpop/admixture/physics.pyx	1;"	kind:file	line:1
 pickle	../.tox/flake8/lib/python3.6/copyreg.py	/^def pickle(ob_type, pickle_function, constructor_ob=None):$/;"	kind:function	line:12
 pickle	../.tox/py36/lib/python3.6/copyreg.py	/^def pickle(ob_type, pickle_function, constructor_ob=None):$/;"	kind:function	line:12
-pickle	../src/kpop/population/mixin_population_render.py	/^import pickle$/;"	kind:namespace	line:2
-pickle	../src/kpop/population/population_base.py	/^import pickle$/;"	kind:namespace	line:2
+pickle	../src/kpop/population/io.py	/^import pickle$/;"	kind:namespace	line:2
+pickle	../src/kpop/population/population_base.py	/^import pickle$/;"	kind:namespace	line:3
 pickle_complex	../.tox/flake8/lib/python3.6/copyreg.py	/^    def pickle_complex(c):$/;"	kind:function	line:34
 pickle_complex	../.tox/py36/lib/python3.6/copyreg.py	/^    def pickle_complex(c):$/;"	kind:function	line:34
-platforms	../setup.py	/^    platforms='any',$/;"	kind:variable	line:125
+platforms	../setup.py	/^    platforms='any',$/;"	kind:variable	line:126
 ploidy	../src/kpop/external/structure/params.py	/^    ploidy=2,$/;"	kind:variable	line:38
-ploidy	../src/kpop/individual.py	/^    def ploidy(self):$/;"	kind:member	line:41
-ploidy	../src/kpop/population/population_base.py	/^    def ploidy(self):$/;"	kind:member	line:87
+ploidy	../src/kpop/individual.py	/^    ploidy = fn_lazy(_.data.shape[1])$/;"	kind:variable	line:39
+ploidy	../src/kpop/population/population_base.py	/^    ploidy = lazy(lambda _: _[0].ploidy)$/;"	kind:variable	line:88
 plot	../src/kpop/admixture/util.pyx	/^def plot(self, show=True, **kwargs):$/;"	kind:function	line:108
-plot	../src/kpop/population/population_base.py	/^    def plot(self):$/;"	kind:member	line:99
+plot	../src/kpop/population/population_base.py	/^    plot = object()$/;"	kind:variable	line:109
+plot.py	../src/kpop/population/plot.py	1;"	kind:file	line:1
 plt	../old/lagrange.py	/^from matplotlib import pyplot as plt$/;"	kind:namespace	line:4
 plt	../old/lagrangean_test.py	/^    from matplotlib import pyplot as plt$/;"	kind:namespace	line:246
 plt	../src/kpop/admixture/util.pyx	/^    from matplotlib import pyplot as plt$/;"	kind:namespace	line:114
 plt	../src/kpop/all.py	/^from matplotlib import pyplot as plt$/;"	kind:namespace	line:4
 plt	../src/kpop/examples/teste.py	/^from matplotlib import pyplot as plt$/;"	kind:namespace	line:3
 plt	../src/kpop/plots/admixture.py	/^from matplotlib import pyplot as plt$/;"	kind:namespace	line:2
-plt	../src/kpop/population/attr_plot.py	/^from matplotlib import pyplot as plt$/;"	kind:namespace	line:2
+plt	../src/kpop/population/plot.py	/^from matplotlib import pyplot as plt$/;"	kind:namespace	line:2
 pop	../.tox/flake8/lib/python3.6/_collections_abc.py	/^    def pop(self):$/;"	kind:member	line:586
 pop	../.tox/flake8/lib/python3.6/_collections_abc.py	/^    def pop(self, index=-1):$/;"	kind:member	line:988
 pop	../.tox/flake8/lib/python3.6/_collections_abc.py	/^    def pop(self, key, default=__marker):$/;"	kind:member	line:790
@@ -10051,7 +10089,7 @@ pop	../.tox/py36/lib/python3.6/weakref.py	/^    def pop(self, key, *args):$/;"	k
 pop	../demos/demo.py	/^    pop = pop.breed(pop, pop.size)$/;"	kind:variable	line:64
 pop	../demos/demo.py	/^pop = Population.make_random(200, 200)$/;"	kind:variable	line:60
 pop	../src/kpop/examples/demo.py	/^pop = popA + popB + popC$/;"	kind:variable	line:8
-pop	../src/kpop/external/structure/parser.py	/^    def pop(self):$/;"	kind:member	line:32
+pop	../src/kpop/external/structure/parser.py	/^    def pop(self):$/;"	kind:member	line:34
 pop	../src/kpop/tests/_test_admixture_calculation.py	/^def pop(N, J):$/;"	kind:function	line:27
 pop1	../demos/demo.py	/^    pop1 = pop1.breed(pop1, pop.size)$/;"	kind:variable	line:77
 pop1	../demos/demo.py	/^pop1 = Population.make_random(200, 200)$/;"	kind:variable	line:71
@@ -10105,11 +10143,11 @@ popitem	../.tox/py36/lib/python3.6/weakref.py	/^    def popitem(self):$/;"	kind:
 pops	../demos/demo.py	/^pops = [pop_total1, pop_total2]$/;"	kind:variable	line:94
 popspecificlambda	../src/kpop/external/structure/params.py	/^    popspecificlambda=0,$/;"	kind:variable	line:107
 population_base.py	../src/kpop/population/population_base.py	1;"	kind:file	line:1
-population_class	../src/kpop/population/population_base.py	/^    class population_class:$/;"	kind:class	line:124
-population_class	../src/kpop/population/population_base.py	/^    population_class = population_class()$/;"	kind:variable	line:130
 population_multi.py	../src/kpop/population/population_multi.py	1;"	kind:file	line:1
 population_single.py	../src/kpop/population/population_single.py	1;"	kind:file	line:1
+populations	../src/kpop/population/population_base.py	/^    populations = ()$/;"	kind:variable	line:108
 populations	../src/kpop/population/population_single.py	/^    def populations(self):$/;"	kind:member	line:16
+populations.py	../src/kpop/population/populations.py	1;"	kind:file	line:1
 pos	../.tox/flake8/lib/python3.6/operator.py	/^def pos(a):$/;"	kind:function	line:120
 pos	../.tox/flake8/lib/python3.6/sre_parse.py	/^    def pos(self):$/;"	kind:member	line:283
 pos	../.tox/py36/lib/python3.6/operator.py	/^def pos(a):$/;"	kind:function	line:120
@@ -10151,7 +10189,9 @@ prob_classify	../src/kpop/population/population_multi.py	/^    def prob_classify
 projdir	../docs/conf.py	/^projdir = os.path.dirname(dirname)$/;"	kind:variable	line:64
 project	../docs/conf.py	/^project = 'Kpop'$/;"	kind:variable	line:54
 project_title	../docs/conf.py	/^project_title = project.title()$/;"	kind:variable	line:55
-projection	../src/kpop/population/attr_plot.py	/^    def projection(self, coords, merge=False, colors=None, show=True,$/;"	kind:member	line:123
+projection	../src/kpop/population/plot.py	/^    def projection(self, coords, merge=False, colors=None, show=True,$/;"	kind:member	line:123
+projection	../src/kpop/population/population_base.py	/^    projection = object()$/;"	kind:variable	line:113
+projection.py	../src/kpop/population/projection.py	1;"	kind:file	line:1
 ptcp154.py	../.tox/flake8/lib/python3.6/encodings/ptcp154.py	1;"	kind:file	line:1
 ptcp154.py	../.tox/py36/lib/python3.6/encodings/ptcp154.py	1;"	kind:file	line:1
 punycode.py	../.tox/flake8/lib/python3.6/encodings/punycode.py	1;"	kind:file	line:1
@@ -10162,7 +10202,7 @@ punycode_encode	../.tox/flake8/lib/python3.6/encodings/punycode.py	/^def punycod
 punycode_encode	../.tox/py36/lib/python3.6/encodings/punycode.py	/^def punycode_encode(text):$/;"	kind:function	line:117
 purge	../.tox/flake8/lib/python3.6/re.py	/^def purge():$/;"	kind:function	line:235
 purge	../.tox/py36/lib/python3.6/re.py	/^def purge():$/;"	kind:function	line:235
-push	../src/kpop/external/structure/parser.py	/^    def push(self, value):$/;"	kind:member	line:37
+push	../src/kpop/external/structure/parser.py	/^    def push(self, value):$/;"	kind:member	line:39
 pwd	../.tox/flake8/lib/python3.6/posixpath.py	/^            import pwd$/;"	kind:namespace	line:246
 pwd	../.tox/flake8/lib/python3.6/posixpath.py	/^        import pwd$/;"	kind:namespace	line:251
 pwd	../.tox/flake8/lib/python3.6/tarfile.py	/^    import pwd$/;"	kind:namespace	line:53
@@ -10185,8 +10225,8 @@ pytest	../src/kpop/tests/test_multipopulation.py	/^import pytest$/;"	kind:namesp
 pytest	../src/kpop/tests/test_population.py	/^import pytest$/;"	kind:namespace	line:1
 pytest	../src/kpop/tests/test_prob.py	/^import pytest$/;"	kind:namespace	line:1
 pytest	../src/kpop/tests/test_statistics.py	/^import pytest$/;"	kind:namespace	line:1
-pytest	../src/kpop/tests/test_structure.py	/^import pytest$/;"	kind:namespace	line:1
-pytestmark	../src/kpop/tests/test_structure.py	/^pytestmark = pytest.mark.skipif(is_ci,$/;"	kind:variable	line:6
+pytest	../src/kpop/tests/test_structure.py	/^import pytest$/;"	kind:namespace	line:3
+pytestmark	../src/kpop/tests/test_structure.py	/^pytestmark = pytest.mark.skipif(is_ci,$/;"	kind:variable	line:9
 python-config	../.tox/flake8/bin/python-config	1;"	kind:file	line:1
 python-config	../.tox/py36/bin/python-config	1;"	kind:file	line:1
 python-config.py	../.tox/flake8/lib/python3.6/config-3.6m-x86_64-linux-gnu/python-config.py	1;"	kind:file	line:1
@@ -10224,11 +10264,11 @@ random	../src/kpop/prob.py	/^    def random(self):$/;"	kind:member	line:117
 random	../src/kpop/prob.py	/^from random import random$/;"	kind:namespace	line:4
 random.py	../.tox/flake8/lib/python3.6/random.py	1;"	kind:file	line:1
 random.py	../.tox/py36/lib/python3.6/random.py	1;"	kind:file	line:1
-random_data_from_freqs_matrix	../src/kpop/individual.py	/^def random_data_from_freqs_matrix(freqs, ploidy=2):$/;"	kind:function	line:337
+random_data_from_freqs_matrix	../src/kpop/individual.py	/^def random_data_from_freqs_matrix(freqs, ploidy=2):$/;"	kind:function	line:322
 random_frequencies	../src/kpop/population/population_single.py	/^from ..utils.frequencies import random_frequencies$/;"	kind:namespace	line:7
 random_frequencies	../src/kpop/utils/frequencies.py	/^def random_frequencies(num_loci, alleles=2, clip=0.0, seed=None):$/;"	kind:function	line:74
 random_ic	../old/initial_conditions_for_lagrangean.py	/^def random_ic(G, k, F=None, Q=None, **kwargs):$/;"	kind:function	line:61
-random_individual	../src/kpop/population/population_base.py	/^    def random_individual(self):$/;"	kind:member	line:462
+random_individual	../src/kpop/population/population_base.py	/^    def random_individual(self):$/;"	kind:member	line:437
 random_pop_data	../src/kpop/population/utils.py	/^def random_pop_data(size, freqs, ploidy=2, dtype=np.int8):$/;"	kind:function	line:40
 random_sequence	../src/kpop/prob.py	/^    def random_sequence(self, size):$/;"	kind:member	line:130
 randomize	../src/kpop/external/structure/params.py	/^    randomize=1,$/;"	kind:variable	line:152
@@ -10236,7 +10276,7 @@ randrange	../.tox/flake8/lib/python3.6/random.py	/^    def randrange(self, start
 randrange	../.tox/flake8/lib/python3.6/random.py	/^randrange = _inst.randrange$/;"	kind:variable	line:749
 randrange	../.tox/py36/lib/python3.6/random.py	/^    def randrange(self, start, stop=None, step=1, _int=int):$/;"	kind:member	line:172
 randrange	../.tox/py36/lib/python3.6/random.py	/^randrange = _inst.randrange$/;"	kind:variable	line:749
-randrange	../src/kpop/population/population_base.py	/^from random import randrange$/;"	kind:namespace	line:3
+randrange	../src/kpop/population/population_base.py	/^from random import randrange, shuffle$/;"	kind:namespace	line:6
 range_iterator	../.tox/flake8/lib/python3.6/_collections_abc.py	/^range_iterator = type(iter(range(0)))$/;"	kind:variable	line:44
 range_iterator	../.tox/py36/lib/python3.6/_collections_abc.py	/^range_iterator = type(iter(range(0)))$/;"	kind:variable	line:44
 raw_unicode_escape.py	../.tox/flake8/lib/python3.6/encodings/raw_unicode_escape.py	1;"	kind:file	line:1
@@ -10320,7 +10360,7 @@ realpath	../.tox/flake8/lib/python3.6/ntpath.py	/^realpath = abspath$/;"	kind:va
 realpath	../.tox/flake8/lib/python3.6/posixpath.py	/^def realpath(filename):$/;"	kind:function	line:382
 realpath	../.tox/py36/lib/python3.6/ntpath.py	/^realpath = abspath$/;"	kind:variable	line:554
 realpath	../.tox/py36/lib/python3.6/posixpath.py	/^def realpath(filename):$/;"	kind:function	line:382
-reason	../src/kpop/tests/test_structure.py	/^                                reason='structure is not installed in travis')$/;"	kind:variable	line:7
+reason	../src/kpop/tests/test_structure.py	/^                                reason='structure is not installed in travis')$/;"	kind:variable	line:10
 recessivealleles	../src/kpop/external/structure/params.py	/^    recessivealleles=0,$/;"	kind:variable	line:70
 recursive_repr	../.tox/flake8/lib/python3.6/functools.py	/^from reprlib import recursive_repr$/;"	kind:namespace	line:24
 recursive_repr	../.tox/flake8/lib/python3.6/reprlib.py	/^def recursive_repr(fillvalue='...'):$/;"	kind:function	line:12
@@ -10330,6 +10370,7 @@ reduce	../.tox/flake8/lib/python3.6/enum.py	/^from functools import reduce$/;"	k
 reduce	../.tox/flake8/lib/python3.6/functools.py	/^    from _functools import reduce$/;"	kind:namespace	line:17
 reduce	../.tox/py36/lib/python3.6/enum.py	/^from functools import reduce$/;"	kind:namespace	line:3
 reduce	../.tox/py36/lib/python3.6/functools.py	/^    from _functools import reduce$/;"	kind:namespace	line:17
+reduce	../src/kpop/population/population_base.py	/^from functools import reduce$/;"	kind:namespace	line:5
 reductor	../.tox/flake8/lib/python3.6/copy.py	/^                        reductor = getattr(x, "__reduce__", None)$/;"	kind:variable	line:171
 reductor	../.tox/flake8/lib/python3.6/copy.py	/^                    reductor = getattr(x, "__reduce_ex__", None)$/;"	kind:variable	line:167
 reductor	../.tox/flake8/lib/python3.6/copy.py	/^                reductor = dispatch_table.get(cls)$/;"	kind:variable	line:163
@@ -10387,23 +10428,23 @@ removeduppaths	../.tox/flake8/lib/python3.6/site.py	/^def removeduppaths():$/;"	
 removeduppaths	../.tox/py36/lib/python3.6/site.py	/^def removeduppaths():$/;"	kind:function	line:113
 renames	../.tox/flake8/lib/python3.6/os.py	/^def renames(old, new):$/;"	kind:function	line:249
 renames	../.tox/py36/lib/python3.6/os.py	/^def renames(old, new):$/;"	kind:function	line:249
-render	../src/kpop/individual.py	/^    def render(self, label_align=None, limit=None):$/;"	kind:member	line:187
+render	../src/kpop/individual.py	/^    def render(self, label_align=None, limit=None):$/;"	kind:member	line:189
 render	../src/kpop/io/arlequin.py	/^def render(data, missing='-'):$/;"	kind:function	line:95
-render	../src/kpop/population/mixin_population_render.py	/^    def render(self, label_align=None, limit=None, ind_limit=None):$/;"	kind:member	line:22
-render_biallelic_freqs	../src/kpop/population/population_base.py	/^    def render_biallelic_freqs(self, sep='  ', align=True,$/;"	kind:member	line:311
+render	../src/kpop/population/io.py	/^    def render(self, label_align=None, limit=None, ind_limit=None):$/;"	kind:member	line:22
+render_biallelic_freqs	../src/kpop/population/population_base.py	/^    def render_biallelic_freqs(self, sep='  ', align=True,$/;"	kind:member	line:286
 render_components	../src/kpop/loci_data.py	/^    def render_components(self, data):$/;"	kind:member	line:33
-render_csv	../src/kpop/individual.py	/^    def render_csv(self, sep=','):$/;"	kind:member	line:255
-render_csv	../src/kpop/population/mixin_population_render.py	/^    def render_csv(self, **kwargs):$/;"	kind:member	line:48
+render_csv	../src/kpop/individual.py	/^    def render_csv(self, sep=','):$/;"	kind:member	line:257
+render_csv	../src/kpop/population/io.py	/^    def render_csv(self, **kwargs):$/;"	kind:member	line:48
 render_data	../src/kpop/loci_data.py	/^    def render_data(self, data, raw=False):$/;"	kind:member	line:121
-render_fst	../src/kpop/population/population_base.py	/^    def render_fst(self, sizes=None):$/;"	kind:member	line:287
-render_locus	../src/kpop/individual.py	/^            def render_locus(idx):$/;"	kind:function	line:194
-render_locus	../src/kpop/individual.py	/^            def render_locus(idx):$/;"	kind:function	line:198
+render_fst	../src/kpop/population/population_base.py	/^    def render_fst(self, sizes=None):$/;"	kind:member	line:262
+render_locus	../src/kpop/individual.py	/^            def render_locus(idx):$/;"	kind:function	line:196
+render_locus	../src/kpop/individual.py	/^            def render_locus(idx):$/;"	kind:function	line:200
 render_locus	../src/kpop/loci_data.py	/^    def render_locus(self, data):$/;"	kind:member	line:23
 render_map	../src/kpop/loci_data.py	/^    def render_map(self):$/;"	kind:member	line:114
 render_map	../src/kpop/loci_data.py	/^    def render_map(self):$/;"	kind:member	line:63
-render_map	../src/kpop/population/mixin_population_render.py	/^    def render_map(self):$/;"	kind:member	line:72
-render_ped	../src/kpop/individual.py	/^    def render_ped(self,$/;"	kind:member	line:229
-render_ped	../src/kpop/population/mixin_population_render.py	/^    def render_ped(self):$/;"	kind:member	line:60
+render_map	../src/kpop/population/io.py	/^    def render_map(self):$/;"	kind:member	line:72
+render_ped	../src/kpop/individual.py	/^    def render_ped(self,$/;"	kind:member	line:231
+render_ped	../src/kpop/population/io.py	/^    def render_ped(self):$/;"	kind:member	line:60
 reorder_k_to_best_q_fit	../src/kpop/admixture/util.pyx	/^def reorder_k_to_best_q_fit(self, obj_q, disp=0):$/;"	kind:function	line:85
 repeat	../.tox/flake8/lib/python3.6/tokenize.py	/^    from itertools import chain, repeat$/;"	kind:namespace	line:485
 repeat	../.tox/py36/lib/python3.6/tokenize.py	/^    from itertools import chain, repeat$/;"	kind:namespace	line:485
@@ -10540,13 +10581,13 @@ rstrip	../.tox/flake8/lib/python3.6/collections/__init__.py	/^    def rstrip(sel
 rstrip	../.tox/py36/lib/python3.6/collections/__init__.py	/^    def rstrip(self, chars=None):$/;"	kind:member	line:1231
 run	../old/core.py	/^    def run(self, n_iter=20, thresh=1e-5, guessfunc=None):$/;"	kind:member	line:59
 run	../old/kmeans.py	/^    def run(self, guess=None, thresh=1e-5, n_runs=20, max_reps=3):$/;"	kind:member	line:158
-run	../src/kpop/external/structure/parser.py	/^    def run(self):$/;"	kind:member	line:42
+run	../src/kpop/external/structure/parser.py	/^    def run(self):$/;"	kind:member	line:44
 run	../tasks.py	/^from invoke import run, task$/;"	kind:namespace	line:2
 run_admixture	../src/kpop/external/admixture/base.py	/^def run_admixture(pop, k, job_dir=None, disp=1, supervised=False):$/;"	kind:function	line:11
-run_admixture	../src/kpop/population/population_base.py	/^        from kpop.external.admixture.base import run_admixture$/;"	kind:namespace	line:485
+run_admixture	../src/kpop/population/population_base.py	/^        from kpop.external.admixture.base import run_admixture$/;"	kind:namespace	line:460
 run_structure	../src/kpop/external/structure/__init__.py	/^from .base import run_structure, mainparams, extraparams, structure_population$/;"	kind:namespace	line:1
 run_structure	../src/kpop/external/structure/base.py	/^def run_structure(pop, k=2, *, method='parental', job_dir=None,$/;"	kind:function	line:11
-run_structure	../src/kpop/tests/test_structure.py	/^from kpop.external.structure import run_structure$/;"	kind:namespace	line:3
+run_structure	../src/kpop/tests/test_structure.py	/^from kpop.external.structure import run_structure$/;"	kind:namespace	line:5
 runonce	../old/kmeans.py	/^    def runonce(self, guess=None, thresh=1e-5, maxiter=100, copy=True,$/;"	kind:member	line:205
 rv	../.tox/flake8/lib/python3.6/copy.py	/^                            rv = reductor()$/;"	kind:variable	line:173
 rv	../.tox/flake8/lib/python3.6/copy.py	/^                        rv = reductor(4)$/;"	kind:variable	line:169
@@ -10566,7 +10607,7 @@ sample	../.tox/flake8/lib/python3.6/random.py	/^    def sample(self, population,
 sample	../.tox/flake8/lib/python3.6/random.py	/^sample = _inst.sample$/;"	kind:variable	line:750
 sample	../.tox/py36/lib/python3.6/random.py	/^    def sample(self, population, k):$/;"	kind:member	line:282
 sample	../.tox/py36/lib/python3.6/random.py	/^sample = _inst.sample$/;"	kind:variable	line:750
-save	../src/kpop/population/mixin_population_render.py	/^    def save(self, file, format='pickle', **kwargs):$/;"	kind:member	line:82
+save	../src/kpop/population/io.py	/^    def save(self, file, format='pickle', **kwargs):$/;"	kind:member	line:82
 save_time_em	../old/tracker.py	/^    def save_time_em(self):$/;"	kind:member	line:29
 save_time_fj	../old/tracker.py	/^    def save_time_fj(self):$/;"	kind:member	line:40
 save_time_qf	../old/tracker.py	/^    def save_time_qf(self):$/;"	kind:member	line:32
@@ -10699,7 +10740,7 @@ setter	../.tox/flake8/lib/python3.6/types.py	/^    def setter(self, fset):$/;"	k
 setter	../.tox/py36/lib/python3.6/types.py	/^    def setter(self, fset):$/;"	kind:member	line:160
 setup	../setup.py	/^from setuptools import setup, find_packages$/;"	kind:namespace	line:6
 setup.py	../setup.py	1;"	kind:file	line:1
-shape	../src/kpop/population/population_base.py	/^    def shape(self):$/;"	kind:member	line:121
+shape	../src/kpop/population/population_base.py	/^    shape = property(lambda _: (_.size, _.num_loci, _.ploidy))$/;"	kind:variable	line:89
 sharp	../src/kpop/prob.py	/^    def sharp(self, mode_set=False):$/;"	kind:member	line:176
 sharp_correction	../old/lagrange.py	/^sharp_correction = True$/;"	kind:variable	line:132
 shell	../src/kpop/cli/main.py	/^from .shell import shell$/;"	kind:namespace	line:10
@@ -10720,8 +10761,10 @@ shuffle	../.tox/flake8/lib/python3.6/random.py	/^    def shuffle(self, x, random
 shuffle	../.tox/flake8/lib/python3.6/random.py	/^shuffle = _inst.shuffle$/;"	kind:variable	line:751
 shuffle	../.tox/py36/lib/python3.6/random.py	/^    def shuffle(self, x, random=None):$/;"	kind:member	line:260
 shuffle	../.tox/py36/lib/python3.6/random.py	/^shuffle = _inst.shuffle$/;"	kind:variable	line:751
-shuffle_loci	../src/kpop/individual.py	/^    def shuffle_loci(self):$/;"	kind:member	line:304
-shuffle_loci	../src/kpop/population/population_base.py	/^    def shuffle_loci(self):$/;"	kind:member	line:657
+shuffle	../src/kpop/population/population_base.py	/^from random import randrange, shuffle$/;"	kind:namespace	line:6
+shuffle	../src/kpop/population/projection.py	/^from numpy.random import shuffle$/;"	kind:namespace	line:2
+shuffled_loci	../src/kpop/individual.py	/^    def shuffled_loci(self):$/;"	kind:member	line:161
+shuffled_loci	../src/kpop/population/population_base.py	/^    def shuffled_loci(self):$/;"	kind:member	line:542
 shutil	../.tox/flake8/lib/python3.6/tarfile.py	/^import shutil$/;"	kind:namespace	line:45
 shutil	../.tox/py36/lib/python3.6/tarfile.py	/^import shutil$/;"	kind:namespace	line:45
 shutil.py	../.tox/flake8/lib/python3.6/shutil.py	1;"	kind:file	line:1
@@ -10752,13 +10795,14 @@ sitecustomize	../.tox/flake8/lib/python3.6/site.py	/^        import sitecustomiz
 sitecustomize	../.tox/py36/lib/python3.6/site.py	/^        import sitecustomize$/;"	kind:namespace	line:548
 size	../demos/demo.py	/^size = 100$/;"	kind:variable	line:37
 size	../demos/demo.py	/^size = 50$/;"	kind:variable	line:90
-size	../src/kpop/population/population_base.py	/^    def size(self):$/;"	kind:member	line:95
-skip_blank	../src/kpop/external/structure/parser.py	/^    def skip_blank(self):$/;"	kind:member	line:91
+size	../src/kpop/population/population_base.py	/^    size = property(len)$/;"	kind:variable	line:86
+skip_blank	../src/kpop/external/structure/parser.py	/^    def skip_blank(self):$/;"	kind:member	line:93
 skip_blank	../src/kpop/external/structure/result.py	/^        def skip_blank():$/;"	kind:function	line:91
-skip_dashed_line	../src/kpop/external/structure/parser.py	/^    def skip_dashed_line(self): $/;"	kind:member	line:97
-skip_fragment	../src/kpop/external/structure/parser.py	/^    def skip_fragment(self, st):$/;"	kind:member	line:78
-skip_lines	../src/kpop/external/structure/parser.py	/^    def skip_lines(self, n):$/;"	kind:member	line:102
-skip_whitespace_re	../src/kpop/external/structure/parser.py	/^    skip_whitespace_re = r'^\\s*'$/;"	kind:variable	line:26
+skip_dashed_line	../src/kpop/external/structure/parser.py	/^    def skip_dashed_line(self):$/;"	kind:member	line:99
+skip_fragment	../src/kpop/external/structure/parser.py	/^    def skip_fragment(self, st):$/;"	kind:member	line:80
+skip_lines	../src/kpop/external/structure/parser.py	/^    def skip_lines(self, n):$/;"	kind:member	line:104
+skip_whitespace_re	../src/kpop/external/structure/parser.py	/^    skip_whitespace_re = r'^\\s*'$/;"	kind:variable	line:28
+sklearn_result	../src/kpop/population/projection.py	/^def sklearn_result(method, raw_data):$/;"	kind:function	line:180
 so	../.tox/flake8/lib/python3.6/distutils/__init__.py	/^import opcode # opcode is not a virtualenv module, so we can use it to find the stdlib$/;"	kind:namespace	line:5
 so	../.tox/flake8/lib64/python3.6/distutils/__init__.py	/^import opcode # opcode is not a virtualenv module, so we can use it to find the stdlib$/;"	kind:namespace	line:5
 so	../.tox/py36/lib/python3.6/distutils/__init__.py	/^import opcode # opcode is not a virtualenv module, so we can use it to find the stdlib$/;"	kind:namespace	line:5
@@ -10872,7 +10916,9 @@ stat.py	../.tox/flake8/lib/python3.6/stat.py	1;"	kind:file	line:1
 stat.py	../.tox/py36/lib/python3.6/stat.py	1;"	kind:file	line:1
 stats	../src/kpop/cli/main.py	/^from .stats import stats$/;"	kind:namespace	line:7
 stats	../src/kpop/cli/stats.py	/^def stats(pop: PopulationBase, verbose=False, json=False,$/;"	kind:function	line:22
+stats	../src/kpop/population/population_base.py	/^    stats = object()$/;"	kind:variable	line:114
 stats.py	../src/kpop/cli/stats.py	1;"	kind:file	line:1
+stats.py	../src/kpop/population/stats.py	1;"	kind:file	line:1
 stdlib	../.tox/flake8/lib/python3.6/distutils/__init__.py	/^import opcode # opcode is not a virtualenv module, so we can use it to find the stdlib$/;"	kind:namespace	line:5
 stdlib	../.tox/flake8/lib64/python3.6/distutils/__init__.py	/^import opcode # opcode is not a virtualenv module, so we can use it to find the stdlib$/;"	kind:namespace	line:5
 stdlib	../.tox/py36/lib/python3.6/distutils/__init__.py	/^import opcode # opcode is not a virtualenv module, so we can use it to find the stdlib$/;"	kind:namespace	line:5
@@ -10883,7 +10929,7 @@ str	../.tox/flake8/lib/python3.6/locale.py	/^def str(val):$/;"	kind:function	lin
 str	../.tox/py36/lib/python3.6/locale.py	/^def str(val):$/;"	kind:function	line:299
 str_iterator	../.tox/flake8/lib/python3.6/_collections_abc.py	/^str_iterator = type(iter(""))$/;"	kind:variable	line:47
 str_iterator	../.tox/py36/lib/python3.6/_collections_abc.py	/^str_iterator = type(iter(""))$/;"	kind:variable	line:47
-str_to_data	../src/kpop/individual.py	/^from kpop.kpop_parser import str_to_data$/;"	kind:namespace	line:6
+str_to_data	../src/kpop/individual.py	/^from kpop.kpop_parser import str_to_data$/;"	kind:namespace	line:7
 str_to_data	../src/kpop/kpop_parser.py	/^def str_to_data(data, names=None):$/;"	kind:function	line:53
 strcoll	../.tox/flake8/lib/python3.6/locale.py	/^    strcoll = _strcoll$/;"	kind:variable	line:99
 strcoll	../.tox/py36/lib/python3.6/locale.py	/^    strcoll = _strcoll$/;"	kind:variable	line:99
@@ -10906,7 +10952,7 @@ struct	../.tox/py36/lib/python3.6/base64.py	/^import struct$/;"	kind:namespace	l
 struct	../.tox/py36/lib/python3.6/tarfile.py	/^import struct$/;"	kind:namespace	line:48
 struct.py	../.tox/flake8/lib/python3.6/struct.py	1;"	kind:file	line:1
 struct.py	../.tox/py36/lib/python3.6/struct.py	1;"	kind:file	line:1
-structure_admixture	../src/kpop/population/population_base.py	/^    def structure_admixture(self, k, pop_labels=None, parental_labels=None):$/;"	kind:member	line:470
+structure_admixture	../src/kpop/population/population_base.py	/^    def structure_admixture(self, k, pop_labels=None, parental_labels=None):$/;"	kind:member	line:445
 structure_population	../src/kpop/cli/export.py	/^        extraparams$/;"	kind:namespace	line:38
 structure_population	../src/kpop/external/structure/__init__.py	/^from .base import run_structure, mainparams, extraparams, structure_population$/;"	kind:namespace	line:1
 structure_population	../src/kpop/external/structure/base.py	/^def structure_population(pop, *, label='ind', onerowperind=False,$/;"	kind:function	line:97
@@ -11086,7 +11132,7 @@ template	../.tox/py36/lib/python3.6/tempfile.py	/^template = "tmp"$/;"	kind:vari
 templates_path	../docs/conf.py	/^templates_path = ['_templates']$/;"	kind:variable	line:40
 test	../.tox/flake8/lib/python3.6/base64.py	/^def test():$/;"	kind:function	line:591
 test	../.tox/py36/lib/python3.6/base64.py	/^def test():$/;"	kind:function	line:591
-test_add_remove_individual	../src/kpop/tests/test_population.py	/^def test_add_remove_individual(popA):$/;"	kind:function	line:148
+test_add_remove_individual	../src/kpop/tests/test_population.py	/^def test_add_remove_individual(popA):$/;"	kind:function	line:149
 test_align_to_the_left	../src/kpop/tests/test_converters.py	/^    def test_align_to_the_left(self):$/;"	kind:member	line:84
 test_align_to_the_right	../src/kpop/tests/test_converters.py	/^    def test_align_to_the_right(self):$/;"	kind:member	line:75
 test_alpha_data	../src/kpop/tests/test_kpop_parser.py	/^def test_alpha_data():$/;"	kind:function	line:19
@@ -11099,14 +11145,14 @@ test_clustering.py	../src/kpop/tests/test_clustering.py	1;"	kind:file	line:1
 test_converters.py	../src/kpop/tests/test_converters.py	1;"	kind:file	line:1
 test_copy_individual	../src/kpop/tests/test_individual.py	/^def test_copy_individual(ind):$/;"	kind:function	line:67
 test_create_individual_labels	../src/kpop/tests/test_population.py	/^def test_create_individual_labels(popA):$/;"	kind:function	line:93
-test_create_offspring	../src/kpop/tests/test_population.py	/^def test_create_offspring(popA):$/;"	kind:function	line:96
+test_create_offspring	../src/kpop/tests/test_population.py	/^def test_create_offspring(popA):$/;"	kind:function	line:97
 test_cython_implementations_matches_reference_fj	../src/kpop/tests/_test_admixture_calculation.py	/^def test_cython_implementations_matches_reference_fj(alg):$/;"	kind:function	line:69
 test_cython_implementations_matches_reference_qi	../src/kpop/tests/_test_admixture_calculation.py	/^def test_cython_implementations_matches_reference_qi(alg):$/;"	kind:function	line:51
 test_dimensionality_reduction.py	../src/kpop/tests/test_dimensionality_reduction.py	1;"	kind:file	line:1
 test_documentation.py	../src/kpop/tests/test_documentation.py	1;"	kind:file	line:1
 test_export_population_to_arlequin	../src/kpop/tests/test_converters.py	/^    def test_export_population_to_arlequin(self, popA, popB):$/;"	kind:member	line:59
 test_fill_frequencies	../src/kpop/tests/test_freqmatrix.py	/^def test_fill_frequencies(f_flat, f_filled):$/;"	kind:function	line:17
-test_fill_population_uses_the_correct_frequencies	../src/kpop/tests/test_population.py	/^def test_fill_population_uses_the_correct_frequencies(popA):$/;"	kind:function	line:109
+test_fill_population_uses_the_correct_frequencies	../src/kpop/tests/test_population.py	/^def test_fill_population_uses_the_correct_frequencies(popA):$/;"	kind:function	line:110
 test_flatten_frequencies	../src/kpop/tests/test_freqmatrix.py	/^def test_flatten_frequencies(f_flat, f_filled):$/;"	kind:function	line:22
 test_freqmatrix.py	../src/kpop/tests/test_freqmatrix.py	1;"	kind:file	line:1
 test_freqs_binomial	../src/kpop/tests/test_freqmatrix.py	/^def test_freqs_binomial():$/;"	kind:function	line:27
@@ -11130,7 +11176,7 @@ test_large_data_with_titles	../src/kpop/tests/test_converters.py	/^    def test_
 test_likelihood.py	../src/kpop/tests/test_likelihood.py	1;"	kind:file	line:1
 test_loglike	../src/kpop/tests/test_likelihood.py	/^def test_loglike():$/;"	kind:function	line:6
 test_make_individual_from_data	../src/kpop/tests/test_individual.py	/^def test_make_individual_from_data():$/;"	kind:function	line:116
-test_make_random_population	../src/kpop/tests/test_population.py	/^def test_make_random_population():$/;"	kind:function	line:140
+test_make_random_population	../src/kpop/tests/test_population.py	/^def test_make_random_population():$/;"	kind:function	line:141
 test_missing_data	../src/kpop/tests/test_kpop_parser.py	/^def test_missing_data():$/;"	kind:function	line:13
 test_mode	../src/kpop/tests/test_prob.py	/^def test_mode():$/;"	kind:function	line:5
 test_mode_set	../src/kpop/tests/test_prob.py	/^def test_mode_set():$/;"	kind:function	line:11
@@ -11141,7 +11187,7 @@ test_population.py	../src/kpop/tests/test_population.py	1;"	kind:file	line:1
 test_population_attribute_behaves_as_a_list	../src/kpop/tests/test_multipopulation.py	/^def test_population_attribute_behaves_as_a_list(popA, popB):$/;"	kind:function	line:20
 test_population_basic_attributes	../src/kpop/tests/test_population.py	/^    def test_population_basic_attributes(self, popA):$/;"	kind:member	line:14
 test_population_frequency_attributes	../src/kpop/tests/test_population.py	/^    def test_population_frequency_attributes(self, popA):$/;"	kind:member	line:23
-test_population_genetic_drift	../src/kpop/tests/test_population.py	/^def test_population_genetic_drift(popA):$/;"	kind:function	line:119
+test_population_genetic_drift	../src/kpop/tests/test_population.py	/^def test_population_genetic_drift(popA):$/;"	kind:function	line:120
 test_prob.py	../src/kpop/tests/test_prob.py	1;"	kind:file	line:1
 test_probabilistic_classifier	../src/kpop/tests/test_multipopulation.py	/^def test_probabilistic_classifier(popA, popB):$/;"	kind:function	line:37
 test_random_individual	../src/kpop/tests/test_individual.py	/^def test_random_individual():$/;"	kind:function	line:103
@@ -11153,7 +11199,14 @@ test_shuffle_loci	../src/kpop/tests/test_individual.py	/^def test_shuffle_loci(i
 test_simple_csv_file	../src/kpop/tests/test_converters.py	/^    def test_simple_csv_file(self):$/;"	kind:member	line:67
 test_statistics.py	../src/kpop/tests/test_statistics.py	1;"	kind:file	line:1
 test_structure.py	../src/kpop/tests/test_structure.py	1;"	kind:file	line:1
-test_structure_can_detect_easy_parental_populations	../src/kpop/tests/test_structure.py	/^def test_structure_can_detect_easy_parental_populations(popA, popB):$/;"	kind:function	line:11
+test_structure_can_detect_easy_parental_populations	../src/kpop/tests/test_structure.py	/^    def test_structure_can_detect_easy_parental_populations(self, popA, popB):$/;"	kind:member	line:15
+test_structure_parser_extracts_basic_info	../src/kpop/tests/test_structure.py	/^    def test_structure_parser_extracts_basic_info(self, example):$/;"	kind:member	line:32
+test_structure_parser_extracts_extended_info	../src/kpop/tests/test_structure.py	/^    def test_structure_parser_extracts_extended_info(self, example):$/;"	kind:member	line:41
+test_structure_parser_extracts_frequency_matrix	../src/kpop/tests/test_structure.py	/^    def test_structure_parser_extracts_frequency_matrix(self, example):$/;"	kind:member	line:63
+test_structure_parser_extracts_fst	../src/kpop/tests/test_structure.py	/^    def test_structure_parser_extracts_fst(self, example):$/;"	kind:member	line:81
+test_structure_parser_extracts_likelihood_data	../src/kpop/tests/test_structure.py	/^    def test_structure_parser_extracts_likelihood_data(self, example):$/;"	kind:member	line:90
+test_structure_parser_extracts_memberships	../src/kpop/tests/test_structure.py	/^    def test_structure_parser_extracts_memberships(self, example):$/;"	kind:member	line:115
+test_structure_parser_extracts_mixture_data	../src/kpop/tests/test_structure.py	/^    def test_structure_parser_extracts_mixture_data(self, example):$/;"	kind:member	line:96
 teste.py	../src/kpop/examples/teste.py	1;"	kind:file	line:1
 testing	../src/kpop/tests/test_documentation.py	/^import manuel.testing$/;"	kind:namespace	line:7
 texinfo_documents	../docs/conf.py	/^texinfo_documents = [$/;"	kind:variable	line:277
@@ -11239,7 +11292,8 @@ trans_36	../.tox/flake8/lib/python3.6/hmac.py	/^trans_36 = bytes((x ^ 0x36) for 
 trans_36	../.tox/py36/lib/python3.6/hmac.py	/^trans_36 = bytes((x ^ 0x36) for x in range(256))$/;"	kind:variable	line:11
 trans_5C	../.tox/flake8/lib/python3.6/hmac.py	/^trans_5C = bytes((x ^ 0x5C) for x in range(256))$/;"	kind:variable	line:10
 trans_5C	../.tox/py36/lib/python3.6/hmac.py	/^trans_5C = bytes((x ^ 0x5C) for x in range(256))$/;"	kind:variable	line:10
-transformed_copy	../src/kpop/population/population_base.py	/^    def transformed_copy(self, individuals, force_multi=False, **kwargs):$/;"	kind:member	line:625
+transform	../src/kpop/population/projection.py	/^    def transform(self, data):$/;"	kind:member	line:176
+transformed_copy	../src/kpop/population/population_base.py	/^    def transformed_copy(self, individuals, force_multi=False, **kwargs):$/;"	kind:member	line:510
 translate	../.tox/flake8/lib/python3.6/collections/__init__.py	/^    def translate(self, *args):$/;"	kind:member	line:1243
 translate	../.tox/flake8/lib/python3.6/fnmatch.py	/^def translate(pat):$/;"	kind:function	line:74
 translate	../.tox/py36/lib/python3.6/collections/__init__.py	/^    def translate(self, *args):$/;"	kind:member	line:1243
@@ -11256,6 +11310,7 @@ truncate	../.tox/flake8/lib/python3.6/tempfile.py	/^    def truncate(self, size=
 truncate	../.tox/py36/lib/python3.6/tempfile.py	/^    def truncate(self, size=None):$/;"	kind:member	line:756
 truth	../.tox/flake8/lib/python3.6/operator.py	/^def truth(a):$/;"	kind:function	line:57
 truth	../.tox/py36/lib/python3.6/operator.py	/^def truth(a):$/;"	kind:function	line:57
+tsne	../src/kpop/population/projection.py	/^    def tsne(self, k=2, *, method='count', norm=True, **kwargs):$/;"	kind:member	line:119
 tuple_iterator	../.tox/flake8/lib/python3.6/_collections_abc.py	/^tuple_iterator = type(iter(()))$/;"	kind:variable	line:48
 tuple_iterator	../.tox/py36/lib/python3.6/_collections_abc.py	/^tuple_iterator = type(iter(()))$/;"	kind:variable	line:48
 types	../.tox/flake8/lib/python3.6/copy.py	/^import types$/;"	kind:namespace	line:51
@@ -11385,7 +11440,8 @@ values	../.tox/py36/lib/python3.6/_collections_abc.py	/^    def values(self):$/;
 values	../.tox/py36/lib/python3.6/collections/__init__.py	/^    def values(self):$/;"	kind:member	line:228
 values	../.tox/py36/lib/python3.6/weakref.py	/^    def values(self):$/;"	kind:member	line:242
 values	../.tox/py36/lib/python3.6/weakref.py	/^    def values(self):$/;"	kind:member	line:454
-values	../src/kpop/external/structure/parser.py	/^        def values(line):$/;"	kind:function	line:273
+values	../src/kpop/external/structure/parser.py	/^        def values(line):$/;"	kind:function	line:276
+values	../src/kpop/external/structure/parser.py	/^        def values(x): return (f(x) for f, x in zip(types, groups(x)))$/;"	kind:function	line:251
 values	../src/kpop/prob.py	/^    def values(self):$/;"	kind:member	line:78
 vel_update	../old/lagrangean_test.py	/^def vel_update(dt, check=True, normalize=False):$/;"	kind:function	line:145
 velocity_ic	../old/initial_conditions_for_lagrangean.py	/^def velocity_ic(mod=1):$/;"	kind:function	line:163
@@ -11465,6 +11521,7 @@ weibullvariate	../.tox/py36/lib/python3.6/random.py	/^weibullvariate = _inst.wei
 which	../.tox/flake8/lib/python3.6/shutil.py	/^def which(cmd, mode=os.F_OK | os.X_OK, path=None):$/;"	kind:function	line:1093
 which	../.tox/py36/lib/python3.6/shutil.py	/^def which(cmd, mode=os.F_OK | os.X_OK, path=None):$/;"	kind:function	line:1093
 whiten	../old/kmeans.py	/^def whiten(data, method=True):$/;"	kind:function	line:566
+whiten	../src/kpop/population/projection.py	/^def whiten(data, method):$/;"	kind:function	line:207
 windows_locale	../.tox/flake8/lib/python3.6/locale.py	/^windows_locale = {$/;"	kind:variable	line:1399
 windows_locale	../.tox/py36/lib/python3.6/locale.py	/^windows_locale = {$/;"	kind:variable	line:1399
 with	../.tox/flake8/lib/python3.6/importlib/_bootstrap.py	/^            raise ImportError('attempted relative import with no known parent '$/;"	kind:namespace	line:918
@@ -11473,6 +11530,7 @@ with_statement	../.tox/flake8/lib/python3.6/__future__.py	/^with_statement = _Fe
 with_statement	../.tox/py36/lib/python3.6/__future__.py	/^with_statement = _Feature((2, 5, 0, "alpha", 1),$/;"	kind:variable	line:122
 wrapped	../.tox/flake8/lib/python3.6/types.py	/^    def wrapped(*args, **kwargs):$/;"	kind:function	line:247
 wrapped	../.tox/py36/lib/python3.6/types.py	/^    def wrapped(*args, **kwargs):$/;"	kind:function	line:247
+wrapped	../src/kpop/tests/test_documentation.py	/^        def wrapped(): return func()$/;"	kind:function	line:19
 wrapper	../.tox/flake8/lib/python3.6/functools.py	/^        def wrapper(*args, **kwds):$/;"	kind:function	line:502
 wrapper	../.tox/flake8/lib/python3.6/functools.py	/^        def wrapper(*args, **kwds):$/;"	kind:function	line:511
 wrapper	../.tox/flake8/lib/python3.6/functools.py	/^        def wrapper(*args, **kwds):$/;"	kind:function	line:526
@@ -11527,7 +11585,7 @@ zfill	../.tox/flake8/lib/python3.6/collections/__init__.py	/^    def zfill(self,
 zfill	../.tox/py36/lib/python3.6/collections/__init__.py	/^    def zfill(self, width): return self.__class__(self.data.zfill(width))$/;"	kind:member	line:1246
 zip_iterator	../.tox/flake8/lib/python3.6/_collections_abc.py	/^zip_iterator = type(iter(zip()))$/;"	kind:variable	line:49
 zip_iterator	../.tox/py36/lib/python3.6/_collections_abc.py	/^zip_iterator = type(iter(zip()))$/;"	kind:variable	line:49
-zip_safe	../setup.py	/^    zip_safe=False,$/;"	kind:variable	line:124
+zip_safe	../setup.py	/^    zip_safe=False,$/;"	kind:variable	line:125
 zipfile	../.tox/flake8/lib/python3.6/shutil.py	/^    import zipfile  # late import for breaking circular dependency$/;"	kind:namespace	line:666
 zipfile	../.tox/flake8/lib/python3.6/shutil.py	/^    import zipfile  # late import for breaking circular dependency$/;"	kind:namespace	line:874
 zipfile	../.tox/py36/lib/python3.6/shutil.py	/^    import zipfile  # late import for breaking circular dependency$/;"	kind:namespace	line:666

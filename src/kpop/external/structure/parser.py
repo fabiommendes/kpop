@@ -16,7 +16,7 @@ def matcher(regex):
 
 def match(re, st):
     "Match string with given regex."
-    
+
     return matcher(re)(st)
 
 
@@ -38,7 +38,7 @@ class StructureParser:
 
     def push(self, value):
         "Append string to the begining of file"
-        
+
         self.lines.appendleft(value)
 
     def run(self):
@@ -65,7 +65,7 @@ class StructureParser:
         m = match(re, line)
         if m is None:
             raise ValueError('unexpected line: %r' % line)
-        
+
         new_line = self.lines[0][m.span()[1]:]
         if new_line:
             self.lines[0] = new_line
@@ -79,16 +79,16 @@ class StructureParser:
 
     def skip_fragment(self, st):
         if not self.lines:
-            raise ValueError('EOF') 
+            raise ValueError('EOF')
         elif not self.lines[0].startswith(st):
             raise ValueError(
                 'expect\n  %r, got\n  %r' % (st, self.lines[0].rstrip())
             )
-        new_line = self.lines[0][len(st):] 
+        new_line = self.lines[0][len(st):]
         if new_line:
             self.lines[0] = new_line
         else:
-            self.lines.popleft() 
+            self.lines.popleft()
 
     def skip_blank(self):
         lines = self.lines
@@ -96,32 +96,32 @@ class StructureParser:
         while lines and (lines[0].isspace() or not lines[0]):
             lines.popleft()
 
-    def skip_dashed_line(self): 
+    def skip_dashed_line(self):
         line = self.pop()
         if set(line) != {'-'}:
             raise ValueError('unexpected line: %r' % line)
-    
+
     def skip_lines(self, n):
         for _ in range(n):
             self.lines.popleft()
 
     #
-    # STRUCTURE FILE SECTIONS 
-    #  
+    # STRUCTURE FILE SECTIONS
+    #
     def parse_header(self):
         self.skip_blank()
         self.pop()
         while not self.pop().startswith('-'):
             pass
         self.skip_blank()
-        
+
     def parse_config(self):
         result = self.result
 
         # Cli args
         self.skip_fragment('Command line arguments:')
         result.argv = self.lines.popleft().strip().split()
-        
+
         # Infile
         self.skip_fragment('Input File:')
         result.infile = self.lines.popleft().strip()
@@ -150,9 +150,9 @@ class StructureParser:
             r'^RANDOMIZE turned (\w+)$'
         )
         result.RANDOMIZE = {'off': False, 'on': True}[randomize]
-        
+
         self.skip_blank()
-        
+
     def parse_membership(self):
         # Skip table header
         self.skip_dashed_line()
@@ -160,7 +160,7 @@ class StructureParser:
         self.skip_blank()
         self.skip_lines(2)
         self.skip_blank()
-        
+
         # Read lines until it reaches the dashed line
         lines = []
         index = []
@@ -180,7 +180,7 @@ class StructureParser:
         for col in range(len(lines[0]) - 1):
             df['cluster_%s' % col] = [line[col] for line in lines]
         df['size'] = [line[-1] for line in lines]
-        
+
         self.skip_blank()
 
     def parse_divergence(self):
@@ -195,7 +195,7 @@ class StructureParser:
                 float(x) if x != '-' else 0.0
                 for x in self.pop().strip().split()[1:]
             ])
-        
+
         # Convert to matrix
         self.result.allele_freq_divergence = np.array(lines)
         self.skip_blank()
@@ -218,7 +218,7 @@ class StructureParser:
         )
         result.mean_log_like = self.parse_data(
             r'Mean value of ln likelihood\s*= (-?\d+[.]\d+)', float
-        ) 
+        )
         result.var_log_like = self.parse_data(
             r'Variance of ln likelihood\s*= (-?\d+[.]\d+)', float
         )
@@ -238,15 +238,17 @@ class StructureParser:
 
     def parse_Q(self):
         self.skip_lines(2)
-        
-        # Prepare line matcher        
+
+        # Prepare line matcher
         regex = r'^\s*\d+\s*(\w+)\s*[(](\d+[.]?\d*)[)]\s*(\d+)\s*:\s*'
         regex += r'(\d+[.]\d+)\s*' * self.result.k
         regex += r'$'
         regex = re.compile(regex)
-        groups = lambda x: regex.match(x).groups()
+
+        def groups(x): return regex.match(x).groups()
         types = [str, float, int] + [float] * self.result.k
-        values = lambda x: (f(x) for f, x in zip(types, groups(x)))
+
+        def values(x): return (f(x) for f, x in zip(types, groups(x)))
 
         # Read mixture data
         data = []
@@ -256,22 +258,21 @@ class StructureParser:
 
         # Save on data frame
         columns = ['label', 'missing', 'population'] \
-                + ['cluster_%s' % i for i in range(self.result.k)]
+            + ['cluster_%s' % i for i in range(self.result.k)]
         self.result.q_matrix = pd.DataFrame(data, columns=columns)
         self.skip_blank()
-
 
     def parse_F(self):
         self.skip_lines(2)
         self.skip_blank()
-        
+
         # Match each line of allele data
         regex = r'^\s*(\w+)\s*[(](\d+[.]?\d*)[)]\s*'
         regex += r'(\d+[.]?\d*)\s*' * self.result.k
         regex += r'$'
         regex = re.compile(regex)
         types = [str, float] + [float] * self.result.k
-        
+
         def values(line):
             m = regex.match(line)
             if m is None:
@@ -283,17 +284,17 @@ class StructureParser:
         data = []
         for _ in range(self.result.loci):
             name = self.pop().strip(': ')
-            n_alleles = self.parse_data(r'^(\d+) alleles$', int) 
+            n_alleles = self.parse_data(r'^(\d+) alleles$', int)
             missing = self.parse_data(r'^(\d+[.]\d+)% missing data$', float)
-            
+
             columns = ['name', 'total'] + ['cluster_%s' % i for i in range(k)]
             alleles = [values(self.pop()) for x in range(n_alleles)]
             alleles = pd.DataFrame(alleles, columns=columns)
             alleles.index = alleles.pop('name')
-            
+
             data.append([name, n_alleles, missing, alleles])
             self.skip_blank()
-        
+
         # Convert to dataframe
         columns = ['name', 'n_alleles', 'missing', 'data']
         self.result.F_matrix = pd.DataFrame(data, columns=columns)
@@ -301,12 +302,12 @@ class StructureParser:
     def parse_options(self):
         self.skip_lines(1)
 
-        flag = lambda x: bool(int(x))
+        def flag(x): return bool(int(x))
         converters = dict(
             NUMINDS=int,
             NUMLOCI=int,
-            MISSING=flag,	
-            LABEL=flag,	
+            MISSING=flag,
+            LABEL=flag,
             POPDATA=flag,
             POPFLAG=flag,
             PHENOTYPE=flag,
@@ -367,15 +368,15 @@ class StructureParser:
         self.result.options = self.parse_dict(self.pop(), converters)
 
     def parse_strat(self):
-        flag = lambda x: bool(int(x))
+        def flag(x): return bool(int(x))
         line = self.pop().partition(':')[-1].strip()
         converters = dict(
-            NUMSIMSTATS=int,	
-            PHENOTYPECOL=int,	
-            POOLFREQ=int,	
-            LOCUSxONLY=flag,	
+            NUMSIMSTATS=int,
+            PHENOTYPECOL=int,
+            POOLFREQ=int,
+            LOCUSxONLY=flag,
             EMERROR=float,
-            MISSINGPHENO=int,	
+            MISSINGPHENO=int,
         )
         self.result.strat_options = self.parse_dict(line, converters)
 
@@ -386,7 +387,6 @@ class StructureParser:
         options = filter(lambda x: x[0], options)
         options = dict(map((lambda x: (x[0], x[2])), options))
         return {k: converters.get(k, str)(v) for k, v in options.items()}
-        
 
 
 def parse_lines(lines, parser=StructureParser):

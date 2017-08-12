@@ -5,6 +5,18 @@ API Reference
 API documentation for the :mod:`kpop` module.
 
 
+Individual
+==========
+
+Each element of a population is an instance of :class:`kpop.Individual`. An
+:class:`kpop.Individual` behave similarly as a list of genetypes or as an
+2D array of genotypes.
+
+.. autoclass:: kpop.Individual
+   :members:
+   :inherited-members:
+
+
 Population objects
 ==================
 
@@ -38,18 +50,6 @@ utilities.
 
 .. autoclass:: kpop.population.attr_plot.PlotAttribute
    :members:
-
-
-Individual
-==========
-
-Each element of a population is an instance of :class:`kpop.Individual`. An
-:class:`kpop.Individual` behave similarly as a list of genetypes or as an
-2D array of genotypes.
-
-.. autoclass:: kpop.Individual
-   :members:
-   :inherited-members:
 
 
 Other utility types

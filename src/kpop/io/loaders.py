@@ -118,7 +118,7 @@ def load_csv(file=sys.stdout, *,
     if pop_col is None:
         result = Population(populations[None], label=pop_label)
     else:
-        factory = lambda x: Population(x[1], label=x[0])
+        def factory(x): return Population(x[1], label=x[0])
         populations = map(factory, populations.items())
         result = MultiPopulation(populations, label=pop_label)
     result.loci_names = header

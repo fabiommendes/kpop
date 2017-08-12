@@ -2,7 +2,7 @@ import abc
 import pickle
 
 
-class RenderablePopulationMixin(abc.ABC):
+class RenderableMixin(abc.ABC):
     """
     Rendering and serialization functions for population classes
     """
@@ -100,3 +100,11 @@ class RenderablePopulationMixin(abc.ABC):
                 F.write(data)
         else:
             raise ValueError('invalid file format: %r' % format)
+
+
+class Io:
+    def __init__(self, pop):
+        self.population = pop
+
+
+

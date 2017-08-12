@@ -81,7 +81,6 @@ locus,        A,        B
    L5, 0.500000, 0.375000
 '''[1:]
 
-
     def _test_render_population_frequencies(self, popA, popB):
         assert (popA + popB).render_biallelic_frequencies(sep=', ') == '''
 
@@ -94,10 +93,11 @@ locus,        A,        B
 def test_create_individual_labels(popA):
     assert popA[0].label == 'A1'
 
+
 def test_create_offspring(popA):
     ind3 = popA.random_individual()
     ind2 = popA.new_offspring(label='Achild')
-    ind1 = popA.new(label='Arandom')
+    ind1 = popA.new_individual(label='Arandom')
 
     for ind in ind1, ind2, ind3:
         print(ind)

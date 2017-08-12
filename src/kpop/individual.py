@@ -2,8 +2,10 @@ import collections
 
 import numpy as np
 from lazyutils import delegate_to, lazy
+from sidekick import _
 
 from kpop.kpop_parser import str_to_data
+from kpop.utils import fn_lazy, fn_property
 
 NOT_GIVEN = object()
 
@@ -33,13 +35,14 @@ class Individual(collections.Sequence):
             representation. If not given, it inherits from parent population.
     """
 
-    @lazy
-    def num_loci(self):
-        return self._data.shape[0]
-
-    @lazy
-    def ploidy(self):
-        return self._data.shape[1]
+    num_loci = fn_lazy(_.data.shape[0])
+    ploidy = fn_lazy(_.data.shape[1])
+    is_biallelic = fn_lazy(_.num_alleles == 2)
+    has_missing = fn_property(lambda _: 0 in _.data)
+    missing_total = fn_property(lambda _: (_.data == 0).sum())
+    missing_ratio = fn_property(_.missing_total / (_.num_loci * _.ploidy))
+    flatten = delegate_to('data')
+    dtype = delegate_to('data')
 
     @lazy
     def num_alleles(self):
@@ -48,14 +51,6 @@ class Individual(collections.Sequence):
         else:
             return self.data.max()
 
-    @lazy
-    def is_biallelic(self):
-        return self.num_alleles == 2
-
-    @property
-    def data(self):
-        return self._data
-
     @property
     def allele_names(self):
         if self._allele_names is None:
@@ -63,28 +58,12 @@ class Individual(collections.Sequence):
                 return self.population.allele_names
         return self._allele_names
 
-    @property
-    def has_missing(self):
-        return 0 in self._data
-
-    @property
-    def missing_ratio(self):
-        return (self._data == 0).sum() / (self.num_loci * self.ploidy)
-
-    @property
-    def missing_total(self):
-        return (self._data == 0).sum()
-
     @lazy
     def admixture_vector(self):
         if self.admixture_q is None:
             return None
         values = sorted(self.admixture_q.items())
         return np.array([y for x, y in values])
-
-    # Inherited attributes
-    flatten = delegate_to('_data')
-    dtype = delegate_to('_data')
 
     @classmethod
     def from_freqs(cls, freqs, ploidy=2, **kwargs):
@@ -111,7 +90,8 @@ class Individual(collections.Sequence):
         return cls(data, **kwargs)
 
     def __init__(self, data, copy=True, label=None, population=None,
-                 allele_names=None, dtype=np.uint8, meta=None, admixture_q=None, num_alleles=None):
+                 allele_names=None, dtype=np.uint8, meta=None, admixture_q=None,
+                 num_alleles=None):
 
         # Convert string initial data
         if isinstance(data, str):
@@ -142,7 +122,7 @@ class Individual(collections.Sequence):
             allele_names = [allele_names for _ in data]
 
         # Save attributes
-        self._data = data
+        self.data = data
         self._allele_names = allele_names
         self.population = population
         self.admixture_q = admixture_q
@@ -155,10 +135,10 @@ class Individual(collections.Sequence):
             self.num_alleles = num_alleles
 
     def __getitem__(self, idx):
-        return self._data[idx]
+        return self.data[idx]
 
     def __iter__(self):
-        return iter(self._data)
+        return iter(self.data)
 
     def __repr__(self):
         return '%s(%r)' % (self.__class__.__name__, self.render(limit=20))
@@ -167,8 +147,30 @@ class Individual(collections.Sequence):
         return self.render()
 
     def __len__(self):
-        return len(self._data)
+        return len(self.data)
 
+    def haplotypes(self):
+        """
+        Return a sequence of ploidy arrays with each haplotype.
+
+        This operation is a simple transpose of genotype data.
+        """
+
+        return self.data.T
+
+    def shuffled_loci(self):
+        """
+        Randomize the position of values in same locus *inplace*.
+        """
+
+        new = self.copy()
+        for loci in new.data:
+            np.random.shuffle(loci)
+        return new
+    
+    #
+    # Coping, saving and serialization
+    #
     def copy(self, data=None, *, copy=True, meta=NOT_GIVEN, **kwargs):
         """
         Creates a copy of individual.
@@ -291,23 +293,6 @@ class Individual(collections.Sequence):
 
         kwargs['label'] = label or label_from_parents(self.label, other.label)
         return self.copy(data, copy=False, **kwargs)
-
-    def haplotypes(self):
-        """
-        Return a sequence of ploidy arrays with each haplotype.
-
-        This operation is a simple transpose of genotype data.
-        """
-
-        return self._data.T
-
-    def shuffle_loci(self):
-        """
-        Randomize the position of alleles at same locus *inplace*.
-        """
-
-        for loci in self.data:
-            np.random.shuffle(loci)
 
 
 def label_from_parents(l1, l2):

@@ -1,7 +1,7 @@
 import numpy as np
 from lazyutils import lazy
 
-from .attr_populations import ImmutablePopulationList
+from .populations import ImmutablePopulationList
 from .population_base import PopulationBase
 from ..individual import Individual
 from ..utils.frequencies import random_frequencies
@@ -117,7 +117,7 @@ class Population(PopulationBase):
             np.random.seed(seed)
 
         while self.size < size:
-            new = self.new(label=self._next_label())
+            new = self.new_individual(label=self._next_label())
             self.add(new)
 
     def fill_missing(self):

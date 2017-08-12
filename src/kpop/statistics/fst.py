@@ -31,7 +31,7 @@ def biallelic_pairwise_fst(freqs: np.ndarray,
     fst_matrix = np.zeros((k, k), dtype=float)
 
     if freqs.shape != h_freqs.shape:
-        shapes = freqs.shape , h_freqs.shape
+        shapes = freqs.shape, h_freqs.shape
         raise ValueError('inconsistent frequency shapes: %s' % (shapes,))
     if freqs.shape[0] != len(sizes):
         shapes = freqs.shape, sizes.shape
@@ -76,9 +76,9 @@ def biallelic_fst(freqs1, freqs2, h_freqs1, h_freqs2, sizes):
 
     # Compute a, b, c
     a = n / nc * (
-        s2 - 1 / (n- 1) * (p * (1 - p) - s2 / 2- h / 4)
+        s2 - 1 / (n - 1) * (p * (1 - p) - s2 / 2 - h / 4)
     )
-    b = n/ (n- 1) * (
+    b = n / (n - 1) * (
         p * (1 - p) - s2 / 2 - (2 * n - 1) / (4 * n) * h
     )
     c = h / 2

@@ -183,7 +183,7 @@ def prepare_setup_files(pop, save_files=True, save_dir=None,
     if not pop:
         raise ValueError('cannot proceed with empty population.')
 
-    B = lambda x: int(bool(x))                                      # noqa: E731
+    def B(x): return int(bool(x))                                      # noqa: E731
     mainparams_data = mainparams(
         pop,
         infile=population_file,
@@ -205,7 +205,8 @@ def prepare_setup_files(pop, save_files=True, save_dir=None,
     # Save files in the specified directory
     if save_files:
         save_dir = os.path.abspath(save_dir) if save_dir else os.getcwd()
-        path = lambda x: os.path.join(save_dir, x)                  # noqa: E731
+
+        def path(x): return os.path.join(save_dir, x)                  # noqa: E731
 
         with open(path('mainparams'), 'w', encoding='utf8') as F:
             F.write(mainparams_data)

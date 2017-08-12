@@ -74,7 +74,13 @@ def admixture_scatter(coeffs, colors=None, legend=True,
                       pop_sizes=None, pop_labels=None, parental_labels=None,
                       title='Admixture coefficients'):
     """
-    Makes an scatter plot of admixture coefficients.
+    Makes an scatter plot of admixture coefficients using polygonal projections.
+    For k=3, this is the traditional triangle plot and it completly encodes a
+    probability distribution into a point inside the triangle.
+
+    For more than 3 coordinates, the polygonal projection ceases to be bijective
+    and each point in the graph is associated with many different probability
+    distributions.
 
     Args:
         coeffs:

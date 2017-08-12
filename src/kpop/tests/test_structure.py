@@ -38,7 +38,6 @@ class TestStructureParser:
         assert 'SelP' in example.infile
         assert example.reps == 100000
 
-
     def test_structure_parser_extracts_extended_info(self, example):
         assert {'-e', '-m'}.issubset(example.argv)
         assert sorted(example.options.keys()) == [
@@ -97,7 +96,7 @@ class TestStructureParser:
     def test_structure_parser_extracts_mixture_data(self, example):
         Q = example.q_matrix
         assert list(Q.columns) == [
-            'label', 'missing', 'population', 'cluster_0', 'cluster_1', 
+            'label', 'missing', 'population', 'cluster_0', 'cluster_1',
             'cluster_2'
         ]
         ind0 = Q.iloc[0]
@@ -108,7 +107,7 @@ class TestStructureParser:
         assert ind0['cluster_1'] == .995
         assert ind0['cluster_2'] == .002
 
-        # There are small rounding errors for mixture data. Maybe we should 
+        # There are small rounding errors for mixture data. Maybe we should
         # consider fixing them on the parser.
         totals = Q[['cluster_0', 'cluster_1', 'cluster_2']].sum(1)
         assert (abs(totals - 1) < 2e-3).all()
@@ -120,4 +119,3 @@ class TestStructureParser:
             [0.944, 0.008, 0.048,  59],
             [0.981, 0.006, 0.012, 224],
         ]).all()
-        
