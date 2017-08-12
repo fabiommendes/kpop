@@ -8,7 +8,7 @@ from .utils import normalize_coeffs, _colors, _pop_labels, _pop_sizes, \
 def admixture_bars(coeffs, colors=None, legend=True,
                    ylabel='Ancestry proportions',
                    pop_sizes=None, pop_labels=None, parental_labels=None,
-                   separaton_lines=True, sort=0,
+                   separaton_lines=True, sort=None,
                    title='Admixture coefficients', axes=None):
     """
     Makes an bar plot of admixture coefficients.
@@ -16,8 +16,33 @@ def admixture_bars(coeffs, colors=None, legend=True,
     It accepts all arguments as :func:`admixture_scatter`.
 
     Args:
+        coeffs:
+            An array with admixture coefficents. Each row is an individual and
+            each column represents the admixture coefficients for parental
+            populations. These coefficients do not need to be normalized.
+        colors (str or Sequence):
+            A colormap or a sequence of colors for each population.
+        legend (bool):
+            If True (default), display a legend with sub-populations.
         ylabel:
             Label of the y-axis.
+        pop_sizes (list[int]):
+            A list of population sizes. The sum of all pop_sizes must be equal
+            to the number of individuals in the coeffs data.
+        pop_labels (list[str]):
+            A list of population labels. Must be of the same size as pop_sizes.
+        parental_labels (list[str]):
+            A list of labels for the parental populations. The bar plot shows
+            the proportions for each parental population.
+        separaton_lines (bool):
+            If true, draws a thin line separating each population.
+        sort (int):
+            Corresponds to the index of a parental population that is used to
+            sort individuals. If given, individuals within each population are
+            sorted by ancestry coefficient for the given parental population.
+        title (str):
+            Plot's title.
+
 
     Returns:
         A matplotlib axes instance.
@@ -29,7 +54,9 @@ def admixture_bars(coeffs, colors=None, legend=True,
     pop_sizes = _pop_sizes(pop_sizes, num_individuals)
 
     # Sort by coefficient
-    if sort is not None or sort is not False:
+    if sort is True:
+        sort = 0
+    if sort not in (None, False):
         coeffs = sort_coeffs(coeffs, pop_sizes, sort)
 
     # Adjust pop sizes and names
@@ -92,9 +119,10 @@ def admixture_scatter(coeffs, colors=None, legend=True,
         legend (bool):
             If True (default), admix legend.
         pop_sizes (list[int]):
-            A list of population sizes.
+            A list of population sizes. The sum of all pop_sizes must be equal
+            to the number of individuals in the coeffs data.
         pop_labels (list[str]):
-            A list of population labels.
+            A list of population labels. Must be of the same size as pop_sizes.
         parental_labels (list[str]):
             A list of labels for the parental populations.
         title (str):

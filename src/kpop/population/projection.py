@@ -1,9 +1,9 @@
 import numpy as np
-from numpy.random import shuffle
 from lazyutils import lazy
 from sklearn import manifold
 
 from .population_base import PopulationBase
+NOT_GIVEN = object()
 
 
 class Projection:
@@ -16,14 +16,14 @@ class Projection:
     def __init__(self, population):
         self.population = population
 
-    def as_data(self, method='flatten', norm=None):
+    def as_data(self, method='flatten', norm=NOT_GIVEN):
         """
         Convert genotype data into a numpy array. This is a basic pre-processing
         step in many dimensionality reduction algorithms.
 
         Genotypes are categorical data and usually it doesn't make sense to
         treat the integer encoding used in kpop as ordinal data (there is
-        no ordering implied when treating say, allele 1 vs allele 2 and allele 
+        no ordering implied when treating say, allele 1 vs allele 2 vs allele
         3).
 
         There are a few basic strategies to convert categorical data in a 
@@ -34,21 +34,26 @@ class Projection:
            locus and creates a matrix C(n,j) of the number of #1 alleles for
            individual n in location j. This only makes sense when working with
            biallelic data.
-        2. The 'flatten' method shuffle the alleles at each loci, flatten, and
-           creates a matrix C(n, j) with (N x 2J) elements. The rest of the
-           algorithm proceeds identically.
-        3. (TODO) In the future we will implement other 
+        2. The 'flatten' method shuffles the alleles at each loci, flatten
+           it, and creates a matrix C(n, j) with (N x 2J) elements. The rest
+           of the algorithm proceeds identically. This pre-processing must be
+           used with care for non-biallelic data.
+        3. We still don't implemented methods that can be
 
         Args:
             method : 'count', 'flatten'
                 Genetic discrimination method. See description above.
+            norm : dfs
 
         Returns:
             An ndarray with transformed data.
         """
 
         data = as_data(self.population, method)
-        if norm is not None:
+        if norm is NOT_GIVEN:
+            method = {'count': 'snp', 'flatten': 'std'}.get(method)
+            data = whiten(data, method)
+        elif norm is not None:
             data = whiten(data, method)
         return data
     

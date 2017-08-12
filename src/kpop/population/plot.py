@@ -1,8 +1,8 @@
 import numpy as np
 from matplotlib import pyplot as plt
 
-from kpop.plots import admixture_scatter, admixture_bars
-from kpop.plots.utils import group_individuals, _colors
+from kpop.plot import admixture_scatter, admixture_bars
+from kpop.plot.utils import group_individuals, _colors
 
 
 class PlotAttribute:

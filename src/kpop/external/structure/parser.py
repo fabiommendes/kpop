@@ -146,6 +146,8 @@ class StructureParser:
         )
 
         # Randomize flag
+        #TODO: accept other options
+        # e.g.: STARTATPOPINFO, LOCPRIOR
         randomize = self.parse_data(
             r'^RANDOMIZE turned (\w+)$'
         )
@@ -402,3 +404,4 @@ def parse_file(file, parser=StructureParser):
     Parse the given file.
     """
     return parse_lines(file.read().splitlines(), parser)
+

@@ -110,7 +110,7 @@ def plot(self, show=True, **kwargs):
     Plot all found admixture coefficients.
     """
 
-    from kpop.plots import admixture_bars
+    from kpop.plot import admixture_bars
     from matplotlib import pyplot as plt
 
     admixture_bars(self.q, **kwargs)
