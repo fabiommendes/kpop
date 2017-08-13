@@ -37,7 +37,7 @@ class PopulationBase(RenderableMixin, collections.Sequence):
 
         
     """
-    
+
     freqs_matrix = lazy(lambda _: freqs_to_matrix(_.freqs))
     freqs_vector = lazy(lambda _: np.ascontiguousarray(_.freqs_matrix[:, 0])) 
 
@@ -88,6 +88,7 @@ class PopulationBase(RenderableMixin, collections.Sequence):
     ploidy = lazy(lambda _: _[0].ploidy)
     shape = property(lambda _: (_.size, _.num_loci, _.ploidy))
     data_size = fn_property(_.size * _.num_loci * _.ploidy)
+    dtype = np.dtype('uint8')
 
     # Allele statistics
     is_biallelic = fn_lazy(_.num_alleles == 2)
@@ -546,7 +547,8 @@ class PopulationBase(RenderableMixin, collections.Sequence):
         
         pop = self.copy()
         for ind in pop:
-            ind._ishuffle_loci()
+            for loci in ind.data:
+                np.random.shuffle(loci)
         return pop
 
     def copy(self):

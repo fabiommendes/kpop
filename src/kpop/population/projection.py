@@ -51,10 +51,10 @@ class Projection:
 
         data = as_data(self.population, method)
         if norm is NOT_GIVEN:
-            method = {'count': 'snp', 'flatten': 'std'}.get(method)
-            data = whiten(data, method)
+            norm = {'count': 'snp', 'flatten': 'std'}.get(method)
+            data = whiten(data, norm)
         elif norm is not None:
-            data = whiten(data, method)
+            data = whiten(data, norm)
         return data
     
     def pca(self, k=2, *, method='count', norm=True):
