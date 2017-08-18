@@ -1,12 +1,10 @@
 import numpy as np
-from lazyutils import lazy
 from sklearn import manifold
 
-from .population_base import PopulationBase
 NOT_GIVEN = object()
 
 
-class Projection:
+class ProjectionAttribute:
     """
     Implements all projection methods (such as PCA) applied to Kpop populations.
     """
@@ -151,12 +149,6 @@ class Projection:
         norm = {True: 'snp', False: 'mean'}.get(norm, norm)
         data = self.as_data(method, norm=norm)
         return sklearn_result(manifold.MDS(k, **kwargs), data, **kwargs)
-
-
-# Patch Population class
-PopulationBase.projection = lazy(lambda _: Projection(_))
-
-
 
 
 #

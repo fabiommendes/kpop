@@ -97,7 +97,7 @@ class Prob(collections.Mapping):
         Defines the support set of distribution.
 
         If elements exist in support, they are forced to exist in distribution,
-        possibly with null probability. If element exists in the distribution
+        possibly with zero probability. If element exists in the distribution
         but is not present in support, raises a ValueError.
         """
 

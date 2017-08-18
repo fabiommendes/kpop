@@ -94,8 +94,19 @@ class PlotAttribute:
             plt.show()
         return ax
 
-    def pca(self, method='flatten', norm=False, merge=False, colors=None,
-            show=True, title='Principal component analysis', legend=True):
+    def _projection(self, which: callable, kwargs: dict):
+        """
+        Common implementation to many scikit learn based projection methods.
+        """
+
+        kwargs.pop('self', None)
+        method = kwargs.pop('method', 'flatten')
+        norm = kwargs.pop('norm', None)
+        coords = which(k=2, method=method, norm=norm)
+        return self.projection(coords, **kwargs)
+
+    def pca(self, method='flatten', norm=None, merge=False, colors=None,
+            show=None, title='Principal component analysis', legend=True):
         """
         A 2D principal component analysis plot for population.
 
@@ -110,17 +121,14 @@ class PlotAttribute:
                 If True, treats a MultiPopulation as a single population.
                 Otherwise separate data for each sub-population in the graph.
             show (bool):
-                If True (default), immediately displays graph on screen.
+                If True, immediately displays graph on screen.
 
         Returns:
              A matplotlib axes.
         """
+        return self._projection(self._population.projection.pca, locals())
 
-        pca_coords = self._population.pca(k=2, method=method, norm=norm)
-        return self.projection(pca_coords, merge=merge, colors=colors,
-                               show=show, title=title, legend=legend)
-
-    def projection(self, coords, merge=False, colors=None, show=True,
+    def projection(self, coords, merge=False, colors=None, show=None,
                    title=None, legend=True):
         """
         Plot a 2D projection of population data.

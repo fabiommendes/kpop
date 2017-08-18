@@ -91,6 +91,9 @@ setup(
             'pytest-cov',
             'manuel',
         ],
+        'all': [
+            'notebook',
+        ],
     },
     cmdclass={"build_ext": build_ext} if build_ext else {},
     ext_modules=[

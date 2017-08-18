@@ -20,12 +20,14 @@ admixture/
 old/
 data/
 demos/
+local/
 
 # Python-boilerplate auto generated files
 src/pystructure/__meta__.py
 
 # IDEs
 .idea/
+.vscode/
 
 # Testing and temporary files
 .tox/

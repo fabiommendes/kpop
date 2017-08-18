@@ -50,8 +50,16 @@ def start_ipython_shell(verbose):
 
 
 def start_notebook(verbose, filename='kpop.ipynb'):
-    from notebook.notebookapp import NotebookApp
-    from jupyter_client import KernelManager
+    try:
+        from notebook.notebookapp import NotebookApp
+        from jupyter_client import KernelManager
+    except ImportError:
+        raise ImportError(
+            'you must install the notebook module to run this command.\n'
+            '\nRun one of the following commands:\n'
+            '   $ pip3 install notebook\n'
+            '   $ pip3 install kpop[all]'
+        )
 
     file_path = os.path.join(os.getcwd(), filename)
     if not os.path.exists(file_path):

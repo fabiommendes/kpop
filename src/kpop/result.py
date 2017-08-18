@@ -33,9 +33,18 @@ def result(data, dtype=None, class_=Result, **kwargs) -> Result:
 
 class Transform(Result):
     """
+    Array sub-type that represents the result of an scikit learn transform
+    object.
     """
 
     _data = delegate_ro('transform')
+
+    def transform(self, data):
+        """
+        Transform the given input data set by the current transformation.
+        """
+
+        return self._data.transform(data)
 
 
 
