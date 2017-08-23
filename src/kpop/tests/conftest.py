@@ -50,12 +50,12 @@ def num_loci():
 
 @pytest.fixture
 def popA_random(num_loci):
-    return Population.make_random(5, num_loci, label='A', min_prob=0.1)
+    return Population.random(5, num_loci, label='A', min_prob=0.1)
 
 
 @pytest.fixture
 def popB_random(num_loci):
-    return Population.make_random(5, num_loci, label='B', min_prob=0.9)
+    return Population.random(5, num_loci, label='B', min_prob=0.9)
 
 
 @pytest.fixture

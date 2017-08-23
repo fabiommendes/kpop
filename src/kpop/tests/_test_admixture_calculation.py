@@ -25,9 +25,9 @@ def q_right(N):
 
 @pytest.fixture
 def pop(N, J):
-    pA = Population.make_random(N, J, label='A', seed=1)
-    pB = Population.make_random(N, J, label='B', seed=2)
-    pC = Population.make_random(N, J, label='C', seed=3)
+    pA = Population.random(N, J, label='A', seed=1)
+    pB = Population.random(N, J, label='B', seed=2)
+    pC = Population.random(N, J, label='C', seed=3)
     return pA + pB + pC
 
 

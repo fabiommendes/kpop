@@ -25,7 +25,7 @@ def create(file, size=100, num_loci=100, clusters=1,
     for i in range(clusters):
         symbol = SYMBOL_TABLE[i]
         label_x = label if clusters == 1 else '%s-%s' % (label, symbol)
-        pop = Population.make_random(size, num_loci, label=label_x)
+        pop = Population.random(size, num_loci, label=label_x)
         pops.append(pop)
 
     pop_total = MultiPopulation(pops)

@@ -1,7 +1,7 @@
 from collections import Counter
 from kpop import *
 
-popA = Population.make_random(50, 50, label='Africa', min_prob=0.2)
+popA = Population.random(50, 50, label='Africa', min_prob=0.2)
 popB = popA.genetic_drift(10, 50, label='Brasil', sample_size=25)
 popC = popB.genetic_drift(10, 50, label='Colombia', sample_size=25)
 popC.fill(50)

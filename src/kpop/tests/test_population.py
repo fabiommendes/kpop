@@ -139,7 +139,7 @@ def test_population_genetic_drift(popA):
 
 
 def test_make_random_population():
-    pop = Population.make_random(30, 20)
+    pop = Population.random(30, 20)
     assert pop.size == 30
     assert pop.num_loci == 20
     delta = pop.freqs_vector - pop.empirical_freqs(as_matrix=True)[:, 0]

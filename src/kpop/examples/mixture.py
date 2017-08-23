@@ -3,9 +3,9 @@ from kpop.all import *
 # Create 3 ancestral populations
 num_ind = 100
 num_loci = 104
-popA = Population.make_random(num_ind, num_loci, label='A')
-popB = Population.make_random(num_ind, num_loci, label='B')
-popC = Population.make_random(num_ind, num_loci, label='C')
+popA = Population.random(num_ind, num_loci, label='A')
+popB = Population.random(num_ind, num_loci, label='B')
+popC = Population.random(num_ind, num_loci, label='C')
 
 # Create a parental multi-population and some mixtures
 parental = popA + popB + popC

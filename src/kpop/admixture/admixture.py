@@ -82,8 +82,8 @@ def admixture_maxlike(x, f_pops, optimizer='slsqrp', q0=None):
         Let us create some random populations and a mixed individual
 
         >>> from kpop import Population, Individual
-        >>> p1 = Population.make_random(10, 1000)
-        >>> p2 = Population.make_random(10, 1000)
+        >>> p1 = Population.random(10, 1000)
+        >>> p2 = Population.random(10, 1000)
         >>> x = Individual.from_freqs(0.5 * p1.freqs + 0.5 * p2.freqs)
 
         We correctly infer that the admixture coefficients are close to the correct
@@ -94,7 +94,7 @@ def admixture_maxlike(x, f_pops, optimizer='slsqrp', q0=None):
 
         This also work with more than 2 ancestral populations
 
-        >>> p3 = Population.make_random(10, 1000)
+        >>> p3 = Population.random(10, 1000)
         >>> q1, q2, q3 = admixture_maxlike(x, [f1, f2, f3])
     """
 

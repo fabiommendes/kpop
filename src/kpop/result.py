@@ -48,8 +48,8 @@ class Transform(Result):
 
 
 
-def make_transform(transform: type,
-                   data: np.ndarray, *args, **kwargs) -> Transform:
+def transform_result(transform: type,
+                     data: np.ndarray, *args, **kwargs) -> Transform:
     """
     Apply transform to given data.
 

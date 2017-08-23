@@ -142,12 +142,54 @@ have many associated methods and attributes. You can explore it by typing
 ``popA.`` and hitting the <tab> key (you will notice it is way more complex than
 Individual instances).
 
-In population genetics we are usually interested in comparing different 
-populations rather than different individuals in the same population. We can 
-easily create a new random population using the Population.make_random 
+In population genetics we are usually interested in comparing different
+populations rather than different individuals in the same population. We can
+easily create a new random population using the Population.make_random
 function:
 
->>> popB = Population.make_random(10, num_loci=4, label='B')
+>>> popB = Population.random(10, num_loci=4, label='B')
+
+This will create a new population with 10 individuals and 4 loci. Now, let us
+compose this population with the previous one by creating a new generation that
+breeds individuals from the first population with the second
+
+>>> popC = popA.breed(popB, size=15, label='C')
+
+We can combine all sub-populations into a single population containing all
+individuals by simply adding the population objects together
+
+>>> pop_all = popA + popB + popC
+
+This creates a
+Individual instances).
+
+In population genetics we are usually interested in comparing different
+populations rather than different individuals in the same population. We can
+easily create a new random population using the Population.make_random
+function:
+
+>>> popB = Population.random(10, num_loci=4, label='B')
+
+This will create a new population with 10 individuals and 4 loci. Now, let us
+compose this population with the previous one by creating a new generation that
+breeds individuals from the first population with the second
+
+>>> popC = popA.breed(popB, size=15, label='C')
+
+We can combine all sub-populations into a single population containing all
+individuals by simply adding the population objects together
+
+>>> pop_all = popA + popB + popC
+
+This creates a
+Individual instances).
+
+In population genetics we are usually interested in comparing different 
+populations rather than different individuals in the same population. We can 
+easily create a new random population using the Population.random
+function:
+
+>>> popB = Population.random(10, num_loci=4, label='B')
 
 This will create a new population with 10 individuals and 4 loci. Now, let us
 compose this population with the previous one by creating a new generation that 

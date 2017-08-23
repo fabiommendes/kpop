@@ -94,25 +94,20 @@ class PlotAttribute:
             plt.show()
         return ax
 
-    def _projection(self, which: callable, kwargs: dict):
+    #
+    # Scatter plots as projections
+    #
+    def scatter(self, which='pca', **kwargs):
         """
-        Common implementation to many scikit learn based projection methods.
-        """
-
-        kwargs.pop('self', None)
-        method = kwargs.pop('method', 'flatten')
-        norm = kwargs.pop('norm', None)
-        coords = which(k=2, method=method, norm=norm)
-        return self.projection(coords, **kwargs)
-
-    def pca(self, method='flatten', norm=None, merge=False, colors=None,
-            show=None, title='Principal component analysis', legend=True):
-        """
-        A 2D principal component analysis plot for population.
+        A scatter plot of genetic data embeded into a 2D manifold.
 
         Args:
+            which (str):
+                The projection method used to reduce dimensionality. Can be
+                anyone of 'pca', 'tsne', 'mds', or 'isomap'.
             method, norm:
-                Parameters of PCA. See :meth:`PopulationBase.pca`.
+                Method used to represent data before the dimensionality
+                reduction.
             title:
                 Optional plot title.
             colors:
@@ -120,24 +115,27 @@ class PlotAttribute:
             merge (bool):
                 If True, treats a MultiPopulation as a single population.
                 Otherwise separate data for each sub-population in the graph.
-            show (bool):
-                If True, immediately displays graph on screen.
-
-        Returns:
-             A matplotlib axes.
         """
-        return self._projection(self._population.projection.pca, locals())
 
-    def projection(self, coords, merge=False, colors=None, show=None,
-                   title=None, legend=True):
+        scatter = {'merge', 'colors', 'show', 'title', 'legend', 'axes'}
+        coords_kwargs = {k: v for k, v in kwargs.items() if k not in scatter}
+        scatter_kwargs = {k: v for k, v in kwargs.items() if k in scatter}
+
+        kwargs.pop('self', None)
+        pop = self._population
+        coords = pop.projection(which, 2, **coords_kwargs)
+        return self.scatter_coords(coords, **scatter_kwargs)
+
+    def scatter_coords(self, coords, merge=False, colors=None, show=None,
+                       title=None, legend=True, axes=None):
         """
-        Plot a 2D projection of population data.
+        Plot a 2D projection of population data from an array of 2D coordinates.
+        This method is used internally by all scatter plot methods. It can also
+        be useful to test projection methods not supported by kpop.
 
         Args:
             coords (2d matrix):
                 The dataset in the reduced set of coordinates.
-            method, norm:
-                Parameters of PCA. See :meth:`PopulationBase.pca`.
             title:
                 Optional plot title.
             colors:
@@ -164,7 +162,7 @@ class PlotAttribute:
         colors = _colors(colors, len(coords_list))
 
         # Plot scattered elements
-        ax = plt.axes()
+        ax = axes or plt.axes()
         for i, coords in enumerate(coords_list):
             X, Y = np.asarray(coords).T
             label = pop_labels[i]
@@ -176,11 +174,98 @@ class PlotAttribute:
         if legend:
             ax.legend()
 
-        # Show and return element
-        if show:
-            plt.show()
         return ax
 
+    def pca(self, method='count', merge=False, colors=None,
+            show=None, title='Principal component analysis', legend=True,
+            **kwargs):
+        """
+        A 2D principal component analysis plot for population.
+
+        Args:
+            method, norm:
+                Parameters of PCA. See :meth:`PopulationBase.pca`.
+            title:
+                Optional plot title.
+            colors:
+                A colormap or a list of colors for each allele.
+            merge (bool):
+                If True, treats a MultiPopulation as a single population.
+                Otherwise separate data for each sub-population in the graph.
+            show (bool):
+                If True, immediately displays graph on screen.
+
+        Returns:
+             A matplotlib axes.
+
+        See Also:
+            :method:`kpop.population.projection.ProjectionAttribute.pca`
+        """
+
+        return self.scatter('pca', **fix_locals(locals()))
+
+    def tsne(self, method='count', merge=False, colors=None,
+            show=None, title='t-SNE', legend=True, **kwargs):
+        """
+        t-Distributed Stochastic Neighbor Embedding. This is a widely used
+        method to project high dimensional data for visualization.
+
+        See Also:
+            :method:`kpop.population.projection.ProjectionAttribute.tsne`
+        """
+
+        return self.scatter('tsne', **fix_locals(locals()))
+
+    def mds(self, method='count', merge=False, colors=None,
+            show=None, title='Multidimensional scaling', legend=True, **kwargs):
+        """
+        Multidimensional scaling.
+
+        See Also:
+            :method:`kpop.population.projection.ProjectionAttribute.mds`
+        """
+
+        return self.scatter('mds', **fix_locals(locals()))
+
+    def isomap(self, method='count', merge=False, colors=None,
+            show=None, title='Isomap', legend=True, **kwargs):
+        """
+        Isomap
+
+        See Also:
+            :method:`kpop.population.projection.ProjectionAttribute.isomap`
+        """
+
+        return self.scatter('isomap', **fix_locals(locals()))
+
+    def lle(self, method='count', merge=False, colors=None,
+            show=None, title='LLE', legend=True, **kwargs):
+        """
+        Local Linear Embedding.
+
+        See Also:
+            :method:`kpop.population.projection.ProjectionAttribute.lle`
+        """
+
+        return self.scatter('lle', **fix_locals(locals()))
+
+    def spectral(self, method='count', merge=False, colors=None,
+            show=None, title='Spectral embedding', legend=True, **kwargs):
+        """
+        Spectral Embedding.
+
+        See Also:
+            :method:`kpop.population.projection.ProjectionAttribute.spectral`
+        """
+
+        return self.scatter('spectral', **fix_locals(locals()))
+
+
+
+
+    #
+    # Admixture plots
+    #
     def admixture(self, parental_labels=None,
                   scatter=False, show=True, **kwargs):
         if self._population.parent is None:
@@ -197,3 +282,11 @@ class PlotAttribute:
         if show:
             plt.show()
         return ax
+
+
+def fix_locals(ns):
+    "Pops the 'self' key from dictionary and return dictionary."
+
+    ns.pop('self', None)
+    ns.update(ns.pop('kwargs', {}))
+    return ns

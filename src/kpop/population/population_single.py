@@ -17,8 +17,8 @@ class Population(PopulationBase):
         return ImmutablePopulationList([self])
 
     @classmethod
-    def make_random(cls, size=0, num_loci=0, alleles=2, ploidy=2, label=None,
-                    min_prob=0.0, seed=None):
+    def random(cls, size=0, num_loci=0, alleles=2, ploidy=2, label=None,
+               min_prob=0.0, seed=None):
         """
         Creates a new random population.
 

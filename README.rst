@@ -140,7 +140,7 @@ Kpop can be used as a library by importing it in python code:
 
     import kpop
 
-    pop = kpop.Population.make_random(10, 100)
+    pop = kpop.Population.random(10, 100)
     ...
 
 If you are just exploring, it might be more useful to just open the Python shell

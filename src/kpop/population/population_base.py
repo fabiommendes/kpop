@@ -340,7 +340,7 @@ class PopulationBase(RenderableMixin, collections.Sequence):
                 Name of new population.
 
         Example:
-            >>> pop = Population.make_random(20, num_loci=50)
+            >>> pop = Population.random(20, num_loci=50)
             >>> pop2 = pop.genetic_drift(20, population_size=10)
 
             After many generations, genetic drift in a small population tends
