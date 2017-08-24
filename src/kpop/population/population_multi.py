@@ -40,14 +40,13 @@ class MultiPopulation(PopulationBase):
             return np.array([], dtype=float)
         return np.zeros(size, dtype=float) + 1 / size
 
-    def __init__(self, populations=None, freqs=None, **kwargs):
+    def __init__(self, populations=(), freqs=None, **kwargs):
         if freqs is not None:
             raise ValueError('cannot specify frequencies on MultiPopulation '
                              'objects')
         self.populations = PopulationsList()
-        if populations:
-            for population in populations:
-                self.add_population(population)
+        for population in populations:
+            self.add_population(population)
         super().__init__(**kwargs)
 
     def __len__(self):
@@ -69,24 +68,15 @@ class MultiPopulation(PopulationBase):
             yield from pop
 
     def __add__(self, other):
-        self_populations = self.populations
-        if isinstance(other, Population):
-            populations = list(self_populations)
-            if other not in populations:
-                populations.append(other)
-            return MultiPopulation(populations)
-        elif isinstance(other, MultiPopulation):
-            populations = list(self_populations)
-            populations.extend([x for x in other.populations
-                                if x not in populations])
-            return MultiPopulation(populations)
+        if isinstance(other, (Population, MultiPopulation)):
+            populations = list(self.populations)
+            return MultiPopulation(populations + list(other.populations))
         return NotImplemented
 
     def __radd__(self, other):
-        if isinstance(other, Population):
-            populations = [other]
-            populations.extend([x for x in self.populations if x is not other])
-            return MultiPopulation(populations)
+        if isinstance(other, (Population, MultiPopulation)):
+            populations = list(self.populations)
+            return MultiPopulation([other] + populations)
         return NotImplemented
 
     def add_population(self, population):

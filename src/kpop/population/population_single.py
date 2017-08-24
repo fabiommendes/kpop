@@ -1,8 +1,8 @@
 import numpy as np
 from lazyutils import lazy
 
-from .populations import ImmutablePopulationList
 from .population_base import PopulationBase
+from .populations import ImmutablePopulationList
 from ..individual import Individual
 from ..utils.frequencies import random_frequencies
 
@@ -11,6 +11,8 @@ class Population(PopulationBase):
     """
     A Population is a collection of individuals.
     """
+
+    _multi_population_class = None
 
     @lazy
     def populations(self):
@@ -50,16 +52,27 @@ class Population(PopulationBase):
 
     def __init__(self, data=(), copy=False, **kwargs):
         self._data = []
-        for ind in prepare_string(data):
-            self.add(ind, copy=copy)
+
+        # Initialize data
+        if isinstance(data, str):
+            for ind in data.splitlines():
+                self.add(ind, copy=copy)
+        elif isinstance(data, PopulationBase):
+            for ind in data:
+                self.add(ind, copy=True)
+        else:
+            for ind in data:
+                self.add(ind, copy=copy)
+
         super(Population, self).__init__(**kwargs)
 
         # Recompute labels, if they are not given
-        for ind in self._data:
-            if getattr(ind, 'label', None) is None:
-                ind.label = self._next_label()
-            ind.population = self
-            ind._container = self
+        if self.label:
+            for ind in self._data:
+                if getattr(ind, 'label', None) is None:
+                    ind.label = self._next_label()
+                ind.population = self
+                ind._container = self
 
     def __len__(self):
         return len(self._data)
@@ -75,7 +88,7 @@ class Population(PopulationBase):
 
     def __add__(self, other):
         if isinstance(other, Population):
-            return self._compose((self, other))
+            return self._multi_population_class([self, other])
         return NotImplemented
 
     def add(self, ind, copy=False):
@@ -90,10 +103,12 @@ class Population(PopulationBase):
                 if copy:
                     ind = ind.copy()
                 else:
-                    raise ValueError(
-                        'individual already belongs to population')
-            ind.population = self
-            ind._container = self
+                    msg = 'individual already belongs to population'
+                    raise ValueError(msg)
+
+                ind.population = self
+                ind._container = self
+
         self._data.append(ind)
 
     def remove(self, idx=-1):
@@ -113,7 +128,7 @@ class Population(PopulationBase):
         given size.
         """
 
-        if seed:
+        if seed is not None:
             np.random.seed(seed)
 
         while self.size < size:
@@ -131,14 +146,3 @@ class Population(PopulationBase):
             missing = np.where(data == 0)
             for i, j in zip(*missing):
                 data[i, j] = freqs[i].random_individual()
-
-    _compose_class = None
-
-    def _compose(self, pops):
-        return self._compose_class(pops)
-
-
-def prepare_string(data):
-    if isinstance(data, str):
-        return data.splitlines()
-    return data

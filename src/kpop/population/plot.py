@@ -199,7 +199,7 @@ class PlotAttribute:
              A matplotlib axes.
 
         See Also:
-            :method:`kpop.population.projection.ProjectionAttribute.pca`
+            :method:`kpop.population.projection.projection.pca`
         """
 
         return self.scatter('pca', **fix_locals(locals()))
@@ -211,7 +211,7 @@ class PlotAttribute:
         method to project high dimensional data for visualization.
 
         See Also:
-            :method:`kpop.population.projection.ProjectionAttribute.tsne`
+            :method:`kpop.population.projection.projection.tsne`
         """
 
         return self.scatter('tsne', **fix_locals(locals()))
@@ -222,7 +222,7 @@ class PlotAttribute:
         Multidimensional scaling.
 
         See Also:
-            :method:`kpop.population.projection.ProjectionAttribute.mds`
+            :method:`kpop.population.projection.projection.mds`
         """
 
         return self.scatter('mds', **fix_locals(locals()))
@@ -233,7 +233,7 @@ class PlotAttribute:
         Isomap
 
         See Also:
-            :method:`kpop.population.projection.ProjectionAttribute.isomap`
+            :method:`kpop.population.projection.projection.isomap`
         """
 
         return self.scatter('isomap', **fix_locals(locals()))
@@ -244,7 +244,7 @@ class PlotAttribute:
         Local Linear Embedding.
 
         See Also:
-            :method:`kpop.population.projection.ProjectionAttribute.lle`
+            :method:`kpop.population.projection.projection.lle`
         """
 
         return self.scatter('lle', **fix_locals(locals()))
@@ -255,7 +255,7 @@ class PlotAttribute:
         Spectral Embedding.
 
         See Also:
-            :method:`kpop.population.projection.ProjectionAttribute.spectral`
+            :method:`kpop.population.projection.projection.spectral`
         """
 
         return self.scatter('spectral', **fix_locals(locals()))

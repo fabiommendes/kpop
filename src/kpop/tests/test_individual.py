@@ -117,3 +117,12 @@ def test_make_individual_from_data():
     ind = Individual('foo: ab aa bb')
     assert ind.label == 'foo'
     assert ind[0, 1] == 2
+
+
+def test_individual_equality():
+    i1 = Individual('i1: 11 12 22')
+    i2 = Individual('i2: 11 12 22')
+    i3 = Individual('i3: 11 12 21')
+    assert i1 != i3
+    assert i2 != i3
+    assert i1 == i2

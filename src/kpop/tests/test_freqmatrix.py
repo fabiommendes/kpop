@@ -35,3 +35,9 @@ def test_freqs_binomial():
 
     freqs = freqs_binomial(pop, flat=True, alpha=1.0)
     assert (freqs == [0.5, 5 / 6, 1 / 6]).all()
+
+
+def test_random_frequencies_seed():
+    f1 = random_frequencies(5, seed=0)
+    f2 = random_frequencies(5, seed=0)
+    assert (f1 == f2).all()

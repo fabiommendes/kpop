@@ -79,7 +79,7 @@ def random_frequencies(num_loci, alleles=2, clip=0.0, seed=None):
     if alleles <= 1:
         raise ValueError('needs at least 2 different alleles')
     uniform = np.random.uniform
-    if seed:
+    if seed is not None:
         np.random.seed(seed)
     if alleles == 2:
         return fill_freqs_vector(uniform(clip, 1 - clip, size=num_loci))

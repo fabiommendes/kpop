@@ -7,7 +7,7 @@ from ..result import result, transform_result
 NOT_GIVEN = object()
 
 
-class ProjectionAttribute:
+class projection:
     """
     Implements all projection methods (such as PCA) applied to Kpop populations.
     """
@@ -260,7 +260,7 @@ class ProjectionAttribute:
 #
 # Utility functions
 #
-def sklearn_manifold(_sk_method, proj: ProjectionAttribute, k: int, _method:
+def sklearn_manifold(_sk_method, proj: projection, k: int, _method:
 str,
                      **kwargs):
     """

@@ -149,6 +149,14 @@ class Individual(collections.Sequence):
     def __len__(self):
         return len(self.data)
 
+    def __eq__(self, other):
+        if isinstance(other, Individual):
+            return (self.data == other.data).all()
+        elif isinstance(other, (np.ndarray, list, tuple)):
+            return (self.data == other).all()
+        else:
+            return NotImplemented
+
     def haplotypes(self):
         """
         Return a sequence of ploidy arrays with each haplotype.

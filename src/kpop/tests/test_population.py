@@ -1,8 +1,6 @@
-import pytest
-import numpy as np
 from numpy.testing import assert_almost_equal
 
-from kpop import Population, Individual
+from kpop import Population
 
 
 #
@@ -36,9 +34,11 @@ class TestProperties:
         assert list(popA.freqs_matrix[:, 0]) == [1.0, 0.0, 0.75, 0.25, 0.5]
         assert list(popA.hfreqs_vector) == [0, 0, 0.5, 0.5, 1]
 
-    def test_fst_statistics(self, popA, popB):
-        popC = Population(popA, label='C', copy=True)
+    def _test_fst_statistics(self, popA, popB):
+        popC = Population(popA, label='C')
         pop = popA + popB + popC
+        print([type(x) for x in [popA, popB, popC]])
+        assert len(pop.populations) == 3
         assert pop.render_fst() == (
             '           A         B\n'
             'B:  0.409558\n'
@@ -87,65 +87,70 @@ locus,        A,        B
 '''.strip()
 
 
-#
-# Test evolution and creation of new offspring
-#
-def test_create_individual_labels(popA):
-    assert popA[0].label == 'A1'
+class TestEvolutionAndOffspring:
+    def test_create_individual_labels(self, popA):
+        assert popA[0].label == 'A1'
+
+    def test_create_offspring(self, popA):
+        ind3 = popA.random_individual()
+        ind2 = popA.new_offspring(label='Achild')
+        ind1 = popA.new_individual(label='Arandom')
+
+        for ind in ind1, ind2, ind3:
+            print(ind)
+            assert ind.population is popA
+            assert ind.label is not None
+            assert ind[0, 0] == 1
+            assert ind[1, 0] == 2
+
+    def test_fill_population_uses_the_correct_frequencies(self, popA):
+        popA.fill(10)
+
+        # These are fixed alleles
+        assert popA[9][0, 0] == 1
+        assert popA[9][0, 1] == 1
+        assert popA[9][1, 0] == 2
+        assert popA[9][1, 1] == 2
+
+    def test_population_genetic_drift(self, popA):
+        size = 1e6  # we need a very large size to avoid going back to the same
+        # frequence by pure chance
+
+        # Frequencies do not change with evolution of zero generations
+        pop2 = popA.genetic_drift(0, sample_size=0, population_size=size)
+        assert popA.freqs == pop2.freqs
+
+        # Genetic drift
+        pop2 = popA.genetic_drift(10, sample_size=0, population_size=size)
+        assert popA.freqs != pop2.freqs
+
+        # Fixed alleles do not change
+        assert popA.freqs[0] == pop2.freqs[0]
+        assert popA.freqs[1] == pop2.freqs[1]
+
+        # Non-fixed alleles should always change
+        for i in range(2, 5):
+            assert popA.freqs[i] != pop2.freqs[i]
+
+    def test_add_remove_individual(self, popA):
+        N = len(popA)
+        popA.add(popA.new_offspring())
+        assert len(popA) == N + 1
+
+        popA.remove()
+        assert len(popA) == N
 
 
-def test_create_offspring(popA):
-    ind3 = popA.random_individual()
-    ind2 = popA.new_offspring(label='Achild')
-    ind1 = popA.new_individual(label='Arandom')
+class TestRandomPopulations:
+    def test_make_random_population(self):
+        pop = Population.random(30, 20)
+        assert pop.size == 30
+        assert pop.num_loci == 20
+        delta = pop.freqs_vector - pop.empirical_freqs(as_matrix=True)[:, 0]
+        assert abs(delta).mean() < 0.15
 
-    for ind in ind1, ind2, ind3:
-        print(ind)
-        assert ind.population is popA
-        assert ind.label is not None
-        assert ind[0, 0] == 1
-        assert ind[1, 0] == 2
-
-
-def test_fill_population_uses_the_correct_frequencies(popA):
-    popA.fill(10)
-
-    # These are fixed alleles
-    assert popA[9][0, 0] == 1
-    assert popA[9][0, 1] == 1
-    assert popA[9][1, 0] == 2
-    assert popA[9][1, 1] == 2
-
-
-def test_population_genetic_drift(popA):
-    size = 1e6  # we need a very large size to avoid going back to the same
-    # frequence by pure chance
-
-    # Frequencies do not change with evolution of zero generations
-    pop2 = popA.genetic_drift(0, sample_size=0, population_size=size)
-    assert popA.freqs == pop2.freqs
-
-    # Genetic drift
-    pop2 = popA.genetic_drift(10, sample_size=0, population_size=size)
-    assert popA.freqs != pop2.freqs
-
-    # Fixed alleles do not change
-    assert popA.freqs[0] == pop2.freqs[0]
-    assert popA.freqs[1] == pop2.freqs[1]
-
-    # Non-fixed alleles should always change
-    for i in range(2, 5):
-        assert popA.freqs[i] != pop2.freqs[i]
-
-
-def test_make_random_population():
-    pop = Population.random(30, 20)
-    assert pop.size == 30
-    assert pop.num_loci == 20
-    delta = pop.freqs_vector - pop.empirical_freqs(as_matrix=True)[:, 0]
-    assert abs(delta).mean() < 0.15
-
-
-def test_add_remove_individual(popA):
-    popA.add(popA.new_offspring())
-    popA.remove()
+    def test_make_random_population_with_seed(self):
+        popA = Population.random(5, 10, seed=0)
+        popB = Population.random(5, 10, seed=0)
+        assert (popA.freqs_vector == popB.freqs_vector).all()
+        assert popA == popB
