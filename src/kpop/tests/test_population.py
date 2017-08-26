@@ -1,3 +1,4 @@
+import numpy as np
 from numpy.testing import assert_almost_equal
 
 from kpop import Population
@@ -6,6 +7,45 @@ from kpop import Population
 #
 # Test rendering and attributes
 #
+class TestDataAccess:
+    "Test basic slicing and data transformation interfaces"
+
+    def test_conversion_to_array(self, popB):
+        arr = popB._as_array()
+        assert arr.shape == (4, 5, 2)
+        assert isinstance(arr, np.ndarray)
+        assert (arr == [
+            [[2, 2], [2, 2], [2, 2], [1, 2], [2, 2]],
+            [[2, 2], [1, 2], [1, 1], [2, 2], [2, 1]],
+            [[2, 2], [1, 2], [1, 1], [1, 2], [2, 1]],
+            [[2, 2], [2, 2], [2, 2], [2, 1], [1, 2]],
+        ]).all()
+
+    def test_conversion_to_raw_array(self, popB):
+        assert (popB.as_array() == popB._as_array()).all()
+        assert popB.as_array('raw-unity').shape == (4, 5, 2)
+
+    def test_flat_conversion(self, popB):
+        assert popB.as_array('flat').shape == (4, 10)
+        assert popB.as_array('rflat').shape == (4, 10)
+
+        flat = popB.as_array('flat-unity')
+        assert_almost_equal(flat.mean(0), 0)
+
+        flat = popB.as_array('rflat-unity')
+        assert_almost_equal(flat.mean(0), 0)
+
+    def test_conversion_to_count_array(self, popB):
+        arr = popB.as_array('count')
+        assert arr.shape == (4, 5)
+        assert (arr == [
+            [0, 0, 0, 1, 0],
+            [0, 1, 2, 0, 1],
+            [0, 1, 2, 1, 1],
+            [0, 0, 0, 1, 1],
+        ]).all()
+
+
 class TestProperties:
     "Test basic attributes that expose kpop population data"
 

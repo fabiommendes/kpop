@@ -48,7 +48,7 @@ Each :class:`kpop.Population` or :class:`kpop.MultiPopulation` instance have a
 ``.plot`` attribute that defines a namespace with many different plotting
 utilities.
 
-.. autoclass:: kpop.population.attr_plot.PlotAttribute
+.. autoclass:: kpop.population.attr_plot.plot
    :members:
 
 

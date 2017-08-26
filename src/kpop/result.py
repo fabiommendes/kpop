@@ -1,5 +1,6 @@
 import numpy as np
-from lazyutils import lazy, delegate_ro
+from lazyutils import delegate_ro
+
 
 #
 #  A np.ndarray class that has a __dict__. The constructors are functions that
@@ -47,9 +48,7 @@ class Transform(Result):
         return self._data.transform(data)
 
 
-
-def transform_result(transform: type,
-                     data: np.ndarray, *args, **kwargs) -> Transform:
+def transform_result(transform: type, data: np.ndarray, **kwargs) -> Transform:
     """
     Apply transform to given data.
 
@@ -66,6 +65,6 @@ def transform_result(transform: type,
     Returns:
         Return a transform array.
     """
-    sk_transform = transform(*args, **kwargs)
+    sk_transform = transform(**kwargs)
     res_data = sk_transform.fit_transform(data)
     return result(res_data, class_=Transform, transform=sk_transform)

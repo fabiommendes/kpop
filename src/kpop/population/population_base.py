@@ -4,6 +4,7 @@ import pickle
 import operator as op
 from functools import reduce
 from random import randrange, shuffle
+from sklearn import preprocessing
 
 import numpy as np
 from lazyutils import lazy
@@ -182,20 +183,103 @@ class PopulationBase(RenderableMixin, collections.Sequence):
             return False
         return all(x == y for (x, y) in zip(self, other))
 
-    def as_array(self, copy=False):
+    def _as_array(self):
         """
-        Return all genotype data as a contiguous array.
-
-        Args:
-            copy:
-                If True, forces to return a copy, otherwise, it tries to recycle
-                the array if data is already compactified.
+        Return genotype data as a contiguous array.
 
         Returns:
             A (size, num_loci, ploidy) array.
         """
-
         return np.array([ind.data for ind in self])
+
+    def as_array(self, which='raw'):
+        """
+        Convert to a numpy data array using the requested conversion method.
+        This is a basic pre-processing step in many dimensionality reduction
+        algorithms.
+
+        Genotypes are categorical data and usually it doesn't make sense to
+        treat the integer encoding used in kpop as ordinal data (there is
+        no ordering implied when treating say, allele 1 vs allele 2 vs allele
+        3).
+
+        Conversion methods:
+            * raw:
+                An 3 dimensional array of (size, num_loci, ploidy) for raw
+                genotype data. Each component represents the value of a single
+                allele.
+            * flat:
+                Like raw, but flatten the last dimension into a (size,
+                num_loci * ploidy) array. This creates a new feature per
+                loci for each degree of ploidy in the data.
+            * rflat:
+                Flatten data, but first shuffle the positions of alleles at
+                each loci. This is recommended if data does not carry reliable
+                haplotype information.
+            * raw-unity, flat-unity, rflat-unity:
+                Normalized versions of "raw", "flat", and "rflat" methods. All
+                components are rescaled with zero mean and unity variance.
+            * count:
+                Force conversion to biallelic data and counts the number of
+                occurrences of the first allele. Most methdds will require
+                normalization, so you probably should consider an specific
+                method such as count-unity, count-snp, etc
+            * count-unity:
+                Normalized version of count scaled to zero mean and unity
+                variance.
+            * count-snp:
+                Normalizes each feature using the standard deviation expected
+                under the assumption of Hardy-Weinberg equilibrium. This
+                procedure is described at Patterson et. al., "Population
+                Structure and Eigenanalysis" and is recommended for SNPs
+                subject to genetic drift.
+            * count-center:
+                Instead of normalizing, simply center data by subtracting half
+                the ploidy to place it into a symmetric range. This
+                normalization puts data into a cube with a predictable
+                origin and range. For diploid data, the components will be
+                either -1, 0, or 1.
+
+        Returns:
+            An ndarray with transformed data.
+        """
+        data = self._as_array()
+
+        # Raw conversion
+        if which == 'raw':
+            return data
+        elif which == 'raw-unity':
+            data = data - data.mean(axis=0)
+            std = data.std(axis=0)
+            data /= np.where(std, std, 1)
+            return data
+
+        # Flattened representations
+        elif which in {'flat', 'flat-unity'}:
+            data = data.reshape(self.size, self.num_loci * self.ploidy)
+            if which == 'flat-unity':
+                return preprocessing.scale(data.astype(float))
+            return data
+        elif which in {'rflat', 'rflat-unity'}:
+            return self.shuffled_loci().as_array(which[1:])
+
+        # Counters
+        elif which in {'count', 'count-unity', 'count-snp', 'count-center'}:
+            count = (np.array(data) == 1).sum(axis=2)
+            if which == 'count-unity':
+                return preprocessing.scale(count.astype(float))
+            elif which == 'count-snp':
+                mu = count.mean(axis=0)
+                p = mu / self.ploidy
+                norm = np.sqrt(p * (1 - p))
+                norm = np.where(norm, norm, 1)
+                return (count - mu) / norm
+            elif which == 'count-center':
+                return count - self.ploidy / 2
+            else:
+                return count
+
+        raise ValueError('invalid conversion method: %r' % which)
 
     #
     # Statistics
@@ -206,7 +290,7 @@ class PopulationBase(RenderableMixin, collections.Sequence):
         times the given allele appears in each individual at each locus.
         """
 
-        data = self.as_array()
+        data = self._as_array()
         return (data == allele).sum(axis=2)
 
     def empirical_freqs(self, alpha=0.0, as_matrix=False):
@@ -269,7 +353,9 @@ class PopulationBase(RenderableMixin, collections.Sequence):
         """
 
         data = self.fst_matrix(sizes)
-        names = [pop.label for pop in self.populations]
+        names = [
+            pop.label or str(i + 1) for i, pop in enumerate(self.populations)
+        ]
         colsize = max(map(len, names))
         rownames = [name.ljust(colsize) for name in names[1:]]
         colwidth = max(colsize, 9)

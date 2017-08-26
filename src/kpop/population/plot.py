@@ -1,11 +1,11 @@
 import numpy as np
 from matplotlib import pyplot as plt
 
-from kpop.plot import admixture_scatter, admixture_bars
-from kpop.plot.utils import group_individuals, _colors
+from ..plot import admixture_scatter, admixture_bars
+from ..plot.utils import group_individuals, _colors
 
 
-class PlotAttribute:
+class plot:
     """
     Implements the Population.plots attribute.
     """
@@ -97,7 +97,7 @@ class PlotAttribute:
     #
     # Scatter plots as projections
     #
-    def scatter(self, which='pca', **kwargs):
+    def scatter(self, which='pca', projection_kwargs=None, **kwargs):
         """
         A scatter plot of genetic data embeded into a 2D manifold.
 
@@ -105,9 +105,9 @@ class PlotAttribute:
             which (str):
                 The projection method used to reduce dimensionality. Can be
                 anyone of 'pca', 'tsne', 'mds', or 'isomap'.
-            method, norm:
-                Method used to represent data before the dimensionality
-                reduction.
+            data:
+                Method used to constructinitial raw data for visualization. This
+                is the same argument as in :cls:`kpop.Population.as_array`
             title:
                 Optional plot title.
             colors:
@@ -117,17 +117,21 @@ class PlotAttribute:
                 Otherwise separate data for each sub-population in the graph.
         """
 
-        scatter = {'merge', 'colors', 'show', 'title', 'legend', 'axes'}
+        scatter = {
+            'merge', 'colors', 'title', 'legend', 'axes', 'alpha', 'fuzzy',
+        }
         coords_kwargs = {k: v for k, v in kwargs.items() if k not in scatter}
         scatter_kwargs = {k: v for k, v in kwargs.items() if k in scatter}
+        if projection_kwargs:
+            coords_kwargs.update(projection_kwargs)
 
         kwargs.pop('self', None)
         pop = self._population
         coords = pop.projection(which, 2, **coords_kwargs)
         return self.scatter_coords(coords, **scatter_kwargs)
 
-    def scatter_coords(self, coords, merge=False, colors=None, show=None,
-                       title=None, legend=True, axes=None):
+    def scatter_coords(self, coords, merge=False, colors=None, title=None,
+                       legend=True, axes=None, alpha=1.0, fuzzy=False):
         """
         Plot a 2D projection of population data from an array of 2D coordinates.
         This method is used internally by all scatter plot methods. It can also
@@ -150,6 +154,9 @@ class PlotAttribute:
              A matplotlib axes.
         """
 
+        if fuzzy:
+            coords = fuzzyfy_coords(coords, fuzzy)
+
         if merge:
             coords_list = [coords]
             pop_labels = [self._population.label or None]
@@ -166,7 +173,7 @@ class PlotAttribute:
         for i, coords in enumerate(coords_list):
             X, Y = np.asarray(coords).T
             label = pop_labels[i]
-            ax.plot(X, Y, 'o', color=colors[i], label=label)
+            ax.plot(X, Y, 'o', color=colors[i], label=label, alpha=alpha)
 
         # Additional plot elements
         if title:
@@ -176,14 +183,12 @@ class PlotAttribute:
 
         return ax
 
-    def pca(self, method='count', merge=False, colors=None,
-            show=None, title='Principal component analysis', legend=True,
-            **kwargs):
+    def pca(self, title='Principal component analysis', **kwargs):
         """
         A 2D principal component analysis plot for population.
 
         Args:
-            method, norm:
+            data:
                 Parameters of PCA. See :meth:`PopulationBase.pca`.
             title:
                 Optional plot title.
@@ -199,13 +204,48 @@ class PlotAttribute:
              A matplotlib axes.
 
         See Also:
-            :method:`kpop.population.projection.projection.pca`
+            :method:`kpop.population.projection.pca`
         """
 
-        return self.scatter('pca', **fix_locals(locals()))
+        return self.scatter('pca', title=title, **kwargs)
 
-    def tsne(self, method='count', merge=False, colors=None,
-            show=None, title='t-SNE', legend=True, **kwargs):
+    def kernel_pca(self, title='Kernel PCA', **kwargs):
+        """
+        Kernel PCA.
+
+        See Also:
+            :method:`kpop.population.projection.projection.kernel_pca`
+        """
+
+        return self.scatter('kernel_pca', title=title, **kwargs)
+
+    def nmf(self, title='Non-negative matrix factorization', regularization=0,
+            **kwargs):
+        """
+        Non-negative matrix factorization.
+
+        See Also:
+            :method:`kpop.population.projection.projection.nmf`
+        """
+
+        return self.scatter(
+            'nmf',
+            title=title,
+            projection_kwargs={'alpha': regularization},
+            **kwargs
+        )
+
+    def ica(self, title='Independent Components Analysis', **kwargs):
+        """
+        ICA
+
+        See Also:
+            :method:`kpop.population.projection.projection.nmf`
+        """
+
+        return self.scatter('ica', title=title, **kwargs)
+
+    def tsne(self, title='t-SNE', **kwargs):
         """
         t-Distributed Stochastic Neighbor Embedding. This is a widely used
         method to project high dimensional data for visualization.
@@ -214,10 +254,9 @@ class PlotAttribute:
             :method:`kpop.population.projection.projection.tsne`
         """
 
-        return self.scatter('tsne', **fix_locals(locals()))
+        return self.scatter('tsne', title=title, **kwargs)
 
-    def mds(self, method='count', merge=False, colors=None,
-            show=None, title='Multidimensional scaling', legend=True, **kwargs):
+    def mds(self, title='Multidimensional scaling', **kwargs):
         """
         Multidimensional scaling.
 
@@ -225,10 +264,9 @@ class PlotAttribute:
             :method:`kpop.population.projection.projection.mds`
         """
 
-        return self.scatter('mds', **fix_locals(locals()))
+        return self.scatter('mds', title=title, **kwargs)
 
-    def isomap(self, method='count', merge=False, colors=None,
-            show=None, title='Isomap', legend=True, **kwargs):
+    def isomap(self, title='Isomap', **kwargs):
         """
         Isomap
 
@@ -236,10 +274,9 @@ class PlotAttribute:
             :method:`kpop.population.projection.projection.isomap`
         """
 
-        return self.scatter('isomap', **fix_locals(locals()))
+        return self.scatter('isomap', title=title, **kwargs)
 
-    def lle(self, method='count', merge=False, colors=None,
-            show=None, title='LLE', legend=True, **kwargs):
+    def lle(self, title='Locally Linear Embedding', **kwargs):
         """
         Local Linear Embedding.
 
@@ -247,10 +284,9 @@ class PlotAttribute:
             :method:`kpop.population.projection.projection.lle`
         """
 
-        return self.scatter('lle', **fix_locals(locals()))
+        return self.scatter('lle', title=title, **kwargs)
 
-    def spectral(self, method='count', merge=False, colors=None,
-            show=None, title='Spectral embedding', legend=True, **kwargs):
+    def spectral(self, title='Spectral Embedding', **kwargs):
         """
         Spectral Embedding.
 
@@ -258,9 +294,13 @@ class PlotAttribute:
             :method:`kpop.population.projection.projection.spectral`
         """
 
-        return self.scatter('spectral', **fix_locals(locals()))
+        return self.scatter('spectral', title=title, **kwargs)
 
+    def factor(self, title='Factor Analysis', **kwargs):
+        return self.scatter('factor', title=title, **kwargs)
 
+    def lda(self, title='Latent Dirichilet Allocation', **kwargs):
+        return self.scatter('lda', title=title, **kwargs)
 
 
     #
@@ -290,3 +330,25 @@ def fix_locals(ns):
     ns.pop('self', None)
     ns.update(ns.pop('kwargs', {}))
     return ns
+
+
+def fuzzyfy_coords(coords, scale):
+    """
+    Fuzzyfy coords of list of points. Useful to display data points occluded
+    in a scatter plot.
+    """
+
+    scale = float(scale)
+    N = len(coords)
+    xmin = coords[:, 0].min()
+    xmax = coords[:, 0].max()
+    ymin = coords[:, 1].min()
+    ymax = coords[:, 1].max()
+    dx = scale * (xmax - xmin) / 50
+    dy = scale * (ymax - ymin) / 50
+    DX = np.random.uniform(-dx, dx, size=N)
+    DY = np.random.uniform(-dy, dy, size=N)
+    coords = np.array(coords)
+    coords[:, 0] += DX
+    coords[:, 1] += DY
+    return coords

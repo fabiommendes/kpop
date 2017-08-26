@@ -1,8 +1,7 @@
 import numpy as np
 from sklearn import manifold, decomposition
 
-
-from ..result import result, transform_result
+from ..result import transform_result
 
 NOT_GIVEN = object()
 
@@ -13,62 +12,11 @@ class projection:
     """
 
     _data = property(lambda _: np.array(_.population))
-    _methods = {'pca', 'tsne', 'lle', 'mds', 'isomap', 'spectral'}
+    _methods = {'pca', 'tsne', 'lle', 'mds', 'isomap', 'spectral',
+                'kernel_pca', 'nmf', 'ica'}
 
     def __init__(self, population):
         self._population = population
-
-    def as_data(self, method='count'):
-        """
-        Convert genotype data into a numpy array. This is a basic pre-processing
-        step in many dimensionality reduction algorithms.
-
-        Genotypes are categorical data and usually it doesn't make sense to
-        treat the integer encoding used in kpop as ordinal data (there is
-        no ordering implied when treating say, allele 1 vs allele 2 vs allele
-        3).
-
-        There are a few basic strategies to convert categorical data in a 
-        genotype to something that can be handled by machine-learning 
-        algorithms.
-
-        1. The 'count' method simply counts the number of #1 alleles in each
-           locus and creates a matrix C(n,j) of the number of #1 alleles for
-           individual n in location j. This only makes sense when working with
-           biallelic data.
-
-           The default strategy is to normalize each component of the C(n, j)
-           matrix according to a measure of genetic drift. This procedure is
-           described at Patterson et. al., "Population Structure and
-           Eigenanalysis" and is recommended for SNPs subject to genetic
-           drift. It is not recommended to use this normalization for
-           micro-satellite data.
-        2. The 'flatten' method shuffles the alleles at each loci, flatten
-           it, and creates a matrix C(n, j) with (N x 2J) elements. The rest
-           of the algorithm proceeds identically. This pre-processing must be
-           used with care for non-biallelic data.
-
-        Args:
-            method : 'count', 'flatten'
-                Conversion method. See description above.
-
-        Returns:
-            An ndarray with transformed data.
-        """
-
-        data = as_raw_data(self._population, method)
-        if method == 'count':
-            data = whiten(data, 'snp')
-        elif method == 'flatten':
-            data = whiten(data, 'std')
-        return data
-
-    def project(self, which, k=2, **kwargs):
-        """
-        Alias to population.project(which, k, ...)
-        """
-
-        return self(which, k, **kwargs)
 
     def __call__(self, which='pca', k=2, **kwargs):
         """
@@ -87,7 +35,7 @@ class projection:
             norm = kwargs.pop('norm', True)
             method = kwargs.pop('method', 'count')
             norm = {True: 'snp', False: 'mean'}.get(norm, norm)
-            data = self.as_data(method)
+            data = self._as_array(method)
             return transform_result(which, data, k, **kwargs)
 
         elif isinstance(which, str):
@@ -97,7 +45,17 @@ class projection:
 
         raise ValueError('invalid method: %r' % which)
 
-    def pca(self, k=2, *, method='count', svd=False, **kwargs):
+    def _as_array(self, data='count'):
+        return self._population.as_array(data)
+
+    def project(self, which, k=2, **kwargs):
+        """
+        Alias to population.project(which, k, ...)
+        """
+
+        return self(which, k, **kwargs)
+
+    def pca(self, k=2, data='count-unity', **kwargs):
         """
         Principal component analysis.
 
@@ -117,14 +75,9 @@ class projection:
         Args:
             k (int):
                 Number of principal components to consider
-            method ('count' or 'flatten'):
-                See the :method:`as_data` method.
-            svd (bool):
-                If True, performs the PCA using an explicit single value
-                decomposition. If SVD is true and k=None, then it performs the
-                full decomposition of data. It is generally slower than the
-                standard PCA for low k, but can be faster for the full
-                decomposition.
+            data:
+                Data conversion method. See the
+                :method:`kpop.Population.as_data` method.
 
             Extra keyword arguments are passed to the
             :cls:`sklearn.decomposition.PCA` constructor before creating the
@@ -158,27 +111,46 @@ class projection:
             >>> (sign_p1 != sign_p2).all()
             True
         """
-        # Compute the singular value decomposition of the rescaled matrix and
-        # return the projections of each individual in this matrix
-        if svd:
-            data = self.as_data(method)
+        if 'pca_reduce' in kwargs:
+            raise TypeError('invalid attribute: pca_reduce')
 
-            _, _, pca_coords = np.linalg.svd(data, False)
-            if k is None or k == 0:
-                pca_coords_k = pca_coords[:]
-            else:
-                pca_coords_k = pca_coords[:k]
-            return result(np.dot(data, pca_coords_k.T))
-        else:
-            pca = decomposition.PCA
-            return sklearn_manifold(pca, self, k, method, **kwargs)
+        pca = decomposition.PCA
+        data = self._as_array(data)
+        return transform_result(pca, data, n_components=k, **kwargs)
 
-    def tsne(self, k=2, *, method='count', max_dimensions=15,
-             perplexity=30, **kwargs):
+    def mds(self, k=2, *, data='count-unity', **kwargs):
+        """
+        Multidimensional scaling.
+
+        This is a low dimensional representation of data that tries to preserve
+        the same distance matrix as in the original high dimensionality space.
+        """
+        return self.sklearn(manifold.MDS, k, data, **kwargs)
+
+    def kernel_pca(self, k=2, *, data='count-unity', **kwargs):
+        """
+        Kernel PCA transformation of data.
+
+        Args:
+            k:
+                Number of dimensions of the reduced space.
+            data:
+                Data conversion method. See the
+                :method:`kpop.Population.as_data` method.
+
+        """
+        kernel_pca = decomposition.KernelPCA
+        kwargs = with_defaults(
+            kwargs,
+            kernel='sigmoid',
+        )
+        return self.sklearn(kernel_pca, k, data, **kwargs)
+
+    def tsne(self, k=2, *, data='count-unity', **kwargs):
         """
         t-distributed stochastic neighbor embedding.
 
-        It is a dimensionality reduction method that tries to preserve 
+        It is a dimensionality reduction method that tries to preserve
         similarities between different features. Differently from PCA, which is
         a simple rotation, t-SNE tends to preserve similarities and lend itself
         for better clustering performance in the reduced coordinates.
@@ -186,14 +158,19 @@ class projection:
         Args:
             k (int):
                 Number of principal components to consider
-            method ('count' or 'flatten'):
-                See the :method:`as_data` method.
+            data:
+                Data conversion method. See the
+                :method:`kpop.Population.as_data` method.
+            pca (int):
+                Apply PCA targeting the given number of dimensions before
+                applying TSNE. This accelerates computation, but also can lead
+                to better results since t-SNE tends to behave somewhat badly
+                in very high dimension spaces.
 
-
+        Notes:
             Extra keyword arguments are passed to the
             :cls:`sklearn.manifold.TSNE` constructor before creating the
             transformation object.
-
 
         Returns:
             A (size x k) matrix with the components of each individual in the
@@ -202,106 +179,117 @@ class projection:
         See Also:
             http://scikit-learn.org/stable/modules/generated/sklearn.manifold.TSNE.html#sklearn.manifold.TSNE
         """
-        data = self.as_data(method)
-        if max_dimensions is not None and self._population.size > max_dimensions:
-            data = transform_result(decomposition.PCA, data, max_dimensions)
+        pca = manifold.TSNE
+        kwargs = with_defaults(kwargs, perplexity=30, pca=15)
+        return self.sklearn(pca, k, data, **kwargs)
 
-        # Extra keyword arguments
-        kwargs['perplexity'] = perplexity
+    def ica(self, k=2, *, data='count-unity', **kwargs):
+        ica = decomposition.FastICA
+        return self.sklearn(ica, k, data, **kwargs)
 
-        return transform_result(manifold.TSNE, data, k, **kwargs)
+    def factor(self, k=2, *, data='count-unity', **kwargs):
+        factor = decomposition.FactorAnalysis
+        return self.sklearn(factor, k, data, **kwargs)
 
-    def mds(self, k=2, *, method='count', **kwargs):
+    def lda(self, k=2, n_populations=5, **kwargs):
         """
-        Multidimensional scaling.
-
-        This is a low dimensional representation of data that tries to preserve
-        the same distance matrix as in the original high dimensionality space.
+        Compute the admixture distribution assuming n_populations parental
+        populations and project the resulting Q-matrix to k dimensions using
+        PCA. This method can be used to visualize data in a triangle (for
+        n_populations=3) or in a flattened simplex.
         """
-        return sklearn_manifold(manifold.MDS, self, k, method, **kwargs)
+        lda = decomposition.LatentDirichletAllocation
+        data = self._as_array('count')
+        q_matrix = transform_result(lda, data, n_topics=n_populations,
+                                  learning_method='batch', **kwargs)
+        return decomposition.PCA(k).fit_transform(q_matrix)
 
-    def isomap(self, k=2, *, method='count', n_neighbors=None, **kwargs):
+    def nmf(self, k=2, *, data='count', **kwargs):
+        if 'pca' in kwargs:
+            raise TypeError('nmf does not support PCA pre-processing')
+        nmf = decomposition.NMF
+        return self.sklearn(nmf, k, data, **kwargs)
+
+    def isomap(self, k=2, *, data='count-unity', n_neighbors=None, **kwargs):
         """
-        Isomap
+        Isomap Embedding.
+
+        Non-linear dimensionality reduction through Isometric Mapping.
+
+        Args:
+            n_neighbors (int):
+                Number of neighbors to consider for each point.
+
+        Returns:
+
         """
-        if n_neighbors is None:
-            n_neighbors = min(int(self._population.size / 3), 5)
-        kwargs['n_neighbors'] = n_neighbors
+        isomap = manifold.Isomap
+        kwargs = with_defaults(
+            kwargs,
+            n_neighbors=n_neighbors or
+                        min(n_neighbors or 50, self._population.size - 1),
+        )
+        return self.sklearn(isomap, k, data, **kwargs)
 
-        def isomap(k, **kwargs):
-            kwargs['n_components'] = k
-            return manifold.Isomap(**kwargs)
+    def lle(self, k=2, *, data='count', n_neighbors=None, reg=1.0, **kwargs):
+        """
+        Locally linear embedding.
 
-        return sklearn_manifold(isomap, self, k, method, **kwargs)
+        This method is implemented here for sake of completeness, but it
+        seems to perform very poorly in genotype data.
 
-    def lle(self, k=2, *, method='count', n_neighbors=10, **kwargs):
-        # if n_neighbors is None:
-        #     n_neighbors = min(int(self._population.size / 3), 5)
-        kwargs['n_neighbors'] = n_neighbors
-        kwargs.setdefault('reg', 1.0)
+        See Also:
+            :cls:`sklearn.manifold.LocallyLinearEmbedding`
+        """
+        lle = manifold.LocallyLinearEmbedding
+        kwargs_ = with_defaults(
+            kwargs,
+            n_neighbors=n_neighbors or
+                        min(n_neighbors or 50, self._population.size - 1),
+        )
+        return self.sklearn(lle, k, data, **kwargs)
 
-        def lle(k, **kwargs):
-            kwargs['n_components'] = k
-            return manifold.LocallyLinearEmbedding(**kwargs)
+    def spectral(self, k=2, *, data='count-unity', **kwargs):
+        spectral = manifold.SpectralEmbedding
+        kwargs = with_defaults(kwargs, affinity='rbf')
+        return self.sklearn(spectral, k, data, **kwargs)
 
-        return sklearn_manifold(lle, self, k, method, **kwargs)
+    def sklearn(self, transformer, k=2, data='count-unity', pca=None,
+                **kwargs):
+        """
+        Apply a scikit-learn dimensionality reduction method to data. Users
+        must pass the transformer class associated with the method (e.g.
+        sklearn.manifold.TSNE).
 
-    # def ltsa(self, k=2, *, method='count', **kwargs):
-    #     return sklearn_manifold(manifold.LTSA, self, k, method, **kwargs)
-    #
-    # def hessian_lle(self, k=2, *, method='count', **kwargs):
-    #     return sklearn_manifold(manifold.HLLE, self, k, method, **kwargs)
-
-    def spectral(self, k=2, *, method='count', **kwargs):
-        kwargs.setdefault('affinity', 'rbf')
-        return sklearn_manifold(manifold.SpectralEmbedding, self, k, method, **kwargs)
+        Args:
+            transformer (callable):
+                Any callable that return a transformer object.
+            k (int):
+                Number of dimensions of target space.
+            data ('count-?' or 'flat-?'):
+                See the :method:`as_array` method. Defaults to 'count-unity'.
+            pca (int or None):
+                If given, preprocess data with PCA and reduce it to the given
+                number of dimensions. Many algoritms perform better (both in
+                terms of speed and quality) if data is reduced to a medium
+                dimensionality space before treatment.
+            """
+        if pca is None:
+            arr_data = self._as_array(data)
+        else:
+            arr_data = self.pca(pca, data)
+        return transform_result(transformer, arr_data, n_components=k, **kwargs)
 
 
 #
 # Utility functions
 #
-def sklearn_manifold(_sk_method, proj: projection, k: int, _method:
-str,
-                     **kwargs):
+def with_defaults(dic, **kwargs):
     """
-    A projection method from a scikit method for manifold learning.
+    Return a copy of dictionary where the positional keyword arguments are
+    inserted as default values.
     """
-    data = proj.as_data(_method)
-    return transform_result(_sk_method, data, k, **kwargs)
-
-
-def as_raw_data(population, method):
-    """
-    Convert raw genotype data to a format usable in a dimensionality reduction
-    algorithms. It does not normalize the results.
-    """
-
-    if method == 'count':
-        data = (np.array(population) == 1).sum(axis=2)
-    elif method == 'flatten':
-        pop = population.shuffled_loci()
-        data = [ind.flatten() for ind in pop]
-        data = np.array(data, dtype=pop.dtype)
-    else:
-        raise ValueError('invalid method: %r' % method)
-    
-    return data
-
-
-def whiten(data, method):
-    "Remove bias and re-normalize, if desired"
-
-    mu = data.mean(axis=0)
-    if method == 'snp':
-        p = mu / 2
-        norm = np.sqrt(p * (1 - p))
-    elif method == 'std':
-        norm = data.std(axis=0)
-    elif method == 'mean':
-        norm = 1.0
-    else:
-        raise ValueError('invalid normalization method: %r' % method)
-
-    # Prevents problems with mean 0 or 1.
-    norm = np.where(norm, norm, 1)
-    return (data - mu) / norm
+    dic = dict(dic)
+    for k, v in kwargs.items():
+        dic.setdefault(k, v)
+    return dic
