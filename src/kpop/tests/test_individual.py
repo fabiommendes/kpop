@@ -75,7 +75,7 @@ def test_shuffle_loci(ind):
     ind_orig = ind.copy()
     sum_values = ind.data.sum(axis=-1)
     for _ in range(10):
-        new = ind.shuffled_loci()
+        new = ind.shuffle_loci()
         assert (new.data.sum(axis=-1) == sum_values).all()
         if (new.data != ind_orig.data).any():
             break

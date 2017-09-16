@@ -21,7 +21,7 @@ class TestMultiPopulation:
         del pop.populations[1]
         assert pop == popA
 
-    def test_multipopulation_with_3_populatoins(self, popA, popB):
+    def test_multipopulation_with_3_populations(self, popA, popB):
         popC = Population(popB[:-1], id='C', copy=True)
         pop = popA + popB
         assert type(pop) == MultiPopulation

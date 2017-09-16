@@ -1,13 +1,65 @@
 import numpy as np
 from numpy.testing import assert_almost_equal
 
-from kpop import Population
+from kpop import Population, Prob
+from kpop.population.population_base import sorted_allele_mapping, \
+    biallelic_mapping
 
 
-#
-# Test rendering and attributes
-#
-class TestDataAccess:
+class TestAuxiliaryFunctions:
+    "Private functions used in base population class"
+
+    def test_sorted_allele_mapping(self):
+        prob = Prob({1: 0.6, 2: 0.4})
+        assert sorted_allele_mapping(prob) == {}
+
+        prob = Prob({2: 0.6, 1: 0.4})
+        assert sorted_allele_mapping(prob) == {2: 1, 1: 2}
+
+        prob = Prob({2: 0.5, 3: 0.4, 1: 0.1})
+        assert sorted_allele_mapping(prob) == {2: 1, 3: 2, 1: 3}
+
+    def test_biallelic_mapping(self):
+        prob = Prob({1: 0.6, 2: 0.4})
+        assert biallelic_mapping(prob) == {}
+
+        prob = Prob({2: 0.6, 1: 0.4})
+        assert biallelic_mapping(prob) == {}
+
+        prob = Prob({2: 0.6, 1: 0.2, 3: 0.2})
+        assert biallelic_mapping(prob) == {2: 1, 1: 2, 3: 2}
+
+
+class TestProperties:
+    "Test basic attributes that expose kpop population data"
+
+    def test_population_basic_attributes(self, popA):
+        assert popA.is_biallelic
+        assert popA.num_alleles == 2
+        assert popA.ploidy == 2
+        assert popA.num_loci == 5
+        assert popA.size == 8
+        assert popA.id == 'A'
+        assert popA.populations == [popA]
+
+    def test_population_frequency_attributes(self, popA):
+        assert_almost_equal(popA.freqs_vector, [1.0, 0.0, 0.75, 0.25, 0.5])
+        assert_almost_equal(popA.freqs_matrix, [
+            (1.0, 0), (0.0, 1), (0.75, 0.25), (0.25, 0.75), (0.5, 0.5)
+        ])
+        assert popA.freqs == [
+            {1: 1.00, 2: 0.00},
+            {1: 0.00, 2: 1.00},
+            {1: 0.75, 2: 0.25},
+            {1: 0.25, 2: 0.75},
+            {1: 0.50, 2: 0.50},
+        ]
+        assert list(popA.freqs_vector) == [1.0, 0.0, 0.75, 0.25, 0.5]
+        assert list(popA.freqs_matrix[:, 0]) == [1.0, 0.0, 0.75, 0.25, 0.5]
+        assert list(popA.hfreqs_vector) == [0, 0, 0.5, 0.5, 1]
+
+
+class TestAsArray:
     "Test basic slicing and data transformation interfaces"
 
     def test_conversion_to_array(self, popB):
@@ -46,44 +98,43 @@ class TestDataAccess:
         ]).all()
 
 
-class TestProperties:
-    "Test basic attributes that expose kpop population data"
-
-    def test_population_basic_attributes(self, popA):
-        assert popA.is_biallelic
-        assert popA.num_alleles == 2
-        assert popA.ploidy == 2
-        assert popA.num_loci == 5
-        assert popA.size == 8
-        assert popA.id == 'A'
-        assert popA.populations == [popA]
-
-    def test_population_frequency_attributes(self, popA):
-        assert_almost_equal(popA.freqs_vector, [1.0, 0.0, 0.75, 0.25, 0.5])
-        assert_almost_equal(popA.freqs_matrix, [
-            (1.0, 0), (0.0, 1), (0.75, 0.25), (0.25, 0.75), (0.5, 0.5)
+class _TestTransformations:
+    def test_drop_non_biallelic(self):
+        pop = Population([
+            [[1, 3], [1, 2], [0, 1]],
+            [[1, 1], [1, 1], [1, 1]],
         ])
-        assert popA.freqs == [
-            {1: 1.00, 2: 0.00},
-            {1: 0.00, 2: 1.00},
-            {1: 0.75, 2: 0.25},
-            {1: 0.25, 2: 0.75},
-            {1: 0.50, 2: 0.50},
+        new = pop.drop_non_biallelic()
+        assert list(new.as_array()) == [
+            [[1, 2], [0, 1]],
+            [[1, 1], [1, 1]],
         ]
-        assert list(popA.freqs_vector) == [1.0, 0.0, 0.75, 0.25, 0.5]
-        assert list(popA.freqs_matrix[:, 0]) == [1.0, 0.0, 0.75, 0.25, 0.5]
-        assert list(popA.hfreqs_vector) == [0, 0, 0.5, 0.5, 1]
 
-    def _test_fst_statistics(self, popA, popB):
-        popC = Population(popA, id='C')
-        pop = popA + popB + popC
-        print([type(x) for x in [popA, popB, popC]])
-        assert len(pop.populations) == 3
-        assert pop.render_fst() == (
-            '           A         B\n'
-            'B:  0.409558\n'
-            'C: -0.028571  0.409558'
-        )
+    def test_force_biallelic(self):
+        pop = Population([
+            [[1, 3], [1, 2], [0, 1]],
+            [[2, 2], [1, 1], [1, 1]],
+            [[1, 2], [1, 1], [1, 1]],
+        ])
+        new = pop.force_biallelic()
+        assert list(new.as_array()) == [
+            [[2, 2], [1, 2], [0, 1]],
+            [[1, 1], [1, 1], [1, 1]],
+            [[2, 1], [1, 1], [1, 1]],
+        ]
+
+    def test_sort_by_allele_freqs(self):
+        pop = Population([
+            [[1, 3], [1, 2], [0, 1]],
+            [[2, 2], [1, 1], [0, 0]],
+            [[1, 2], [1, 1], [1, 0]],
+        ])
+        new = pop.sort_by_allele_freq()
+        assert list(new.as_array()) == [
+            [[2, 3], [1, 2], [0, 1]],
+            [[1, 1], [1, 1], [0, 0]],
+            [[2, 1], [1, 1], [1, 0]],
+        ]
 
 
 class TestRender:
@@ -127,62 +178,9 @@ locus,        A,        B
 '''.strip()
 
 
-class TestEvolutionAndOffspring:
-    def test_create_individual_labels(self, popA):
-        assert popA[0].id == 'A1'
-
-    def test_create_offspring(self, popA):
-        ind3 = popA.simulation.random_individual()
-        ind2 = popA.simulation.new_offspring(id='Achild')
-        ind1 = popA.simulation.new_individual(id='Arandom')
-
-        for ind in ind1, ind2, ind3:
-            print(ind)
-            assert ind.population is popA
-            assert ind.id is not None
-            assert ind[0, 0] == 1
-            assert ind[1, 0] == 2
-
-    def test_fill_population_uses_the_correct_frequencies(self, popA):
-        popA.fill(10)
-
-        # These are fixed alleles
-        assert popA[9][0, 0] == 1
-        assert popA[9][0, 1] == 1
-        assert popA[9][1, 0] == 2
-        assert popA[9][1, 1] == 2
-
-    def test_population_genetic_drift(self, popA):
-        size = 1e6  # we need a very large size to avoid going back to the same
-        # frequence by pure chance
-
-        # Frequencies do not change with evolution of zero generations
-        pop2 = popA.simulation.genetic_drift(0, sample_size=0,
-                                          population_size=size)
-        assert popA.freqs == pop2.freqs
-
-        # Genetic drift
-        pop2 = popA.simulation.genetic_drift(10, sample_size=0, population_size=size)
-        assert popA.freqs != pop2.freqs
-
-        # Fixed alleles do not change
-        assert popA.freqs[0] == pop2.freqs[0]
-        assert popA.freqs[1] == pop2.freqs[1]
-
-        # Non-fixed alleles should always change
-        for i in range(2, 5):
-            assert popA.freqs[i] != pop2.freqs[i]
-
-    def test_add_remove_individual(self, popA):
-        N = len(popA)
-        popA.add(popA.simulation.new_offspring())
-        assert len(popA) == N + 1
-
-        popA.remove()
-        assert len(popA) == N
-
-
 class TestRandomPopulations:
+    "Test the creation of random populations"
+
     def test_make_random_population(self):
         pop = Population.random(30, 20)
         assert pop.size == 30

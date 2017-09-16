@@ -6,36 +6,6 @@ from kpop.prob import Prob
 from kpop.utils import freqs_to_matrix
 
 
-def normalize_freqs_arg(freqs):
-    """
-    Normalize frequencies to be a sequence of probability distributions.
-    """
-
-    if freqs is None:
-        return None
-
-    if len(freqs) == 0:
-        raise ValueError('cannot initialize from empty frequencies')
-
-    if isinstance(freqs[0], collections.Mapping):
-        result = []
-        for prob in freqs:
-            if not isinstance(prob, collections.Mapping):
-                prob = enumerate(prob)
-            prob = Prob(prob)
-            result.append(prob)
-        return result
-    else:
-        freqs = np.asarray(freqs)
-        result = []
-        if freqs.ndim == 1:
-            for prob in freqs:
-                result.append(Prob({1: prob, 2: 1 - prob}))
-        else:
-            for prob in freqs:
-                data = enumerate(prob, start=1)
-                result.append(Prob(data))
-        return result
 
 
 def random_pop_data(size, freqs, ploidy=2, dtype=np.int8):

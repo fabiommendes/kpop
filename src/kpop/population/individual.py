@@ -167,7 +167,7 @@ class Individual(collections.Sequence):
 
         return self.data.T
 
-    def shuffled_loci(self):
+    def shuffle_loci(self):
         """
         Randomize the position of values in same locus *inplace*.
         """
@@ -176,7 +176,7 @@ class Individual(collections.Sequence):
         for loci in new.data:
             np.random.shuffle(loci)
         return new
-    
+
     #
     # Coping, saving and serialization
     #
@@ -288,7 +288,7 @@ class Individual(collections.Sequence):
             data = np.where(which, data2, data1)
             data = data[:, None]
 
-        # Diploid create 2 segments for each parent and fuse the _results
+        # Diploid create 2 segments for each parent and fuse the results
         elif self.ploidy == 2:
             which = np.random.randint(0, 2, size=self.num_loci)
             data = np.where(which, self.data[:, 0], self.data[:, 1])
@@ -302,6 +302,21 @@ class Individual(collections.Sequence):
 
         kwargs['id'] = id or id_label_from_parents(self.id, other.id)
         return self.copy(data, copy=False, **kwargs)
+
+
+class IndividualProxy(Individual):
+    _data = data = property(lambda _: _._population._data[_._idx])
+    _allele_names = None
+    id = property(lambda _: _._population.individual_ids[_._idx])
+    population = property(lambda _: _._population)
+    label = property(lambda _: _.id)
+
+    def __init__(self, population, idx):
+        self._population = population
+        self._idx = idx
+
+    def copy(self, *args, **kwargs):
+        return self
 
 
 def id_label_from_parents(l1, l2):

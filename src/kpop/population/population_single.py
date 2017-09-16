@@ -1,7 +1,8 @@
 import numpy as np
 from lazyutils import lazy
 
-from kpop.population.individual import Individual
+from kpop.population.individual import Individual, \
+    IndividualProxy, random_data_from_freqs_matrix
 from .population_base import PopulationBase
 from .populations import ImmutablePopulationList
 from ..utils.frequencies import random_frequencies
@@ -41,47 +42,49 @@ class Population(PopulationBase):
         """
         if num_loci <= 0:
             raise ValueError('num_loci must be at least one!')
+        if seed is not None:
+            np.random.seed(seed)
 
-        freqs = random_frequencies(num_loci, alleles=alleles, clip=min_prob,
-                                   seed=seed)
-        pop = Population(freqs=freqs, id=id, num_loci=num_loci,
-                         num_alleles=alleles, ploidy=ploidy)
-        pop.fill(size, seed=seed)
-        pop.freqs_matrix = freqs
-        return pop
+        # Frequencies
+        freqs = random_frequencies(num_loci, alleles, clip=min_prob, seed=seed)
 
-    def __init__(self, data=(), copy=False, **kwargs):
-        self._data = []
+        # Create data
+        data = []
+        for _ in range(size):
+            ind = random_data_from_freqs_matrix(freqs, ploidy=ploidy)
+            data.append(ind)
+        data = np.array(data)
 
-        # Initialize data
+        # Return population
+        return Population(
+            data, freqs=freqs, id=id,
+            num_loci=num_loci, num_alleles=alleles, ploidy=ploidy
+        )
+
+    def __init__(self, data=(), copy=False, id=None, individual_ids=None,
+                 **kwargs):
         if isinstance(data, str):
-            for ind in data.splitlines():
-                self.add(ind, copy=copy)
+            data, _labels = parse_population_data(data)
+            individual_ids = individual_ids or _labels
         elif isinstance(data, PopulationBase):
-            for ind in data:
-                self.add(ind, copy=True)
+            individual_ids = individual_ids or data.individual_ids
+            data = data.as_array()
         else:
-            for ind in data:
-                self.add(ind, copy=copy)
+            data = np.array(data, dtype='uint8')
 
+        self._data = np.asarray(data)
+        kwargs.update(id=id, individual_ids=individual_ids)
         super(Population, self).__init__(**kwargs)
-
-        # Recompute ids, if they are not given
-        if self.id:
-            for ind in self._data:
-                if getattr(ind, 'id', None) is None:
-                    ind.id = self._next_id()
-                ind.population = self
-                ind._container = self
 
     def __len__(self):
         return len(self._data)
 
     def __getitem__(self, idx):
-        return self._data[idx]
+        return IndividualProxy(self, idx)
 
     def __iter__(self):
-        return iter(self._data)
+        for idx in range(self.size):
+            yield IndividualProxy(self, idx)
 
     def __str__(self):
         return '\n'.join(str(x) for x in self)
@@ -91,58 +94,52 @@ class Population(PopulationBase):
             return self._multi_population_class([self, other])
         return NotImplemented
 
-    def add(self, ind, copy=False):
-        """
-        Adds individual to population.
-        """
-
-        if not isinstance(ind, Individual):
-            ind = Individual(ind, population=self)
+    def __eq__(self, other):
+        if isinstance(other, Population):
+            x = self._data
+            y = other._data
+            return x.shape == y.shape and (x == y).all()
         else:
-            if ind._container not in (self, None):
-                if copy:
-                    ind = ind.copy()
-                else:
-                    msg = 'individual already belongs to population'
-                    raise ValueError(msg)
+            return super().__eq__(other)
 
-                ind.population = self
-                ind._container = self
+    def _as_array(self):
+        return np.array(self._data)
 
-        self._data.append(ind)
 
-    def remove(self, idx=-1):
-        """
-        Remove and return individual at given index.
+def parse_population_data(data):
+    """
+    Initialize population from string data.
+    """
 
-        If no index is given, remove the last individual.
-        """
+    part_labels = [line.rpartition(':') for line in data.splitlines()]
+    labels = [label or None for label, _, _ in part_labels]
+    if set(labels) == {None}:
+        labels = None
+    data_raw = [line.split() for _, _, line in part_labels]
+    data_raw = np.array([[list(e) for e in line] for line in data_raw])
 
-        ind = self._data.pop(idx)
-        ind._container = None
-        return ind
+    # Create a list of locus maps. Each element is a dictionary mapping
+    # chars in raw data to integers
+    locus_map = []
+    for idx in range(data_raw.shape[1]):
+        locus = data_raw[:, idx, :]
+        alleles = set(locus.flat)
+        alleles.discard('-')
 
-    def fill(self, size, seed=None):
-        """
-        Fill population with new random individuals until it reaches the
-        given size.
-        """
+        if all(tk.isdigit() for tk in alleles):
+            map = {tk: int(tk) for tk in alleles}
+        else:
+            map = dict(enumerate(sorted(alleles), 1))
+        map['-'] = 0
+        locus_map.append(map)
 
-        if seed is not None:
-            np.random.seed(seed)
+    # Convert string data to numeric data
+    data = np.zeros(data_raw.shape, dtype='uint8')
+    ii, jj, kk = data.shape
+    for j in range(jj):
+        map = locus_map[j]
+        for i in range(ii):
+            for k in range(kk):
+                data[i, j, k] = map[data_raw[i, j, k]]
 
-        while self.size < size:
-            new = self.simulation.new_individual(id=self._next_id())
-            self.add(new)
-
-    def fill_missing(self):
-        """
-        Fills missing data.
-        """
-
-        freqs = self.freqs
-        for ind in self:
-            data = ind.data
-            missing = np.where(data == 0)
-            for i, j in zip(*missing):
-                data[i, j] = freqs[i].random_individual()
+    return data, labels

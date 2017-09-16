@@ -62,7 +62,7 @@ class Simulation(Attr):
             new.fill(sample_size)
         return new
 
-    def breed(self, population, size, id='breed', parent=None, **kwargs):
+    def breed(self, population, size, id='breed', **kwargs):
         """
         Breed individuals from both populations.
 
@@ -84,7 +84,7 @@ class Simulation(Attr):
             father, mother = self.random_individual(), self.random_individual()
             child = father.breed(mother, id='%s%s' % (id, i), **kwargs)
             children.append(child)
-        return self._new_population(children, parent=parent, id=id)
+        return self._new_population(children, id=id)
 
     def new_individual(self, id=None, **kwargs):
         """

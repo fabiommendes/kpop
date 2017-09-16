@@ -2,6 +2,7 @@ import collections
 import copy
 
 import numpy as np
+import pandas as pd
 from lazyutils import lazy
 from sidekick import _
 from sklearn import preprocessing
@@ -14,8 +15,8 @@ from .plot import Plot
 from .projection import Projection
 from .simulation import Simulation
 from .stats import Stats
-from .utils import normalize_freqs_arg, freqs_fastest, get_freqs, set_freqs, \
-    hfreqs_vector
+from .utils import freqs_fastest, get_freqs, set_freqs, hfreqs_vector
+from ..prob import Prob
 from ..utils.frequencies import fill_freqs_vector, freqs_to_matrix
 from ..utils.functional import fn_lazy, fn_property
 
@@ -67,6 +68,9 @@ class PopulationBase(collections.Sequence):
     missing_total = property(lambda _: sum(ind.missing_total for ind in _))
     missing_ratio = fn_property(_.missing_total / _.data_size)
 
+    # Meta information
+    individual_ids = property(lambda _: _.meta['ids'])
+
     # Special attributes. These will be inserted later via monkey patching
     populations = ()
     admixture = Admixture()
@@ -76,37 +80,61 @@ class PopulationBase(collections.Sequence):
     plot = Plot()
     projection = Projection()
     simulation = Simulation()
-    stats = Stats()
+    statistics = Stats()
 
-    def __init__(self, freqs=None, allele_names=None, id=None, parent=None,
-                 ploidy=None, num_loci=None, num_alleles=None):
+    # Aliases
+    admix = lazy(lambda self: self.admixture)
+    cls = lazy(lambda self: self.classification)
+    sim = lazy(lambda self: self.simulation)
+    stats = lazy(lambda self: self.statistics)
+
+    def __init__(self, freqs=None, allele_names=None, id=None, ploidy=None,
+                 num_loci=None, num_alleles=None, individual_ids=None):
 
         # Normalize frequencies
-        self._freqs = normalize_freqs_arg(freqs)
-        if isinstance(freqs, np.ndarray):
+        if freqs is None:
+            self._freqs = None
+        elif len(freqs) == 0:
+            raise ValueError('cannot initialize from empty frequencies')
+        elif isinstance(freqs[0], collections.Mapping):
+            self._freqs = [Prob(p) for p in freqs]
+        else:
+            freqs = np.asarray(freqs)
+
             if freqs.ndim == 2:
+                self._freqs = [Prob(dict(enumerate(p, 1))) for p in freqs]
                 self.freqs_matrix = np.array(freqs)
                 self.num_alleles = freqs.shape[1]
             elif freqs.ndim == 1:
+                self._freqs = [Prob({1: p, 2: 1 - p}) for p in freqs]
                 self.freqs_vector = np.array(freqs)
-                self.num_alleles = 2
                 self.freqs_matrix = fill_freqs_vector(self.freqs_vector)
+                self.num_alleles = 2
             else:
                 raise ValueError('invalid frequency data')
-        if self._freqs:
-            num_loci = len(self._freqs)
+
+        # Fix num_loci from data
+        if self._freqs is not None:
+            self.num_loci = len(self._freqs)
+            if num_loci is not None and num_loci != self.num_loci:
+                raise ValueError('invalid value for num_loci')
+        elif num_loci is not None:
+            self.num_loci = num_loci
+
+        # Individual ids
+        if individual_ids is None:
+            fmt = 'ind%s' if id is None else '%s%%s' % id
+            individual_ids = [fmt % i for i in range(1, self.size + 1)]
 
         # Save required attributes
         self.allele_names = allele_names
         self.id = id
-        self.parent = parent
         self._last_id_index = 0
+        self.meta = pd.DataFrame({'ids': individual_ids})
 
         # Save optional given lazy attributes
         if ploidy is not None:
             self.ploidy = ploidy
-        if num_loci is not None:
-            self.num_loci = num_loci
         if num_alleles is not None:
             self.num_alleles = num_alleles
 
@@ -117,19 +145,22 @@ class PopulationBase(collections.Sequence):
         return self.io.render(id_align='best')
 
     def __eq__(self, other):
-        # Treat other as a sequence and compare each item.
-        try:
-            N = len(other)
-        except TypeError:
+        if not isinstance(other, PopulationBase):
             return NotImplemented
-
-        if len(self) != N:
+        if self.shape != other.shape:
             return False
-        return all(x == y for (x, y) in zip(self, other))
+        return all(x == y for x, y in zip(self, other))
 
     def _population(self, *args, **kwargs):
         from kpop import Population
         return Population(*args, **kwargs)
+
+    def _next_id(self):
+        self._last_id_index += 1
+        return '%s%s' % (self.id or 'ind', self._last_id_index)
+
+    def _as_array(self):
+        return NotImplementedError('must be implemented on subclasses')
 
     def as_array(self, which='raw'):
         """
@@ -182,7 +213,7 @@ class PopulationBase(collections.Sequence):
         Returns:
             An ndarray with transformed data.
         """
-        data = np.array([ind.data for ind in self])
+        data = self._as_array()
 
         # Raw conversion
         if which == 'raw':
@@ -200,7 +231,7 @@ class PopulationBase(collections.Sequence):
                 return preprocessing.scale(data.astype(float))
             return data
         elif which in {'rflat', 'rflat-unity'}:
-            return self.shuffled_loci().as_array(which[1:])
+            return self.shuffle_loci().as_array(which[1:])
 
         # Counters
         elif which in {'count', 'count-unity', 'count-snp', 'count-center'}:
@@ -220,31 +251,7 @@ class PopulationBase(collections.Sequence):
 
         raise ValueError('invalid conversion method: %r' % which)
 
-    def drop_loci(self, indexes):
-        """
-        Create a new population with all loci in the given indexes removed.
-
-        Args:
-            indexes: a list of loci indexes
-
-        Returns:
-            A new population.
-        """
-
-        data = np.array([ind.data for ind in self]) if _data is None else _data
-        indexes = set(indexes)
-        good_loci = np.array([idx for idx in range(self.num_loci)
-                              if idx not in indexes])
-        data = data[:, good_loci]
-
-        # Create new individuals
-        new_inds = []
-        for ind, gene in zip(self, data):
-            new_inds.append(ind.copy(gene, num_alleles=2))
-
-        return self.transformed_copy(new_inds)
-
-    def drop_non_biallelic(self, *, _data=None):
+    def drop_non_biallelic(self):
         """
         Creates a new population that remove all non-biallelic loci.
 
@@ -252,50 +259,71 @@ class PopulationBase(collections.Sequence):
             A (population, removed) tuple with the new population and a list of
             of all dropped locus indexes.
         """
+        bad_loci = self.statistics.non_biallelic()
+        return self.drop_loci(bad_loci), bad_loci
 
-        data = np.array([ind.data for ind in self]) if _data is None else _data
-        bad_loci = self.stats.non_biallelic(_data=data)
-        return self.drop_loci(bad_loci, _data=data), bad_loci
-
-    def transformed_copy(self, individuals, force_multi=False, **kwargs):
+    def force_biallelic(self):
         """
-        Return a transformed copy of population with the given list of
-        individuals. The number of individuals must match the current
-        population.
+        Return a new population with forced biallelic data.
+
+        If a locus has more than 2 alleles, the most common allele is picked
+        as allele 1 and the alternate allele 2 comprises all the other alleles.
+        """
+        alleles_mapping = [biallelic_mapping(prob) for prob in self.freqs]
+        return self.map_alleles(alleles_mapping)
+
+    def sort_by_allele_freq(self):
+        """
+        Return a new population in which the index attributed to each allele
+        in each locus is sorted by the frequency in the population. After that,
+        allele 1 will be the most common, allele 2 is the second most common
+        and so on.
+        """
+        alleles_mapping = [sorted_allele_mapping(prob) for prob in self.freqs]
+        return self.map_alleles(alleles_mapping)
+
+    def map_alleles(self, alleles_mapping):
+        """
+        Create new population reorganizing all allele values by the given
+        list of allele values mappings.
 
         Args:
-            individuals:
-                A list of new, transformed individuals.
-
-        Returns:
-            The transformed Population or MultiPopulation.
+            alleles_mapping:
+                A list with num_loci elements. Each element must be a mapping
+                from the old allele values to the new ones. If an element is
+                an empty dictionary, no remapping is done.
         """
+        raise NotImplementedError('must be implemented in subclasses')
 
-        # Return population or multi-population
-        kwargs.setdefault('parent', self)
-        kwargs.setdefault('id', self.id)
-        if not self.is_multi_population:
-            pop = self.population_class(individuals, **kwargs)
-            if force_multi:
-                return self.multi_population_class([pop], **kwargs)
-            return pop
-        else:
-            populations = []
-            idx = 0
-            for pop in self.populations:
-                data = individuals[idx: idx + len(pop)]
-                idx += len(pop)
-                pop = self._population(data, id=pop.id, parent=pop.parent)
-                populations.append(pop)
-            return self.multi_population_class(populations, **kwargs)
-
-    def copy(self):
+    def drop_loci(self, indexes):
         """
-        Return a copy of population.
+        Create a new population with all loci in the given indexes removed.
         """
-        return copy.deepcopy(self)
+        indexes = set(indexes)
+        keep = np.array([i for i in range(self.num_loci) if i not in indexes])
+        return self.keep_loci(keep)
 
-    def shuffled_loci(self):
+    def drop_individuals(self, indexes):
+        """
+        Creates new population removing the individuals in the given indexes.
+        """
+        indexes = set(indexes)
+        keep = np.array([i for i in range(self.size) if i not in indexes])
+        return self.keep_individuals(keep)
+
+    def keep_loci(self, indexes):
+        """
+        Creates a new population keeping only the loci in the given indexes.
+        """
+        raise NotImplementedError('must be implemented in subclasses')
+
+    def keep_individuals(self, indexes):
+        """
+        Creates new population removing the individuals in the given indexes.
+        """
+        raise NotImplementedError('must be implemented in subclasses')
+
+    def shuffle_loci(self):
         """
         Return a copy with shuffled contents of each locus.
         """
@@ -306,6 +334,27 @@ class PopulationBase(collections.Sequence):
                 np.random.shuffle(loci)
         return pop
 
-    def _next_id(self):
-        self._last_id_index += 1
-        return '%s%s' % (self.id or 'ind', self._last_id_index)
+    def copy(self, id=None):
+        """
+        Return a copy of population.
+        """
+
+        new = copy.deepcopy(self)
+        if id is not None:
+            new.id = id
+        return new
+
+
+def sorted_allele_mapping(prob):
+    mapping = sorted(prob.items(), key=lambda x: x[1], reverse=True)
+    return {x: i for i, (x, y) in enumerate(mapping, 1) if i != x}
+
+
+def biallelic_mapping(prob):
+    if len(prob) <= 2:
+        return {}
+    else:
+        idx = prob.mode()
+        mapping = {i: 2 for i in prob}
+        mapping[idx] = 1
+        return mapping
