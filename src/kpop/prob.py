@@ -173,7 +173,7 @@ class Prob(collections.Mapping):
                 mode_set.add(elem)
         return mode_set
 
-    def sharp(self, mode_set=False):
+    def sharp(self, mode_set=True):
         """
         Return a sharp version of the probability distribution.
 
@@ -191,19 +191,30 @@ class Prob(collections.Mapping):
             data[self.mode()] = 1.0
         return Prob(data)
 
-    def kl_divergence(self, distr: collections.Mapping):
+    def kl_divergence(self, q: collections.Mapping):
         """
         Return the Kullback-Leibler divergence with probability distribution.
+
+        This is given by the formula:
+
+            $KL = \sum_i p_i \ln \frac {p_i} {q_i},$
+
+        in which p_i comes from the probability object and q_i comes from the
+        argument.
         """
 
         prob = self._data.get
         divergence = 0.0
         visited = 0
 
-        for k, q in distr.items():
+        for k, q in q.items():
             visited += 1
             p = prob(k, 0.0)
-            divergence += p and p * log(p / q)
+            if p:
+                try:
+                    divergence += p and p * log(p / q)
+                except ZeroDivisionError:
+                    return float('inf')
 
         if len(self._data) != visited:
             return float('inf')
@@ -224,6 +235,11 @@ class Prob(collections.Mapping):
         """
 
         if coding is None:
-            coding = range(max(self))
+            types = {type(x) for x in self._data}
+            if types == {int}:
+                coding = range(max(self) + 1)
+            else:
+                coding = sorted(self._data)
+
         prob = self._data.get
         return np.array([prob(x, 0.0) for x in coding], dtype=float)

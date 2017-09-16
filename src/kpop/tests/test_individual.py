@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 from numpy.testing import assert_equal
 
-from kpop.individual import Individual, label_from_parents
+from kpop.population.individual import Individual, id_label_from_parents
 from kpop.utils.frequencies import fill_freqs_vector
 
 
@@ -17,12 +17,12 @@ def ind_data():
 
 
 def test_can_create_individual_from_data():
-    ind = Individual([[1, 2], [3, 4]], label='foo')
+    ind = Individual([[1, 2], [3, 4]], id='foo')
     assert ind.render() == 'foo: 12 34'
 
 
 def test_can_create_individual_from_string():
-    ind = Individual('123 456', label='foo')
+    ind = Individual('123 456', id='foo')
     assert ind.num_loci == 2
     assert ind.ploidy == 3
     assert ind.render() == 'foo: 123 456'
@@ -58,16 +58,16 @@ def test_breed(ind):
 
 
 def test_breed_monoic():
-    ind = Individual('1 1 2 2', label='foo')
+    ind = Individual('1 1 2 2', id='foo')
     child = ind.breed(ind)
     assert_equal(child.data, ind.data)
-    assert child.label == 'foo'
+    assert child.id == 'foo'
 
 
 def test_copy_individual(ind):
     cp = ind.copy()
     assert_equal(cp.data, ind.data)
-    assert cp.label == ind.label
+    assert cp.id == ind.id
     assert cp.allele_names == ind.allele_names
 
 
@@ -90,7 +90,7 @@ def test_haplotypes(ind):
 
 
 def test_label_from_parents():
-    f = label_from_parents
+    f = id_label_from_parents
     assert f(None, None) is None
     assert f('foo', None) == 'foo_'
     assert f(None, 'foo') == 'foo_'
@@ -102,8 +102,8 @@ def test_label_from_parents():
 
 def test_random_individual():
     f1 = [1.0, 0.0, 0.5]
-    ind1 = Individual.from_freqs(f1, label='rand1')
-    ind2 = Individual.from_freqs(fill_freqs_vector(f1), label='rand2')
+    ind1 = Individual.from_freqs(f1, id='rand1')
+    ind2 = Individual.from_freqs(fill_freqs_vector(f1), id='rand2')
 
     for ind in ind1, ind2:
         print(ind)
@@ -115,7 +115,7 @@ def test_random_individual():
 
 def test_make_individual_from_data():
     ind = Individual('foo: ab aa bb')
-    assert ind.label == 'foo'
+    assert ind.id == 'foo'
     assert ind[0, 1] == 2
 
 

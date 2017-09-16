@@ -94,15 +94,15 @@ function can adapt to different formats, but the command line interface expects
 a more or less rigid configuration. Your CSV file must have a single header line
 for which Kpop understands a few column names:
 
-label:
-    label for a single individual.
+id:
+    id for a single individual.
 index:
-    a numeric index. Kpop will ignore this column if label is given or otherwise
-    use it as a label.
+    a numeric index. Kpop will ignore this column if id is given or otherwise
+    use it as a id.
 population:
-    a label or index for the population that each individual belongs to.
+    a id or index for the population that each individual belongs to.
 gender:
-    arbitrary gender label string. Not restricted to male/female.
+    arbitrary gender id string. Not restricted to male/female.
 age:
     a numeric (float) value representing age. You decide if this number means
     years, days, minutes, simulation ticks, etc.
@@ -121,7 +121,7 @@ dash character (``-``) and empty cells as missing data.
 
 A typical Kpop CSV file will be like the following::
 
-    label,population,rs123,rs1234,rs42
+    id,population,rs123,rs1234,rs42
     john,uk,12,02,11
     paul,uk,22,22,
     psy,korea,--,21,22

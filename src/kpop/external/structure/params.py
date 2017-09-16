@@ -44,7 +44,7 @@ MAINPARAMS_DEFAULTS = dict(
     onerowperind=1,
 
     # (B) Input file contains individual labels
-    label=1,
+    id=1,
 
     # (B) Input file contains a population identifier
     popdata=0,

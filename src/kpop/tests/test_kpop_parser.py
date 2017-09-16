@@ -1,5 +1,6 @@
-from kpop.kpop_parser import *
 import pytest
+
+from kpop.parser import *
 
 
 def test_invalid_kpop_data():

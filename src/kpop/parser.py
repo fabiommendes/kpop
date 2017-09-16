@@ -2,7 +2,7 @@ import collections
 
 import numpy as np
 
-from kpop.exceptions import MissingDataError
+from .exceptions import MissingDataError
 
 
 def check_valid_names(names):

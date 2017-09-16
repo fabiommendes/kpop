@@ -22,7 +22,7 @@ class TestMultiPopulation:
         assert pop == popA
 
     def test_multipopulation_with_3_populatoins(self, popA, popB):
-        popC = Population(popB[:-1], label='C', copy=True)
+        popC = Population(popB[:-1], id='C', copy=True)
         pop = popA + popB
         assert type(pop) == MultiPopulation
         assert len(pop.populations) == 2

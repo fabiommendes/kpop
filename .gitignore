@@ -9,11 +9,13 @@ __pycache__/
 *.egg-info/
 .coverage
 .ipynb_checkpoints/
+src/__init__.py
 
 # Build directories
 .cache/
 docs/_build/
 build/
+htmlcov/
 dist/
 programs/
 admixture/

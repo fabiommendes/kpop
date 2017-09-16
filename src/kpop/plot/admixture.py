@@ -74,7 +74,7 @@ def admixture_bars(coeffs, colors=None, legend=True,
         color = colors[i]
         label = parental_labels[i]
         ax.bar(X, Y, bottom=bottom, color=color, width=1.0, linewidth=0,
-               label=label)
+               id=label)
         bottom += Y
     ax.axis([0, num_individuals, 0, 1])
 
@@ -203,7 +203,7 @@ def admixture_scatter(coeffs, colors=None, legend=True,
         label = pop_labels[i]
         color = colors[i]
         X, Y = admixture_coords(pop, vertices).T
-        ax.plot(X, Y, 'o', color=color, label=label)
+        ax.plot(X, Y, 'o', color=color, id=label)
 
     # Additional graphic elements
     if legend:

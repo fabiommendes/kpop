@@ -56,7 +56,7 @@ def create_header(pop, F=sys.stdout, title=None, missing='-'):
 
 
 def create_sample_data(subpop, F, missing):
-    labels = (ind.label or 'ind%s' % i for i, ind in enumerate(subpop))
+    labels = (ind.id or 'ind%s' % i for i, ind in enumerate(subpop))
     labels = ['    %s ' % label for label in labels]
     label_size = len(max(labels, key=len))
     indent = ' ' * (label_size + 2)
@@ -82,7 +82,7 @@ def create_data(pop, F=sys.stdout, names=None, missing='-'):
     F.write('[[Samples]]\n')
 
     for idx, subpop in enumerate(pop.populations):
-        name = next(names) or subpop.label or 'pop%s' % idx
+        name = next(names) or subpop.id or 'pop%s' % idx
         F.write('SampleName="%s"\n' % name.replace('"', ''))
         F.write('SampleSize=%s\n' % len(subpop))
         F.write('SampleData={\n')

@@ -61,7 +61,7 @@ class MultiPopulation(PopulationBase):
                     i -= size
                 else:
                     return pop[i]
-            raise IndexError(idx)
+        raise IndexError(idx)
 
     def __iter__(self):
         for pop in self.populations:
@@ -99,7 +99,7 @@ class MultiPopulation(PopulationBase):
             ind: a :class:`Individual` instance.
 
         Returns:
-            The label or index (if no label is defined) of the selected
+            The id or index (if no id is defined) of the selected
             population.
         """
 
@@ -108,13 +108,13 @@ class MultiPopulation(PopulationBase):
     def prob_classify(self, ind, prior=None):
         """
         Classify individual in one of parental populations and return a
-        probability distribution over population labels.
+        probability distribution over population ids.
 
         Args:
             ind: a :class:`Individual` instance.
 
         Returns:
-            A :class:`Prob` mapping from population labels to probabilities.
+            A :class:`Prob` mapping from population ids to probabilities.
         """
 
         if prior is None:
@@ -125,7 +125,7 @@ class MultiPopulation(PopulationBase):
                                      prior=prior)
             data = {}
             for i, pop in enumerate(self.populations):
-                data[pop.label or i] = probs[i]
+                data[pop.id or i] = probs[i]
             return Prob(data)
         else:
             raise NotImplementedError
@@ -138,7 +138,7 @@ class MultiPopulation(PopulationBase):
             ind: a :class:`Individual` instance.
 
         Returns:
-            A :class:`Prob` mapping from population labels to admixture
+            A :class:`Prob` mapping from population ids to admixture
             coefficients.
         """
 
@@ -147,7 +147,7 @@ class MultiPopulation(PopulationBase):
             result = admixture.admixture(ind.data, f_pops, method=method)
             data = {}
             for i, pop in enumerate(self.populations):
-                data[pop.label or i] = result[i]
+                data[pop.id or i] = result[i]
             return Prob(data)
         else:
             raise NotImplementedError
@@ -266,18 +266,18 @@ class MultiPopulation(PopulationBase):
         raise NotImplementedError
 
     def _mix_classifier__admixture(self, pop):
-        # Create supervised pop_labels
-        pop_labels = []
-        for i, label in enumerate(self.populations.labels()):
-            pop_labels.extend([label] * self.populations[i].size)
-        pop_labels.extend([None] * pop.size)
+        # Create supervised pop_ids
+        pop_ids = []
+        for i, id in enumerate(self.populations.ids()):
+            pop_ids.extend([id] * self.populations[i].size)
+        pop_ids.extend([None] * pop.size)
 
         # Create resulting population
         pop_total = self + pop
         classified_pop = pop_total.structure_admixture(
             k=len(self.populations),
-            parental_labels=self.populations.labels(),
-            pop_labels=pop_labels,
+            parental_ids=self.populations.ids(),
+            pop_ids=pop_ids,
         )
         del classified_pop.populations[0: self.num_populations]
         return classified_pop
@@ -286,7 +286,7 @@ class MultiPopulation(PopulationBase):
         for population in self.populations:
             population.fill_missing()
 
-    def new_admixed_population(self, coeffs, size=0, label=None, **kwargs):
+    def new_admixed_population(self, coeffs, size=0, id=None, **kwargs):
         """
         Creates a new empty admixed population with the given mixture
         coefficients. If size is given, fill it with the given number of
@@ -295,11 +295,11 @@ class MultiPopulation(PopulationBase):
         Args:
             coeffs:
                 Admixture coefficients. Can be a list of values or a Prob()
-                object mapping sub-population labels or indexes to admixture
+                object mapping sub-population ids or indexes to admixture
                 coefficients.
             size:
                 Optional size of the new population.
-            label:
+            id:
                 Label for the new population.
             **kwargs:
                 Additional coefficients passed to the Population constructor.
@@ -312,8 +312,8 @@ class MultiPopulation(PopulationBase):
         if isinstance(coeffs, Prob):
             coeffs, probs = [], dict(coeffs)
             for i, pop in enumerate(self.populations):
-                if pop.label in coeffs:
-                    coeffs.append(probs.pop(pop.label))
+                if pop.id in coeffs:
+                    coeffs.append(probs.pop(pop.id))
                 elif i in probs:
                     coeffs.append(probs.pop(i))
                 else:
@@ -341,7 +341,7 @@ class MultiPopulation(PopulationBase):
                 freqs.append(prob)
 
         # Create population object
-        kwargs['label'] = label
+        kwargs['id'] = id
         kwargs.setdefault('parent', self)
         kwargs.setdefault('ploidy', self.ploidy)
         kwargs.setdefault('num_alleles', self.num_alleles)

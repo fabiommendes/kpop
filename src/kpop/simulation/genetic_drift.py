@@ -1,32 +1,11 @@
-"""
-General routines that simulation evolution.
-"""
 import numpy as np
 
-from kpop.utils import fill_freqs_vector, flatten_frequencies
-
-
-def frequency_drift_1D(freqs_vector, n_generations, size):
-    """
-    Simulate the genetic drift from a vector after the given number of
-    generations.
-
-    Args:
-        freqs_vector: a 1D input vector of frequencies.
-        n_generations: number of generations.
-        size: effective size of population.
-    """
-
-    result = np.array(freqs_vector, copy=True)
-    for _ in range(n_generations):
-        for j, f in enumerate(result):
-            result[j] = np.random.binomial(size, f) / size
-    return result
+from ..utils import fill_freqs_vector, flatten_frequencies
 
 
 def frequency_drift(freqs, n_generations, size):
     """
-    Simulate the genetic drift from a vector after the given number of
+    Simulate the genetic drift of a population after the given number of
     generations.
 
     Args:
@@ -48,3 +27,21 @@ def frequency_drift(freqs, n_generations, size):
         return fill_freqs_vector(freqs)
     else:
         raise NotImplementedError('only biallelic data is supported')
+
+
+def frequency_drift_1D(freqs_vector, n_generations, size):
+    """
+    Simulate the genetic drift from a vector after the given number of
+    generations.
+
+    Args:
+        freqs_vector: a 1D input vector of frequencies.
+        n_generations: number of generations.
+        size: effective size of population.
+    """
+
+    result = np.array(freqs_vector, copy=True)
+    for _ in range(n_generations):
+        for j, f in enumerate(result):
+            result[j] = np.random.binomial(size, f) / size
+    return result

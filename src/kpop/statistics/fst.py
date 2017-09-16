@@ -1,9 +1,11 @@
+from collections import Sequence
+
 import numpy as np
 
 
-def biallelic_pairwise_fst(freqs: np.ndarray,
-                           h_freqs: np.ndarray,
-                           sizes: np.ndarray) -> np.ndarray:
+def biallelic_pairwise_fst(freqs: Sequence,
+                           h_freqs: Sequence,
+                           sizes: Sequence) -> np.ndarray:
     """
     Return a matrix of pairwise Fst components from frequency data. The Fst
     coefficients are computed using the method introduced by B. S. Weir and C.
@@ -26,8 +28,8 @@ def biallelic_pairwise_fst(freqs: np.ndarray,
     """
     freqs = np.asarray(freqs)
     h_freqs = np.asarray(h_freqs)
-    k, j = freqs.shape
     sizes = np.asarray(sizes)
+    k, j = freqs.shape
     fst_matrix = np.zeros((k, k), dtype=float)
 
     if freqs.shape != h_freqs.shape:
@@ -59,8 +61,6 @@ def biallelic_fst(freqs1, freqs2, h_freqs1, h_freqs2, sizes):
             Arrays of heterozygote frequencies in each population.
         sizes:
             Size of each sub-population.
-    Returns:
-
     """
 
     f1, f2 = map(np.asarray, (freqs1, freqs2))
@@ -69,9 +69,9 @@ def biallelic_fst(freqs1, freqs2, h_freqs1, h_freqs2, sizes):
 
     # Compute auxiliary variables
     n = (n1 + n2) / 2
-    nc = (2 * n - (n1**2 + n2**2) / (2 * n))
+    nc = (2 * n - (n1 ** 2 + n2 ** 2) / (2 * n))
     p = (n1 * f1 + n2 * f2) / (2 * n)
-    s2 = (n1 * (f1 - p)**2 + n2 * (f2 - p)**2) / n
+    s2 = (n1 * (f1 - p) ** 2 + n2 * (f2 - p) ** 2) / n
     h = (n1 * h1 + n2 * h2) / (2 * n)
 
     # Compute a, b, c

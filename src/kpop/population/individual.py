@@ -4,7 +4,7 @@ import numpy as np
 from lazyutils import delegate_to, lazy
 from sidekick import _
 
-from kpop.kpop_parser import str_to_data
+from kpop.parser import str_to_data
 from kpop.utils import fn_lazy, fn_property
 
 NOT_GIVEN = object()
@@ -18,7 +18,8 @@ class Individual(collections.Sequence):
 
     Args:
         data:
-            Can be either a string of values
+            Can be either a string of values or a lisg of raw genotype values
+            represented as integers.
 
     Attributes:
         num_loci:
@@ -89,7 +90,7 @@ class Individual(collections.Sequence):
             data = random_data_from_freqs_matrix(freqs, ploidy=ploidy)
         return cls(data, **kwargs)
 
-    def __init__(self, data, copy=True, label=None, population=None,
+    def __init__(self, data, copy=True, id=None, population=None,
                  allele_names=None, dtype=np.uint8, meta=None, admixture_q=None,
                  num_alleles=None):
 
@@ -97,8 +98,8 @@ class Individual(collections.Sequence):
         if isinstance(data, str):
             if ':' in data:
                 prefix, data = data.split(':')
-                if label is None:
-                    label = prefix
+                if id is None:
+                    id = prefix
 
             data = data.strip()
             data, allele_names_ = str_to_data(data, allele_names)
@@ -127,7 +128,7 @@ class Individual(collections.Sequence):
         self.population = population
         self.admixture_q = admixture_q
         self._container = None
-        self.label = label
+        self.id = id
         self.meta = dict(meta or {})
 
         # Save lazy overrides
@@ -184,7 +185,7 @@ class Individual(collections.Sequence):
         Creates a copy of individual.
         """
 
-        kwargs.setdefault('label', self.label)
+        kwargs.setdefault('id', self.id)
         kwargs.setdefault('population', self.population)
         kwargs.setdefault('allele_names', self.allele_names)
         dtype = kwargs.setdefault('dtype', self.dtype)
@@ -194,7 +195,7 @@ class Individual(collections.Sequence):
             data = np.array(self.data, copy=copy, dtype=dtype)
         return Individual(data, **kwargs)
 
-    def render(self, label_align=None, limit=None):
+    def render(self, id_align=None, limit=None):
         """
         Renders individual genotype.
         """
@@ -215,8 +216,8 @@ class Individual(collections.Sequence):
                 return ''.join(str(mapping.get(x, x)) for x in locus)
 
         size = len(self)
-        label_align = -1 if label_align is None else label_align
-        data = [((self.label or 'ind') + ':').rjust(label_align + 1)]
+        id_align = -1 if id_align is None else id_align
+        data = [((self.id or 'ind') + ':').rjust(id_align + 1)]
 
         # Select items
         if limit and size > limit:
@@ -267,11 +268,11 @@ class Individual(collections.Sequence):
         Render individual in CSV.
         """
 
-        data = [self.label]
+        data = [self.id]
         data.extend(''.join(map(str, x)) for x in self)
         return sep.join(data)
 
-    def breed(self, other, label=None, **kwargs):
+    def breed(self, other, id=None, **kwargs):
         """
         Breeds with other individual.
 
@@ -299,13 +300,13 @@ class Individual(collections.Sequence):
         else:
             raise NotImplementedError
 
-        kwargs['label'] = label or label_from_parents(self.label, other.label)
+        kwargs['id'] = id or id_label_from_parents(self.id, other.id)
         return self.copy(data, copy=False, **kwargs)
 
 
-def label_from_parents(l1, l2):
+def id_label_from_parents(l1, l2):
     """
-    Creates a new label from parents labels.
+    Creates a new id label from parents id labels.
     """
 
     if l1 == l2:

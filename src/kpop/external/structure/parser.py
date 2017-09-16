@@ -309,7 +309,7 @@ class StructureParser:
             NUMINDS=int,
             NUMLOCI=int,
             MISSING=flag,
-            LABEL=flag,
+            id=flag,
             POPDATA=flag,
             POPFLAG=flag,
             PHENOTYPE=flag,

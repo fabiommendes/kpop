@@ -1,9 +1,9 @@
 from collections import Counter
 from kpop import *
 
-popA = Population.random(50, 50, label='Africa', min_prob=0.2)
-popB = popA.genetic_drift(10, 50, label='Brasil', sample_size=25)
-popC = popB.genetic_drift(10, 50, label='Colombia', sample_size=25)
+popA = Population.random(50, 50, id='Africa', min_prob=0.2)
+popB = popA.genetic_drift(10, 50, id='Brasil', sample_size=25)
+popC = popB.genetic_drift(10, 50, id='Colombia', sample_size=25)
 popC.fill(50)
 pop = popA + popB + popC
 ind = popB.random_individual().breed(popC.random_individual())

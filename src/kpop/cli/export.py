@@ -14,7 +14,7 @@ from .util import printif, verbose, file_to_pop
               help='population label')
 @verbose()
 @file_to_pop()
-def export(pop, format=None, output=None, verbose=False, label=None):
+def export(pop, format=None, output=None, verbose=False, id=None):
     """
     Export population to external formats.
     """

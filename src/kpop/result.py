@@ -68,3 +68,10 @@ def transform_result(transform: type, data: np.ndarray, **kwargs) -> Transform:
     sk_transform = transform(**kwargs)
     res_data = sk_transform.fit_transform(data)
     return result(res_data, class_=Transform, transform=sk_transform)
+
+
+class Classification(Result):
+    pass
+
+def classification_result(classifier, data, **kwargs) -> Classification:
+    pass

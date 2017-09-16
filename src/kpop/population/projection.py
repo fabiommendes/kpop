@@ -1,22 +1,21 @@
 import numpy as np
 from sklearn import manifold, decomposition
 
+from .attr import Attr
 from ..result import transform_result
 
 NOT_GIVEN = object()
 
 
-class projection:
+class Projection(Attr):
     """
-    Implements all projection methods (such as PCA) applied to Kpop populations.
+    Implements the population.projection attribute with all projection
+    methods (such as PCA) applied to Kpop populations.
     """
 
     _data = property(lambda _: np.array(_.population))
     _methods = {'pca', 'tsne', 'lle', 'mds', 'isomap', 'spectral',
                 'kernel_pca', 'nmf', 'ica'}
-
-    def __init__(self, population):
-        self._population = population
 
     def __call__(self, which='pca', k=2, **kwargs):
         """
@@ -32,9 +31,7 @@ class projection:
         documentation.
         """
         if callable(which):
-            norm = kwargs.pop('norm', True)
             method = kwargs.pop('method', 'count')
-            norm = {True: 'snp', False: 'mean'}.get(norm, norm)
             data = self._as_array(method)
             return transform_result(which, data, k, **kwargs)
 
@@ -96,8 +93,8 @@ class projection:
             Consider a random synthetic population with two sub-populations with
             10 elements each. Each individual has 200 alleles.
 
-            >>> popA = Population.random(10, 200, label='A')
-            >>> popB = Population.random(10, 200, label='B')
+            >>> popA = Population.random(10, 200, id='A')
+            >>> popB = Population.random(10, 200, id='B')
 
             Usually the the principal axis alone will be enough to classify
             these individuals. Since the mean is zero, individuals of one
@@ -180,7 +177,8 @@ class projection:
             http://scikit-learn.org/stable/modules/generated/sklearn.manifold.TSNE.html#sklearn.manifold.TSNE
         """
         pca = manifold.TSNE
-        kwargs = with_defaults(kwargs, perplexity=30, pca=15)
+        pca_dims = None if self._population.num_loci < 15 else 15
+        kwargs = with_defaults(kwargs, perplexity=30, pca=pca_dims)
         return self.sklearn(pca, k, data, **kwargs)
 
     def ica(self, k=2, *, data='count-unity', **kwargs):
@@ -227,7 +225,7 @@ class projection:
         kwargs = with_defaults(
             kwargs,
             n_neighbors=n_neighbors or
-                        min(n_neighbors or 50, self._population.size - 1),
+                        min(n_neighbors or 25, self._population.size - 1),
         )
         return self.sklearn(isomap, k, data, **kwargs)
 
@@ -245,9 +243,9 @@ class projection:
         kwargs_ = with_defaults(
             kwargs,
             n_neighbors=n_neighbors or
-                        min(n_neighbors or 50, self._population.size - 1),
+                        min(n_neighbors or 25, self._population.size - 1),
         )
-        return self.sklearn(lle, k, data, **kwargs)
+        return self.sklearn(lle, k, data, **kwargs_)
 
     def spectral(self, k=2, *, data='count-unity', **kwargs):
         spectral = manifold.SpectralEmbedding

@@ -54,7 +54,7 @@ class AdmixtureResult:
                 label = 'pop-%s' % (i + 1)
             else:
                 label = labels[i]
-            pop = Population(freqs=freqs, ploidy=self.ploidy, label=label)
+            pop = Population(freqs=freqs, ploidy=self.ploidy, id=label)
             parental.add_population(pop)
         return parental
 

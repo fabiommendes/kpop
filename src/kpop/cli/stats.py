@@ -43,10 +43,10 @@ def stats(pop: PopulationBase, verbose=False, json=False,
             click.echo(click.style('populations:', bold=True))
             for i, subpop in enumerate(pop.populations, 1):
                 entry('- %s' % (subpop.label or 'pop%s' % i))
-                pop_summary(subpop, indent=3, label=False)
+                pop_summary(subpop, indent=3, id=False)
 
 
-def pop_summary(pop, indent=1, label=True):
+def pop_summary(pop, indent=1, id=True):
     if label and pop.label:
         entry('label', pop.label, indent)
     entry('size', pop.size, indent)

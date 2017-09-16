@@ -27,7 +27,7 @@ from kpop.io import load_pickle
                    'information with their respective columns')
 @click.option('--debug/--no-debug', '-d', default=False,
               help='if true, shows debug information')
-def import_(file, output=None, label=None,
+def import_(file, output=None, id=None,
             pop_col=None, ind_col=None, missing_data='-',
             skip_rows=None, skip_cols=None,
             meta=None, debug=False):
@@ -45,7 +45,7 @@ def import_(file, output=None, label=None,
             ignore_cols=normalize_list(skip_cols),
             ignore_rows=normalize_list(skip_rows),
             meta=meta,
-            label=label
+            id=label
         )
         kwargs = {k: v for k, v in kwargs.items() if v is not None}
         try:

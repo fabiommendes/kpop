@@ -94,7 +94,7 @@ def run_structure(pop, k=2, *, method='parental', job_dir=None,
     return StructureResult(data, job_dir=job_dir)
 
 
-def structure_population(pop, *, label='ind', onerowperind=False,
+def structure_population(pop, *, id='ind', onerowperind=False,
                          popdata=None, popflag=None, locdata=None,
                          phenotype=None, sep=' ', linesep='\n'):
     """
@@ -119,7 +119,7 @@ def structure_population(pop, *, label='ind', onerowperind=False,
         ...        [[0, 1], [0, 0], [1, 1]],
         ...        [[1, 0], [0, 0], [0, 1]]]
         >>> beatles = ['John', 'Paul', 'George', 'Ringo']
-        >>> out = structure_population(pop, label=beatles)
+        >>> out = structure_population(pop, id=beatles)
         >>> print(out)
         John 0 0 1
         John 1 0 1
@@ -129,7 +129,7 @@ def structure_population(pop, *, label='ind', onerowperind=False,
         George 1 0 1
         Ringo 1 0 0
         Ringo 0 0 1
-        >>> out = structure_population(pop, label=beatles,onerowperind=True)
+        >>> out = structure_population(pop, id=beatles,onerowperind=True)
         >>> print(out)
         John 0 1 0 0 1 1
         Paul 1 0 0 0 0 1
@@ -170,7 +170,7 @@ def structure_population(pop, *, label='ind', onerowperind=False,
 
 
 def prepare_setup_files(pop, save_files=True, save_dir=None,
-                        label='ind', population_file='population.dat',
+                        id='ind', population_file='population.dat',
                         outfile='out',
                         popdata=None, popflag=None, locdata=None,
                         phenotype=None, onerowperind=True,
@@ -199,7 +199,7 @@ def prepare_setup_files(pop, save_files=True, save_dir=None,
     extraparams_data = extraparams(EXTRAPARAMS_DEFAULTS.copy())
 
     # Compute sample file
-    popfile = structure_population(pop, label=label,
+    popfile = structure_population(pop, id=label,
                                    onerowperind=onerowperind)
 
     # Save files in the specified directory

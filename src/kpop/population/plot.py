@@ -1,21 +1,17 @@
 import numpy as np
 from matplotlib import pyplot as plt
 
+from .attr import Attr
 from ..plot import admixture_scatter, admixture_bars
 from ..plot.utils import group_individuals, _colors
 
 
-class plot:
+class Plot(Attr):
     """
     Implements the Population.plots attribute.
     """
 
-    @property
-    def _populations(self):
-        return self._population.populations
-
-    def __init__(self, population):
-        self._population = population
+    _populations = property(lambda self: self._population.populations)
 
     def _pop_sizes(self):
         return [len(pop) for pop in self._populations]
@@ -24,7 +20,7 @@ class plot:
         populations = (population or self._population).populations
         labels = []
         for i, pop in enumerate(populations):
-            label = pop.label if pop.label else 'pop-%s' % i
+            label = pop.id if pop.id else 'pop-%s' % i
             labels.append(label)
         return labels
 
@@ -61,7 +57,7 @@ class plot:
 
         data = np.concatenate([pop.freqs_matrix for pop in populations], 0)
         pop_sizes = [pop.num_loci for pop in populations]
-        pop_labels = [pop.label or i for i, pop in enumerate(populations)]
+        pop_labels = [pop.id or i for i, pop in enumerate(populations)]
         alleles = data.shape[1]
         labels = ['allele-%s' % (i + 1) for i in range(alleles)]
         if sorted:
@@ -119,6 +115,7 @@ class plot:
 
         scatter = {
             'merge', 'colors', 'title', 'legend', 'axes', 'alpha', 'fuzzy',
+            'labels',
         }
         coords_kwargs = {k: v for k, v in kwargs.items() if k not in scatter}
         scatter_kwargs = {k: v for k, v in kwargs.items() if k in scatter}
@@ -131,7 +128,8 @@ class plot:
         return self.scatter_coords(coords, **scatter_kwargs)
 
     def scatter_coords(self, coords, merge=False, colors=None, title=None,
-                       legend=True, axes=None, alpha=1.0, fuzzy=False):
+                       legend=True, axes=None, alpha=1.0, fuzzy=False,
+                       labels=None):
         """
         Plot a 2D projection of population data from an array of 2D coordinates.
         This method is used internally by all scatter plot methods. It can also
@@ -160,10 +158,15 @@ class plot:
         if merge:
             coords_list = [coords]
             pop_labels = [self._population.label or None]
+        elif labels is not None:
+            pop_labels = sorted(set(labels))
+            coords_list = [np.array(
+                [pt for label_, pt in zip(labels, coords) if label_ == label]
+            ) for label in pop_labels]
         else:
             pop_sizes = [len(pop) for pop in self._populations]
             coords_list = group_individuals(coords, pop_sizes)
-            pop_labels = [pop.label or i for i, pop in
+            pop_labels = [pop.id or i for i, pop in
                           enumerate(self._populations)]
 
         colors = _colors(colors, len(coords_list))
@@ -299,15 +302,26 @@ class plot:
     def factor(self, title='Factor Analysis', **kwargs):
         return self.scatter('factor', title=title, **kwargs)
 
-    def lda(self, title='Latent Dirichilet Allocation', **kwargs):
+    def scatter_lda(self, n_populations=5,
+                    title='Latent Dirichilet Allocation', **kwargs):
+        """
+        A scatter plot of LDA data. It computes the Q-matrix of admixture
+        coefficients and project it in a plane using PCA. This is probably not
+        as useful as an admixture plot but can give some insight on the
+        structure of a population.
+
+        Args:
+            n_populations:
+                Number of parental populations.
+        """
+        kwargs.setdefault('n_populations', n_populations)
         return self.scatter('lda', title=title, **kwargs)
 
 
     #
     # Admixture plots
     #
-    def admixture(self, parental_labels=None,
-                  scatter=False, show=True, **kwargs):
+    def admixture(self, parental_labels=None, scatter=False, **kwargs):
         if self._population.parent is None:
             raise ValueError('population must define a parental population')
 
@@ -316,20 +330,9 @@ class plot:
         kwargs['pop_labels'] = self._pop_labels()
         kwargs['parental_labels'] = self._pop_labels(self._population.parent)
         if scatter:
-            ax = admixture_scatter(data, **kwargs)
+            return admixture_scatter(data, **kwargs)
         else:
-            ax = admixture_bars(data, **kwargs)
-        if show:
-            plt.show()
-        return ax
-
-
-def fix_locals(ns):
-    "Pops the 'self' key from dictionary and return dictionary."
-
-    ns.pop('self', None)
-    ns.update(ns.pop('kwargs', {}))
-    return ns
+            return admixture_bars(data, **kwargs)
 
 
 def fuzzyfy_coords(coords, scale):

@@ -8,17 +8,17 @@ from kpop.io import export_arlequin, csv_lines
 
 @pytest.fixture
 def popA():
-    return Population('11 22 11 22\n12 12 12 12', label='popA')
+    return Population('11 22 11 22\n12 12 12 12', id='popA')
 
 
 @pytest.fixture
 def popB():
-    return Population('22 11 22 11\n12 12 12 12', label='popB')
+    return Population('22 11 22 11\n12 12 12 12', id='popB')
 
 
 @pytest.fixture
 def popC():
-    return Population('-- 11 22 11\n12 -- 12 12', label='popB')
+    return Population('-- 11 22 11\n12 -- 12 12', id='popB')
 
 
 arldata_AB = """[Profile]

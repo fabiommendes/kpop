@@ -69,7 +69,7 @@ open-close parens at the end of their names). In order to get help on the
 methods behavior and signature, just use the ``?`` helper as bellow
 
 >>> ind.breed?                                                  # doctest: +SKIP
-Signature: ind.breed(other, label=None, **kwargs)
+Signature: ind.breed(other, id=None, **kwargs)
    doctest:
 Breeds with other individual.
 <NEWLINE>
@@ -120,7 +120,7 @@ Now that we have a bunch of individuals, we can make a population. Of course
 we could use the list of individuals directly, but Kpop provides the much more
 convenient :class:`kpop.Population` type to represent a group of individuals. 
 
->>> popA = Population(list_of_individuals, label='A')
+>>> popA = Population(list_of_individuals, id='A')
 >>> popA                                                        # doctest: +SKIP
   ind1: 22 21 12 22
   ind2: 22 11 11 21
@@ -147,57 +147,15 @@ populations rather than different individuals in the same population. We can
 easily create a new random population using the Population.make_random
 function:
 
->>> popB = Population.random(10, num_loci=4, label='B')
+>>> popB = Population.random(10, num_loci=4, id='B')
 
 This will create a new population with 10 individuals and 4 loci. Now, let us
 compose this population with the previous one by creating a new generation that
 breeds individuals from the first population with the second
 
->>> popC = popA.breed(popB, size=15, label='C')
+>>> popC = popA.simulation.breed(popB, size=15, id='C')
 
 We can combine all sub-populations into a single population containing all
-individuals by simply adding the population objects together
-
->>> pop_all = popA + popB + popC
-
-This creates a
-Individual instances).
-
-In population genetics we are usually interested in comparing different
-populations rather than different individuals in the same population. We can
-easily create a new random population using the Population.make_random
-function:
-
->>> popB = Population.random(10, num_loci=4, label='B')
-
-This will create a new population with 10 individuals and 4 loci. Now, let us
-compose this population with the previous one by creating a new generation that
-breeds individuals from the first population with the second
-
->>> popC = popA.breed(popB, size=15, label='C')
-
-We can combine all sub-populations into a single population containing all
-individuals by simply adding the population objects together
-
->>> pop_all = popA + popB + popC
-
-This creates a
-Individual instances).
-
-In population genetics we are usually interested in comparing different 
-populations rather than different individuals in the same population. We can 
-easily create a new random population using the Population.random
-function:
-
->>> popB = Population.random(10, num_loci=4, label='B')
-
-This will create a new population with 10 individuals and 4 loci. Now, let us
-compose this population with the previous one by creating a new generation that 
-breeds individuals from the first population with the second
-
->>> popC = popA.breed(popB, size=15, label='C')
-
-We can combine all sub-populations into a single population containing all 
 individuals by simply adding the population objects together
 
 >>> pop_all = popA + popB + popC

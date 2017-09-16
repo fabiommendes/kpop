@@ -1,9 +1,9 @@
 import numpy as np
 from lazyutils import lazy
 
+from kpop.population.individual import Individual
 from .population_base import PopulationBase
 from .populations import ImmutablePopulationList
-from ..individual import Individual
 from ..utils.frequencies import random_frequencies
 
 
@@ -19,7 +19,7 @@ class Population(PopulationBase):
         return ImmutablePopulationList([self])
 
     @classmethod
-    def random(cls, size=0, num_loci=0, alleles=2, ploidy=2, label=None,
+    def random(cls, size=0, num_loci=0, alleles=2, ploidy=2, id=None,
                min_prob=0.0, seed=None):
         """
         Creates a new random population.
@@ -44,7 +44,7 @@ class Population(PopulationBase):
 
         freqs = random_frequencies(num_loci, alleles=alleles, clip=min_prob,
                                    seed=seed)
-        pop = Population(freqs=freqs, label=label, num_loci=num_loci,
+        pop = Population(freqs=freqs, id=id, num_loci=num_loci,
                          num_alleles=alleles, ploidy=ploidy)
         pop.fill(size, seed=seed)
         pop.freqs_matrix = freqs
@@ -66,11 +66,11 @@ class Population(PopulationBase):
 
         super(Population, self).__init__(**kwargs)
 
-        # Recompute labels, if they are not given
-        if self.label:
+        # Recompute ids, if they are not given
+        if self.id:
             for ind in self._data:
-                if getattr(ind, 'label', None) is None:
-                    ind.label = self._next_label()
+                if getattr(ind, 'id', None) is None:
+                    ind.id = self._next_id()
                 ind.population = self
                 ind._container = self
 
@@ -132,7 +132,7 @@ class Population(PopulationBase):
             np.random.seed(seed)
 
         while self.size < size:
-            new = self.new_individual(label=self._next_label())
+            new = self.simulation.new_individual(id=self._next_id())
             self.add(new)
 
     def fill_missing(self):

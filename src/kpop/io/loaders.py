@@ -6,8 +6,7 @@ from typing import List, Union, Dict
 
 import numpy as np
 
-from ..individual import Individual
-from ..population import Population, MultiPopulation
+from ..population import Individual, Population, MultiPopulation
 
 NOT_GIVEN = object()
 
@@ -111,16 +110,16 @@ def load_csv(file=sys.stdout, *,
     body = new_body
     populations = OrderedDict((p, []) for p in pop_values)
     for i, (label, pop, row) in enumerate(zip(label_values, pop_values, body)):
-        ind = Individual(row, label=label)
+        ind = Individual(row, id=label)
         populations[pop].append(ind)
 
     # Create population or multipopulation return value
     if pop_col is None:
-        result = Population(populations[None], label=pop_label)
+        result = Population(populations[None], id=pop_label)
     else:
-        def factory(x): return Population(x[1], label=x[0])
+        def factory(x): return Population(x[1], id=x[0])
         populations = map(factory, populations.items())
-        result = MultiPopulation(populations, label=pop_label)
+        result = MultiPopulation(populations, id=pop_label)
     result.loci_names = header
     return result
 

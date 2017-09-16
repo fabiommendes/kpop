@@ -32,12 +32,12 @@ def popB_data():
 
 @pytest.fixture
 def popA(popA_data):
-    return Population([Individual(x) for x in popA_data], label='A')
+    return Population([Individual(x) for x in popA_data], id='A')
 
 
 @pytest.fixture
 def popB(popB_data):
-    return Population([Individual(x) for x in popB_data], label='B')
+    return Population([Individual(x) for x in popB_data], id='B')
 
 
 #
@@ -50,12 +50,12 @@ def num_loci():
 
 @pytest.fixture
 def popA_random(num_loci):
-    return Population.random(5, num_loci, label='A', min_prob=0.1)
+    return Population.random(5, num_loci, id='A', min_prob=0.1)
 
 
 @pytest.fixture
 def popB_random(num_loci):
-    return Population.random(5, num_loci, label='B', min_prob=0.9)
+    return Population.random(5, num_loci, id='B', min_prob=0.9)
 
 
 @pytest.fixture

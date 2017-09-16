@@ -3,15 +3,15 @@ from kpop.all import *
 # Create 3 ancestral populations
 num_ind = 100
 num_loci = 104
-popA = Population.random(num_ind, num_loci, label='A')
-popB = Population.random(num_ind, num_loci, label='B')
-popC = Population.random(num_ind, num_loci, label='C')
+popA = Population.random(num_ind, num_loci, id='A')
+popB = Population.random(num_ind, num_loci, id='B')
+popC = Population.random(num_ind, num_loci, id='C')
 
 # Create a parental multi-population and some mixtures
 parental = popA + popB + popC
-popAB = parental.new_admixed_population([0.5, 0.5, 0.0], 50, label='AB')
-popAAB = parental.new_admixed_population([0.75, 0.25, 0.0], 50, label='AAB')
-popABC = parental.new_admixed_population([0.25, 0.25, 0.5], 50, label='ABC')
+popAB = parental.new_admixed_population([0.5, 0.5, 0.0], 50, id='AB')
+popAAB = parental.new_admixed_population([0.75, 0.25, 0.0], 50, id='AAB')
+popABC = parental.new_admixed_population([0.25, 0.25, 0.5], 50, id='ABC')
 child = popAB + popAAB + popABC
 
 # Re-calculate frequencies for parental populations
