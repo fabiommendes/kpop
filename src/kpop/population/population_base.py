@@ -220,9 +220,9 @@ class PopulationBase(collections.Sequence):
 
         raise ValueError('invalid conversion method: %r' % which)
 
-    def drop_markers(self, indexes, *, _data=None):
+    def drop_loci(self, indexes):
         """
-        Create a new population with all loci in the given index removed.
+        Create a new population with all loci in the given indexes removed.
 
         Args:
             indexes: a list of loci indexes
@@ -255,7 +255,7 @@ class PopulationBase(collections.Sequence):
 
         data = np.array([ind.data for ind in self]) if _data is None else _data
         bad_loci = self.stats.non_biallelic(_data=data)
-        return self.drop_markers(bad_loci, _data=data), bad_loci
+        return self.drop_loci(bad_loci, _data=data), bad_loci
 
     def transformed_copy(self, individuals, force_multi=False, **kwargs):
         """
