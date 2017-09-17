@@ -25,16 +25,6 @@ class MultiPopulation(PopulationBase):
     def freqs_pop(self):
         return [pop.freqs for pop in self.populations]
 
-    def prior(self):
-        """
-        Prior probability for each sub-population.
-        """
-
-        size = len(self.populations)
-        if size == 0:
-            return np.array([], dtype=float)
-        return np.zeros(size, dtype=float) + 1 / size
-
     def __init__(self, populations=(), freqs=None, **kwargs):
         if freqs is not None:
             raise ValueError('cannot specify frequencies on MultiPopulation '

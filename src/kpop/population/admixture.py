@@ -1,7 +1,7 @@
 import numpy as np
 
 from .attr import Attr
-from .. import Prob
+from ..prob import Prob
 from ..admixture import admixture
 
 

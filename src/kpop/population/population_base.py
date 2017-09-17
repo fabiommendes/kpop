@@ -11,12 +11,12 @@ from sklearn import preprocessing
 from kpop.population.utils import del_attrs
 from .admixture import Admixture
 from .classification import Classification
-from .clustering import Clustering
+from .clusterization import Clusterization
 from .io import Io
 from .plot import Plot
 from .projection import Projection
 from .simulation import Simulation
-from .stats import Stats
+from .statistics import Statistics
 from .utils import freqs_fastest, get_freqs, set_freqs, hfreqs_vector
 from ..prob import Prob
 from ..utils.frequencies import fill_freqs_vector, freqs_to_matrix
@@ -79,25 +79,28 @@ class PopulationBase(collections.Sequence, metaclass=abc.ABCMeta):
     # Special attributes. These will be inserted later via monkey patching
     populations = ()
     admixture = Admixture()
-    clustering = Clustering()
+    clusterization = Clusterization()
     classification = Classification()
     io = Io()
     plot = Plot()
     projection = Projection()
     simulation = Simulation()
-    statistics = Stats()
+    statistics = Statistics()
 
     # Aliases
-    admix = lazy(lambda self: self.admixture)
-    cls = lazy(lambda self: self.classification)
-    sim = lazy(lambda self: self.simulation)
-    stats = lazy(lambda self: self.statistics)
+    admix = property(lambda self: self.admixture)
+    cls = classify = property(lambda self: self.classification)
+    cluster = property(lambda self: self.clusterization)
+    proj = property(lambda self: self.projection)
+    sim = property(lambda self: self.simulation)
+    stats = property(lambda self: self.statistics)
 
     # List of cacheable attributes
     _cacheable_attributes = (
-        'has_missing', 'missing_total', 'missing_ratio', 'admixture',
-        'clustering', 'classification', 'io', 'plot', 'projection',
-        'simulation', 'statistics', 'admix', 'cls', 'sim', 'stats',
+        'has_missing', 'missing_total', 'missing_ratio',
+        'is_biallelic', 'num_alleles',
+        'admixture', 'clustering', 'classification', 'io', 'plot', 'projection',
+        'simulation', 'statistics',
     )
 
     def __init__(self, freqs=None, allele_names=None, id=None, ploidy=None,

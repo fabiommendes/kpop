@@ -4,7 +4,7 @@ from ..result import transform_result
 from .attr import Attr
 
 
-class Clustering(Attr):
+class Clusterization(Attr):
     """
     Implements all clustering methods for a population in a separate namespace.
     """

@@ -1,9 +1,9 @@
 def test_sharp_classifier(popA, popB):
     pop = popA + popB
     for ind in popA:
-        assert pop.classify(ind) == 'A'
+        assert pop.cls.parent(ind) == 'A'
     for ind in popB:
-        assert pop.classify(ind) == 'B'
+        assert pop.cls.parent(ind) == 'B'
 
 
 def test_probabilistic_classifier(popA, popB):
@@ -11,7 +11,7 @@ def test_probabilistic_classifier(popA, popB):
     pAs = []
 
     for ind in popA:
-        prob = pop.prob_classify(ind)
+        prob = pop.cls.parent_prob(ind)
         pA = prob['A']
         pAs.append(pA)
 

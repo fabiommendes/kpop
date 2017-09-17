@@ -199,10 +199,10 @@ visualization.
 # TODO.
 
 
-Clustering
+Clusterization
 ==========
 
-Clustering is the task of spliting data into separate groups without providing
+Clusterization is the task of spliting data into separate groups without providing
 a training set on correct classifications. This is often refered as "unsupervised
 learning". Notice here that "unsupervised" does not mean "completely independent
 of human intervention" since almost all clustering algorithms requires some

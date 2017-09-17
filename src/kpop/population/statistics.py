@@ -8,7 +8,7 @@ from ..statistics import biallelic_pairwise_fst
 from ..utils import freqs_to_matrix
 
 
-class Stats(Attr):
+class Statistics(Attr):
     """
     Implements the population.stats attribute.
     """
