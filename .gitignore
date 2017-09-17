@@ -13,16 +13,15 @@ src/__init__.py
 
 # Build directories
 .cache/
-docs/_build/
-build/
-htmlcov/
-dist/
-programs/
-admixture/
-old/
-data/
-demos/
-local/
+/docs/_build/
+/build/
+/htmlcov/
+/dist/
+/programs/
+/old/
+/data/
+/demos/
+/local/
 
 # Python-boilerplate auto generated files
 src/pystructure/__meta__.py

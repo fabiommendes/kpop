@@ -1,0 +1,31 @@
+[Profile]
+Title="Sample Arlequin data"
+NbSamples=2
+DataType=STANDARD
+GenotypicData=1
+LocusSeparator=WHITESPACE
+GameticPhase=0
+RecessiveData=0
+MissingData='-'
+
+
+[Data]
+[[Samples]]
+SampleName="popA"
+SampleSize=2
+SampleData={
+    popA1 1 1 2 1 2
+            1 2 1 2
+    popA2 1 1 1 1 1
+            1 1 1 1
+}
+
+SampleName="popB"
+SampleSize=2
+SampleData={
+    popB1 1 2 1 2 1
+            2 1 2 1
+    popB2 1 1 1 1 1
+            1 1 1 1
+}
+

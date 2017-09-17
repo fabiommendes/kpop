@@ -1,11 +1,10 @@
 import os
+import subprocess
 import tempfile
 
-import subprocess
-
 from kpop.population.population_base import PopulationBase
-from .result import StructureResult
 from .params import MAINPARAMS_DEFAULTS, EXTRAPARAMS_DEFAULTS
+from .result import StructureResult
 
 
 def run_structure(pop, k=2, *, method='parental', job_dir=None,
@@ -137,18 +136,18 @@ def structure_population(pop, *, id='ind', onerowperind=False,
         Ringo 1 0 0 0 0 1
     """
     table = []
-    if isinstance(label, (list, tuple)):
-        minsize = max(len(x) for x in label)
+    if isinstance(id, (list, tuple)):
+        minsize = max(len(x) for x in id)
     elif isinstance(pop, PopulationBase):
         minsize = max(len(x.label) for x in pop)
     else:
-        minsize = len(label) + len(str(len(pop)))
+        minsize = len(id) + len(str(len(pop)))
 
     for i, ind in enumerate(pop):
-        if isinstance(label, (list, tuple)):
-            row = [label[i]]
+        if isinstance(id, (list, tuple)):
+            row = [id[i]]
         else:
-            row = [getattr(ind, 'label', label + str(i + 1))]
+            row = [getattr(ind, 'label', id + str(i + 1))]
         row[0] = row[0].ljust(minsize + 1)
         table.append(row)
 
@@ -183,7 +182,9 @@ def prepare_setup_files(pop, save_files=True, save_dir=None,
     if not pop:
         raise ValueError('cannot proceed with empty population.')
 
-    def B(x): return int(bool(x))                                      # noqa: E731
+    def to_bool(x):
+        return int(bool(x))
+
     mainparams_data = mainparams(
         pop,
         infile=population_file,
@@ -191,22 +192,23 @@ def prepare_setup_files(pop, save_files=True, save_dir=None,
         numinds=pop.shape[0],
         numloci=pop.shape[1],
         ploidy=pop.shape[2],
-        popdata=B(popdata),
-        popflag=B(popflag),
-        locdata=B(locdata),
-        phenotype=B(phenotype),
+        popdata=to_bool(popdata),
+        popflag=to_bool(popflag),
+        locdata=to_bool(locdata),
+        phenotype=to_bool(phenotype),
     )
     extraparams_data = extraparams(EXTRAPARAMS_DEFAULTS.copy())
 
     # Compute sample file
-    popfile = structure_population(pop, id=label,
+    popfile = structure_population(pop, id=id,
                                    onerowperind=onerowperind)
 
     # Save files in the specified directory
     if save_files:
         save_dir = os.path.abspath(save_dir) if save_dir else os.getcwd()
 
-        def path(x): return os.path.join(save_dir, x)                  # noqa: E731
+        def path(x):
+            return os.path.join(save_dir, x)  # noqa: E731
 
         with open(path('mainparams'), 'w', encoding='utf8') as F:
             F.write(mainparams_data)

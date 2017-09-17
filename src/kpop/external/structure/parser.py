@@ -49,15 +49,15 @@ class StructureParser:
         self.parse_avg_heterozygosity()
         self.parse_likelihood()
         self.parse_fst()
-        self.parse_Q()
-        self.parse_F()
+        self.parse_q()
+        self.parse_f()
         self.parse_options()
         self.parse_strat()
         return self.result
 
     def parse_re(self, re):
         """
-        Match regex with the first line and return the corresponding match 
+        Match regex with the first line and return the corresponding match
         object.
         """
 
@@ -146,7 +146,7 @@ class StructureParser:
         )
 
         # Randomize flag
-        #TODO: accept other options
+        # TODO: accept other options
         # e.g.: STARTATPOPINFO, LOCPRIOR
         randomize = self.parse_data(
             r'^RANDOMIZE turned (\w+)$'
@@ -193,23 +193,21 @@ class StructureParser:
         # Read lines
         lines = []
         for _ in range(self.result.k):
-            lines.append([
-                float(x) if x != '-' else 0.0
-                for x in self.pop().strip().split()[1:]
-            ])
+            lines.append(
+                [float(x) if x != '-' else 0.0
+                 for x in self.pop().strip().split()[1:]]
+            )
 
         # Convert to matrix
         self.result.allele_freq_divergence = np.array(lines)
         self.skip_blank()
 
     def parse_avg_heterozygosity(self):
+        pattern = r'^cluster\s*\d+\s*:\s*(\d+[.]\d+)\s*$'
         self.skip_lines(1)
-        self.result.avg_heterozygosity = np.array([
-            self.parse_data(
-                r'^cluster\s*\d+\s*:\s*(\d+[.]\d+)\s*$', float
-            )
-            for _ in range(self.result.k)
-        ])
+        self.result.avg_heterozygosity = np.array(
+            [self.parse_data(pattern, float) for _ in range(self.result.k)]
+        )
         self.skip_blank()
 
     def parse_likelihood(self):
@@ -230,15 +228,13 @@ class StructureParser:
         self.skip_blank()
 
     def parse_fst(self):
-        self.result.mean_fst = np.array([
-            self.parse_data(
-                r'Mean value of Fst_\d+\s*= (-?\d+[.]\d+)', float
-            )
-            for _ in range(self.result.k)
-        ])
+        pattern = r'Mean value of Fst_\d+\s*= (-?\d+[.]\d+)'
+        self.result.mean_fst = np.array(
+            [self.parse_data(pattern, float) for _ in range(self.result.k)]
+        )
         self.skip_blank()
 
-    def parse_Q(self):
+    def parse_q(self):
         self.skip_lines(2)
 
         # Prepare line matcher
@@ -247,10 +243,13 @@ class StructureParser:
         regex += r'$'
         regex = re.compile(regex)
 
-        def groups(x): return regex.match(x).groups()
+        def groups(x):
+            return regex.match(x).groups()
+
         types = [str, float, int] + [float] * self.result.k
 
-        def values(x): return (f(x) for f, x in zip(types, groups(x)))
+        def values(x):
+            return (f(x) for f, x in zip(types, groups(x)))
 
         # Read mixture data
         data = []
@@ -259,12 +258,12 @@ class StructureParser:
             data.append([label, miss, pop] + q_probs)
 
         # Save on data frame
-        columns = ['label', 'missing', 'population'] \
-            + ['cluster_%s' % i for i in range(self.result.k)]
+        columns = ['label', 'missing', 'population'] + \
+                  ['cluster_%s' % i for i in range(self.result.k)]
         self.result.q_matrix = pd.DataFrame(data, columns=columns)
         self.skip_blank()
 
-    def parse_F(self):
+    def parse_f(self):
         self.skip_lines(2)
         self.skip_blank()
 
@@ -304,7 +303,9 @@ class StructureParser:
     def parse_options(self):
         self.skip_lines(1)
 
-        def flag(x): return bool(int(x))
+        def flag(x):
+            return bool(int(x))
+
         converters = dict(
             NUMINDS=int,
             NUMLOCI=int,
@@ -370,7 +371,9 @@ class StructureParser:
         self.result.options = self.parse_dict(self.pop(), converters)
 
     def parse_strat(self):
-        def flag(x): return bool(int(x))
+        def flag(x):
+            return bool(int(x))
+
         line = self.pop().partition(':')[-1].strip()
         converters = dict(
             NUMSIMSTATS=int,
@@ -404,4 +407,3 @@ def parse_file(file, parser=StructureParser):
     Parse the given file.
     """
     return parse_lines(file.read().splitlines(), parser)
-
