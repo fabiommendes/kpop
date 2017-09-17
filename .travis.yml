@@ -3,12 +3,12 @@ cache: pip
 sudo: false
 
 # Prepare environment
-env:
-  - CPATH=$HOME/.local/include
-  - LIBRARY_PATH=$HOME/.local/lib
-  - LD_LIBRARY_PATH=$HOME/.local/lib
-  - MPLBACKEND="agg"
-  - MATPLOTLIBRC=$HOME/matplotlibrc
+before_install:
+  - export CPATH=$HOME/.local/include
+  - export LIBRARY_PATH=$HOME/.local/lib
+  - export LD_LIBRARY_PATH=$HOME/.local/lib
+  - export MPLBACKEND="agg"
+  - export MATPLOTLIBRC=$HOME/matplotlibrc
 
 
 # Test environments
