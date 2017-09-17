@@ -14,10 +14,6 @@
    :target: https://codeclimate.com/github/fabiommendes/kpop
    :alt: Code Climate
 
-.. image:: https://www.quantifiedcode.com/api/v1/project/989e3bf4fb4f4afe9fdf762d819b3fe4/badge.svg
-  :target: https://www.quantifiedcode.com/app/project/989e3bf4fb4f4afe9fdf762d819b3fe4
-  :alt: Code issues
-
 
 Kpop is a Python package to perform population genetics analysis that
 integrates traditional methods such as PCA and LDA (Latent Dirichilet Analysis,

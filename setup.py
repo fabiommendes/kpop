@@ -75,7 +75,7 @@ setup(
         'numpy',
         'scipy',
         'matplotlib',
-        'sklearn>=0.19',
+        'sklearn>=0.19.0',
         'maputil',
         'pandas',
         'pyplink',
