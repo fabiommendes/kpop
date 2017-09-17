@@ -201,8 +201,13 @@ class Projection(Attr):
 
         lda = decomposition.LatentDirichletAllocation
         data = self._as_array('count')
-        q_matrix = transform_result(lda, data, n_components=n_populations,
-                                    learning_method='batch', **kwargs)
+
+        if is_sklearn_version_gt(19):
+            kwargs.update(n_compontents=n_populations)
+        else:
+            kwargs.update(n_topics=n_populations)
+
+        q_matrix = transform_result(lda, data, learning_method='batch', **kwargs)
         return decomposition.PCA(k).fit_transform(q_matrix)
 
     def nmf(self, k=2, *, data='count', **kwargs):
@@ -294,3 +299,11 @@ def with_defaults(dic, **kwargs):
     for k, v in kwargs.items():
         dic.setdefault(k, v)
     return dic
+
+
+def is_sklearn_version_gt(version=19):
+    """
+    Test Scikit Learn minor version.
+    """
+    import sklearn
+    return int(sklearn.__version__.split()[1]) >= version
