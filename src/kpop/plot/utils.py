@@ -1,11 +1,15 @@
 import numpy as np
-from matplotlib import cm
+
+from ..utils import lazy_module
+
+cm = lazy_module('matplotlib.cm')
 
 
-def unique_colors(n, colormap=cm.rainbow):
+def unique_colors(n, colormap=None):
     """
     Iterator with n unique colors from colormap.
     """
+    colormap = colormap or cm.rainbow
 
     if isinstance(colormap, str):
         try:

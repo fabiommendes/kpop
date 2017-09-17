@@ -2,9 +2,7 @@ import matplotlib as mpl
 import pytest
 import os
 
-if os.environ.get('DISPLAY', '') == '':
-    print('no display found. Using non-interactive Agg backend')
-    mpl.use('Agg')
+mpl.use('Agg')
 
 from kpop import Population, Individual
 

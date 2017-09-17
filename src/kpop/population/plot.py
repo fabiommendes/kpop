@@ -1,9 +1,11 @@
 import numpy as np
-from matplotlib import pyplot as plt
 
+from ..utils import lazy_module
 from .attr import Attr
 from ..plot import admixture_scatter, admixture_bars
 from ..plot.utils import group_individuals, _colors
+
+plt = lazy_module('matplotlib.pyplot')
 
 
 class Plot(Attr):
@@ -316,7 +318,6 @@ class Plot(Attr):
         """
         kwargs.setdefault('n_populations', n_populations)
         return self.scatter('lda', title=title, **kwargs)
-
 
     #
     # Admixture plots

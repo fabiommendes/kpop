@@ -4,6 +4,10 @@ from kpop import Population
 
 
 class TestProjection:
+    """
+    Test the population.projection attribute.
+    """
+
     def test_can_analyze_pca(self, popA):
         data = popA.projection.pca(k=3, data='count')
         assert data.shape == (8, 3)
@@ -84,7 +88,11 @@ class TestProjection:
             popB.projection.nmf(pca=3)
 
 
-class TestPlots:
+class TestPlot:
+    """
+    Test the population.plot attribute.
+    """
+
     @pytest.fixture
     def pop(self):
         return Population('11 22 11\n12 12 12', ploidy=2)

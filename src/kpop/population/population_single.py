@@ -2,10 +2,9 @@ import numpy as np
 from lazyutils import lazy
 
 from .individual import IndividualProxy
-from kpop.population.utils import random_individual_data
 from .population_base import PopulationBase
 from .population_list import ImmutablePopulationList
-from .utils import parse_population_data, discard_attrs
+from .utils import parse_population_data, discard_attrs, random_individual_data
 from ..utils.frequencies import random_frequencies
 
 

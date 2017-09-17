@@ -1,8 +1,13 @@
 import numpy as np
-from matplotlib import pyplot as plt
 
-from .utils import normalize_coeffs, _colors, _pop_labels, _pop_sizes, \
-    sort_coeffs, group_individuals, admixture_coords
+from .utils import (
+    normalize_coeffs, sort_coeffs,
+    _colors, _pop_labels, _pop_sizes,
+    group_individuals, admixture_coords
+)
+from ..utils import lazy_module
+
+plt = lazy_module('matplotlib.plt')
 
 
 def admixture_bars(coeffs, colors=None, legend=True,
@@ -180,8 +185,10 @@ def admixture_scatter(coeffs, colors=None, legend=True,
         ax.axis([-1.1, 1.1, -0.7, 1.2])
         delta = (0, 0.1)
         top, left, right = vertices
-        kwargs = {'verticalalignment': 'center',
-                  'horizontalalignment': 'center'}
+        kwargs = {
+            'verticalalignment': 'center',
+            'horizontalalignment': 'center'
+        }
         ax.text(*(top + delta), s=parental_labels[0], **kwargs)
         ax.text(*(left - delta), s=parental_labels[1], **kwargs)
         ax.text(*(right - delta), s=parental_labels[2], **kwargs)

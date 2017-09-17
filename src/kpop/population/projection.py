@@ -201,7 +201,7 @@ class Projection(Attr):
 
         lda = decomposition.LatentDirichletAllocation
         data = self._as_array('count')
-        q_matrix = transform_result(lda, data, n_topics=n_populations,
+        q_matrix = transform_result(lda, data, n_components=n_populations,
                                     learning_method='batch', **kwargs)
         return decomposition.PCA(k).fit_transform(q_matrix)
 

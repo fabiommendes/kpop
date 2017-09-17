@@ -3,7 +3,6 @@ import collections
 import copy
 
 import numpy as np
-import pandas as pd
 from lazyutils import lazy
 from sidekick import _
 from sklearn import preprocessing
@@ -19,8 +18,10 @@ from .simulation import Simulation
 from .statistics import Statistics
 from .utils import get_freqs, set_freqs, hfreqs_vector
 from ..prob import Prob
-from ..utils.frequencies import fill_freqs_vector, freqs_to_matrix
-from ..utils.functional import fn_lazy, fn_property
+from ..utils import fill_freqs_vector, freqs_to_matrix, fn_lazy, fn_property, \
+    lazy_module
+
+pd = lazy_module('pandas')
 
 
 class PopulationBase(collections.Sequence, metaclass=abc.ABCMeta):
