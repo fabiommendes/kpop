@@ -3,6 +3,7 @@ from sklearn import manifold, decomposition
 
 from .attr import Attr
 from ..result import transform_result
+from ..utils import is_transformer
 
 NOT_GIVEN = object()
 
@@ -13,7 +14,6 @@ class Projection(Attr):
     methods (such as PCA) applied to Kpop populations.
     """
 
-    _data = property(lambda _: np.array(_.population))
     _methods = {'pca', 'tsne', 'lle', 'mds', 'isomap', 'spectral',
                 'kernel_pca', 'nmf', 'ica'}
 
@@ -30,15 +30,15 @@ class Projection(Attr):
         For more details, see the corresponding method name in the class
         documentation.
         """
-        if callable(which):
-            method = kwargs.pop('method', 'count')
-            data = self._as_array(method)
-            return transform_result(which, data, k, **kwargs)
-
+        if is_transformer(which):
+            return self.sklearn(which, k=k, **kwargs)
+        elif callable(which):
+            raise NotImplementedError('do not accept function transformers')
         elif isinstance(which, str):
-            which_ = which.lower().replace('-', '')
-            method = getattr(self, which_)
-            return method(k, **kwargs)
+            which_ = which.lower().replace('-', '_')
+            if which_ in self._methods:
+                method = getattr(self, which_)
+                return method(k, **kwargs)
 
         raise ValueError('invalid method: %r' % which)
 
@@ -108,8 +108,8 @@ class Projection(Attr):
             >>> (sign_p1 != sign_p2).all()
             True
         """
-        if 'pca_reduce' in kwargs:
-            raise TypeError('invalid attribute: pca_reduce')
+        if 'pca' in kwargs:
+            raise TypeError('invalid argument: pca')
 
         pca = decomposition.PCA
         data = self._as_array(data)
@@ -189,17 +189,20 @@ class Projection(Attr):
         factor = decomposition.FactorAnalysis
         return self.sklearn(factor, k, data, **kwargs)
 
-    def lda(self, k=2, n_populations=5, **kwargs):
+    def lda_projection(self, k=2, n_populations=5, **kwargs):
         """
         Compute the admixture distribution assuming n_populations parental
         populations and project the resulting Q-matrix to k dimensions using
         PCA. This method can be used to visualize data in a triangle (for
         n_populations=3) or in a flattened simplex.
         """
+        if k >= n_populations:
+            raise ValueError('k must be greater than n_populations')
+
         lda = decomposition.LatentDirichletAllocation
         data = self._as_array('count')
         q_matrix = transform_result(lda, data, n_topics=n_populations,
-                                  learning_method='batch', **kwargs)
+                                    learning_method='batch', **kwargs)
         return decomposition.PCA(k).fit_transform(q_matrix)
 
     def nmf(self, k=2, *, data='count', **kwargs):
