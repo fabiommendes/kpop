@@ -1,33 +1,9 @@
 import numpy as np
 from numpy.testing import assert_almost_equal
 
-from kpop import Population, Prob
+from kpop import Population, Prob, MultiPopulation
 from kpop.population.population_base import sorted_allele_mapping, \
     biallelic_mapping
-
-
-class TestAuxiliaryFunctions:
-    "Private functions used in base population class"
-
-    def test_sorted_allele_mapping(self):
-        prob = Prob({1: 0.6, 2: 0.4})
-        assert sorted_allele_mapping(prob) == {}
-
-        prob = Prob({2: 0.6, 1: 0.4})
-        assert sorted_allele_mapping(prob) == {2: 1, 1: 2}
-
-        prob = Prob({2: 0.5, 3: 0.4, 1: 0.1})
-        assert sorted_allele_mapping(prob) == {2: 1, 3: 2, 1: 3}
-
-    def test_biallelic_mapping(self):
-        prob = Prob({1: 0.6, 2: 0.4})
-        assert biallelic_mapping(prob) == {}
-
-        prob = Prob({2: 0.6, 1: 0.4})
-        assert biallelic_mapping(prob) == {}
-
-        prob = Prob({2: 0.6, 1: 0.2, 3: 0.2})
-        assert biallelic_mapping(prob) == {2: 1, 1: 2, 3: 2}
 
 
 class TestProperties:
@@ -98,6 +74,30 @@ class TestAsArray:
         ]).all()
 
 
+class TestAuxiliaryFunctions:
+    "Private functions used in base population class"
+
+    def test_sorted_allele_mapping(self):
+        prob = Prob({1: 0.6, 2: 0.4})
+        assert sorted_allele_mapping(prob) == {}
+
+        prob = Prob({2: 0.6, 1: 0.4})
+        assert sorted_allele_mapping(prob) == {2: 1, 1: 2}
+
+        prob = Prob({2: 0.5, 3: 0.4, 1: 0.1})
+        assert sorted_allele_mapping(prob) == {2: 1, 3: 2, 1: 3}
+
+    def test_biallelic_mapping(self):
+        prob = Prob({1: 0.6, 2: 0.4})
+        assert biallelic_mapping(prob) == {}
+
+        prob = Prob({2: 0.6, 1: 0.4})
+        assert biallelic_mapping(prob) == {}
+
+        prob = Prob({2: 0.6, 1: 0.2, 3: 0.2})
+        assert biallelic_mapping(prob) == {2: 1, 1: 2, 3: 2}
+
+
 class _TestTransformations:
     def test_drop_non_biallelic(self):
         pop = Population([
@@ -137,49 +137,8 @@ class _TestTransformations:
         ]
 
 
-class TestRender:
-    "Test functions that render a population to string"
-
-    def test_render_population(self, popA):
-        assert popA.io.render() == '''
-A1: 11 22 12 12 12
-A2: 11 22 11 22 21
-A3: 11 22 11 22 21
-A4: 11 22 11 21 12
-A5: 11 22 21 21 21
-A6: 11 22 21 22 21
-A7: 11 22 11 12 12
-A8: 11 22 21 22 12
-    '''.strip()
-
-    def test_render_population_biallelic_freqs(self, popA, popB):
-        freqs_render = (popA + popB).stats.render_biallelic_freqs()
-        assert freqs_render == '''
-locus         A         B
-   L1  1.000000  0.000000
-   L2  0.000000  0.250000
-   L3  0.750000  0.500000
-   L4  0.250000  0.375000
-   L5  0.500000  0.375000
-'''[1:]
-
-        assert (popA + popB).stats.render_biallelic_freqs(sep=', ') == '''
-locus,        A,        B
-   L1, 1.000000, 0.000000
-   L2, 0.000000, 0.250000
-   L3, 0.750000, 0.500000
-   L4, 0.250000, 0.375000
-   L5, 0.500000, 0.375000
-'''[1:]
-
-    def _test_render_population_frequencies(self, popA, popB):
-        assert (popA + popB).render_biallelic_frequencies(sep=', ') == '''
-
-'''.strip()
-
-
-class TestRandomPopulations:
-    "Test the creation of random populations"
+class TestSinglePopulations:
+    "Test specific funtions for the PopulationSingle class"
 
     def test_make_random_population(self):
         pop = Population.random(30, 20)
@@ -194,3 +153,36 @@ class TestRandomPopulations:
         popB = Population.random(5, 10, seed=0)
         assert (popA.freqs_vector == popB.freqs_vector).all()
         assert popA == popB
+
+
+class TestMultiPopulation:
+    def test_multi_population(self, popA, popB):
+        pop = popA + popB
+        assert pop[0] == popA[0]
+        assert pop[len(popA)] == popB[0]
+        assert len(pop) == len(popA) + len(popB)
+        assert len(list(pop)) == len(popA) + len(popB)
+
+    def test_population_attribute_behaves_as_a_list(self, popA, popB):
+        pop = popA + popB
+        del pop.populations[1]
+        assert pop == popA
+
+    def test_multipopulation_with_3_populations(self, popA, popB):
+        popC = Population(popB[:-1], id='C')
+        pop = popA + popB
+        assert type(pop) == MultiPopulation
+        assert len(pop.populations) == 2
+        assert pop.populations == [popA, popB]
+
+        pop = popA + popB + popC
+        assert type(pop) == MultiPopulation
+        assert len(pop.populations) == 3
+        assert pop.populations == [popA, popB, popC]
+
+        pop = popA + (popB + popC)
+        assert type(pop) == MultiPopulation
+        assert len(pop.populations) == 3
+        assert pop.populations == [popA, popB, popC]
+
+
