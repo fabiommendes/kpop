@@ -8,7 +8,7 @@ from kpop.tests import is_ci
 
 pytestmark = pytest.mark.skipif(
     is_ci,
-    reason='structure is not installed in travis'
+    reason='structure is not installed on CI environments'
 )
 
 
