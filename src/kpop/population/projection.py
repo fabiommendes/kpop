@@ -203,7 +203,7 @@ class Projection(Attr):
         data = self._as_array('count')
 
         if is_sklearn_version_gt(19):
-            kwargs.update(n_compontents=n_populations)
+            kwargs.update(n_components=n_populations)
         else:
             kwargs.update(n_topics=n_populations)
 
@@ -306,4 +306,4 @@ def is_sklearn_version_gt(version=19):
     Test Scikit Learn minor version.
     """
     import sklearn
-    return int(sklearn.__version__.split()[1]) >= version
+    return int(sklearn.__version__.split('.')[1]) >= version
