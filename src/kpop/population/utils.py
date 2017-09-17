@@ -1,71 +1,50 @@
-import collections
-
 import numpy as np
 
-from kpop.prob import Prob
-from kpop.utils import freqs_to_matrix
+from ..prob import Prob
 
 
-
-
-def random_pop_data(size, freqs, ploidy=2, dtype=np.int8):
+#
+# Generic functions
+#
+def discard_attrs(obj, attrs):
     """
-    Create a random population data of bi-allele individuals from the given
-    frequency.
-
-    freqs_binomial can be a list of frequencies f[j] or a list of (f[j], 1-f[j]) tuples.
-    In both cases, the frequency f[j] represents the probability that the
-    j-th feature has a value of 1.
+    Remove all attributes from object, if they exist.
     """
 
-    num_loci = len(freqs)
-    data = np.random.uniform(size=num_loci * ploidy * int(size))
-    data = data.reshape((size, num_loci, ploidy))
-    alleles = freqs.shape[1]
-    if alleles == 2:
-        return np.asarray(data < freqs[:, 0, None], dtype=dtype) + 1
-    else:
-        data = np.zeros((size, num_loci, ploidy), dtype=dtype)
-        mask = data >= freqs[:, 0, None]
-        for i in range(1, alleles):
-            data[mask] = i
-            mask &= data >= freqs[:, i, None]
-        return data + 1
-
-
-def freqs_fastest(pop):
-    try:
-        return pop.freqs_vector
-    except ValueError:
-        pass
-    if pop.num_alleles <= 5:
-        return pop.freqs_matrix
-    return pop.freqs
+    for attr in attrs:
+        if attr in obj.__dict__:
+            obj.__delattr__(attr)
 
 
 def get_freqs(pop):
+    """
+    Return a list of Prob instances representing the frequencies in each locus.
+    """
+
     if pop._freqs is None:
-        vars_ = pop.__dict__
-        data = vars_.get('freqs_matrix') or vars_.get('freqs_vector')
-
-        if data is not None:
-            if data.ndim == 1:
-                data = freqs_to_matrix(data)
-            pop._freqs = [Prob(enumerate(locus)) for locus in data]
-
-        else:
-            pop._freqs = pop.stats.empirical_freqs()
-
+        pop._freqs = pop.stats.empirical_freqs()
     return pop._freqs
 
 
 def set_freqs(pop, value):
-    pop._freqs = normalize_freqs_arg(value)
-    del pop.freqs_vector
-    del pop.freqs_matrix
+    """
+    Sets the freqs attribute of a population.
+    """
+    if not len(value) == pop.num_loci or not \
+            all(isinstance(x, Prob) for x in value):
+        raise ValueError('not a valid loci frequency vector')
+
+    pop._freqs = list(value)
+    discard_attrs(pop, ['freqs_vector', 'freqs_matrix'])
 
 
 def hfreqs_vector(pop):
+    """
+    Compute the heterozygote frequency on population.
+
+    This is the probability of a heterozygote genotype for each locus.
+    """
+
     if pop.ploidy == 2:
         data = np.array(pop)
         heterozygote = data[:, :, 0] != data[:, :, 1]
@@ -76,7 +55,7 @@ def hfreqs_vector(pop):
 
 def parse_population_data(data):
     """
-    Initialize population from string data.
+    Return population (genotype data, ids) from a string.
     """
 
     part_labels = [line.rpartition(':') for line in data.splitlines()]
@@ -114,11 +93,45 @@ def parse_population_data(data):
     return data, labels
 
 
-def del_attrs(obj, attrs):
+def id_label_from_parents(l1, l2):
     """
-    Remove all attributes from object, if they exist.
+    Creates a new id label from parents id labels.
     """
 
-    for attr in attrs:
-        if attr in obj.__dict__:
-            obj.__delattr__(attr)
+    if l1 == l2:
+        return l1
+    elif l1 is None:
+        return l2 + '_'
+    elif l2 is None:
+        return l1 + '_'
+
+    common = []
+    for c1, c2 in zip(l1, l2):
+        if c1 == c2:
+            common.append(c1)
+            continue
+        break
+    common = ''.join(common)
+    l1 = l1[len(common):] or '_'
+    l2 = l2[len(common):] or '_'
+    return '%s-%s,%s' % (common, l1, l2)
+
+
+def random_individual_data(freqs, ploidy=2):
+    """
+    Creates a random biallelic individual data with given ploidy.
+
+    Freqs can be a list of (p, 1 - p) pairs or a list of p's.
+    """
+
+    freq_array = np.asarray(freqs)
+    num_loci = len(freq_array)
+    values = np.random.uniform(size=num_loci * ploidy)
+    values = values.reshape((num_loci, ploidy))
+
+    if freq_array.ndim == 2:
+        if freq_array.shape[1] != 2:
+            raise NotImplementedError('must be biallelic!')
+        return np.asarray(values >= freq_array[:, 0, None], dtype=np.uint8) + 1
+    else:
+        return np.asarray(values >= freq_array[:, None], dtype=np.uint8) + 1

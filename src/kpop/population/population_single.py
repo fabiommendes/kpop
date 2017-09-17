@@ -1,10 +1,11 @@
 import numpy as np
 from lazyutils import lazy
 
-from .individual import IndividualProxy, random_data_from_freqs_matrix
+from .individual import IndividualProxy
+from kpop.population.utils import random_individual_data
 from .population_base import PopulationBase
-from .populations import ImmutablePopulationList
-from .utils import parse_population_data, del_attrs
+from .population_list import ImmutablePopulationList
+from .utils import parse_population_data, discard_attrs
 from ..utils.frequencies import random_frequencies
 
 
@@ -51,7 +52,7 @@ class Population(PopulationBase):
         # Create data
         data = []
         for _ in range(size):
-            ind = random_data_from_freqs_matrix(freqs, ploidy=ploidy)
+            ind = random_individual_data(freqs, ploidy=ploidy)
             data.append(ind)
         data = np.array(data)
 
@@ -85,9 +86,6 @@ class Population(PopulationBase):
         for idx in range(self.size):
             yield IndividualProxy(self, idx)
 
-    def __str__(self):
-        return '\n'.join(str(x) for x in self)
-
     def __add__(self, other):
         if isinstance(other, Population):
             return self._multi_population_class([self, other])
@@ -114,22 +112,22 @@ class Population(PopulationBase):
             new._data = data
 
             if data.shape != self.shape:
-                del_attrs(new, new._shape_attrs)
+                discard_attrs(new, new._shape_attrs)
 
         return new
 
     def keep_loci(self, indexes, **kwargs):
+        check_data(kwargs)
         new_data = self._data[:, indexes, :]
         return self.copy(data=new_data, **kwargs)
 
     def keep_individuals(self, indexes, **kwargs):
+        check_data(kwargs)
         new_data = self._data[indexes]
         return self.copy(data=new_data, **kwargs)
 
     def map_alleles(self, alleles_mapping, **kwargs):
-        if 'data' in kwargs:
-            raise TypeError('invalid argument: "data"')
-
+        check_data(kwargs)
         data = self._data.copy()
         for i, ind in enumerate(data):
             for j, locus in enumerate(ind):
@@ -138,3 +136,8 @@ class Population(PopulationBase):
                     data[i, j, k] = map.get(value, value)
 
         return self.copy(data=data, **kwargs)
+
+
+def check_data(kwargs):
+    if 'data' in kwargs:
+        raise TypeError('invalid argument: "data"')

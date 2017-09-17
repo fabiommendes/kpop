@@ -3,7 +3,7 @@ import pytest
 from numpy.testing import assert_equal
 
 from kpop.population.individual import Individual
-from kpop.population.util import id_label_from_parents
+from kpop.population.utils import id_label_from_parents
 from kpop.utils.frequencies import fill_freqs_vector
 
 

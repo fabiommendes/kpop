@@ -172,7 +172,7 @@ class Admixture(Attr):
     def _mix_classifier__admixture(self, pop):
         # Create supervised pop_ids
         pop_ids = []
-        for i, id in enumerate(self.populations.ids()):
+        for i, id in enumerate(self.populations.population_ids()):
             pop_ids.extend([id] * self.populations[i].size)
         pop_ids.extend([None] * pop.size)
 
@@ -180,7 +180,7 @@ class Admixture(Attr):
         pop_total = self + pop
         classified_pop = pop_total.structure_admixture(
             k=len(self.populations),
-            parental_ids=self.populations.ids(),
+            parental_ids=self.populations.population_ids(),
             pop_ids=pop_ids,
         )
         del classified_pop.populations[0: self.num_populations]

@@ -4,7 +4,7 @@ import numpy as np
 from lazyutils import delegate_to, lazy
 from sidekick import _
 
-from kpop.population.util import id_label_from_parents
+from kpop.population.utils import id_label_from_parents, random_individual_data
 from .utils import parse_population_data
 from ..utils import fn_lazy, fn_property
 
@@ -261,7 +261,7 @@ class Individual(IndividualBase, collections.Sequence):
         if isinstance(freqs[0], collections.Mapping):
             raise NotImplementedError
         else:
-            data = random_data_from_freqs_matrix(freqs, ploidy=ploidy)
+            data = random_individual_data(freqs, ploidy=ploidy)
         return cls(data, **kwargs)
 
     def __init__(self, data, id=None, population=None,
@@ -318,22 +318,3 @@ class IndividualProxy(IndividualBase):
     def __init__(self, population, idx):
         self.population = population
         self._idx = idx
-
-
-def random_data_from_freqs_matrix(freqs, ploidy=2):
-    """
-    Creates a random biallelic individual data with given ploidy.
-
-    Freqs can be a list of (p, 1 - p) pairs or a list of p's.
-    """
-
-    freq_array = np.asarray(freqs)
-    num_loci = len(freq_array)
-    values = np.random.uniform(size=num_loci * ploidy)
-    values = values.reshape((num_loci, ploidy))
-    if freq_array.ndim == 2:
-        if freq_array.shape[1] != 2:
-            raise NotImplementedError('must be biallelic!')
-        return np.asarray(values >= freq_array[:, 0, None], dtype=np.uint8) + 1
-    else:
-        return np.asarray(values >= freq_array[:, None], dtype=np.uint8) + 1

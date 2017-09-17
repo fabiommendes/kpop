@@ -14,7 +14,6 @@ class PopulationList(collections.MutableSequence):
 
     def __setitem__(self, index, value):
         index = self._conv_index(index)
-        self._check_new_pop(value)
         self._data[index] = value
 
     def __delitem__(self, index):
@@ -40,31 +39,26 @@ class PopulationList(collections.MutableSequence):
 
     def insert(self, index, value):
         index = self._conv_index(index)
-        self._check_new_pop(value)
         self._data.insert(index, value)
-
-    def _check_new_pop(self, value):
-        if self._data:
-            pass
 
     def _conv_index(self, idx):
         if isinstance(idx, (int, slice)):
             return idx
         else:
             for i, pop in enumerate(self):
-                if idx == pop.label:
+                if idx == pop.id:
                     return i
             else:
-                raise KeyError('invalid label: %r' % idx)
+                raise KeyError('invalid id: %r' % idx)
 
-    def labels(self, prefix='pop'):
+    def population_ids(self, prefix='pop'):
         """
         Return a list of labels or indexes for sub-populations.
         """
 
         def gen():
             for i, pop in enumerate(self):
-                yield (prefix + str(i) if pop.label is None else pop.label)
+                yield (prefix + str(i) if pop.id is None else pop.id)
 
         return list(gen())
 

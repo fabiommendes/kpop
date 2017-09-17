@@ -36,6 +36,18 @@ class TestPopulation:
         assert popA.size == 8
         assert popA.id == 'A'
         assert popA.populations == [popA]
+        assert popA.num_populations == 1
+        assert popA.has_missing_data is False
+        assert popA.missing_data_ratio == 0
+        assert popA.missing_data_total == 0.0
+
+    def test_population_special_attributes_aliases(self, popA):
+        assert popA.admixture is popA.admix
+        assert popA.classification is popA.cls
+        assert popA.clusterization is popA.cluster
+        assert popA.projection is popA.proj
+        assert popA.simulation is popA.sim
+        assert popA.statistics is popA.stats
 
     def test_population_frequency_attributes(self, popA):
         assert_almost_equal(popA.freqs_vector, [1.0, 0.0, 0.75, 0.25, 0.5])
@@ -84,12 +96,27 @@ class TestPopulation:
     def test_conversion_to_count_array(self, popB):
         arr = popB.as_array('count')
         assert arr.shape == (4, 5)
-        assert (arr == [
-            [0, 0, 0, 1, 0],
-            [0, 1, 2, 0, 1],
-            [0, 1, 2, 1, 1],
-            [0, 0, 0, 1, 1],
-        ]).all()
+        assert deeplist(arr) == [[0, 0, 0, 1, 0],
+                                 [0, 1, 2, 0, 1],
+                                 [0, 1, 2, 1, 1],
+                                 [0, 0, 0, 1, 1]]
+
+    def test_conversion_to_count_snp(self, popB):
+        arr = popB.as_array('count-snp')
+        assert arr.shape == (4, 5)
+        assert arr.dtype == np.dtype(float)
+
+    def test_conversion_to_count_center(self, popB):
+        arr = popB.as_array('count-center')
+        assert arr.shape == (4, 5)
+        assert deeplist(arr) == [[-1., -1, -1, 0, -1],
+                                 [-1., 0, 1, -1, 0],
+                                 [-1., 0, 1, 0, 0],
+                                 [-1., -1, -1, 0, 0]]
+
+    def test_invalid_conversion_method(self, popA):
+        with pytest.raises(ValueError):
+            popA.as_array('bad-method')
 
     #
     # Private functions used in base population class
@@ -117,6 +144,11 @@ class TestPopulation:
     #
     # Transformations
     #
+    def test_drop_individuals(self, popA):
+        new = popA.drop_individuals(range(popA.size - 2))
+        assert new.size == 2
+        assert new[1] == popA[-1]
+
     def test_drop_non_biallelic(self):
         pop = Population([
             [[1, 3], [1, 2], [0, 1]],
@@ -154,20 +186,61 @@ class TestPopulation:
             [[2, 1], [1, 1], [1, 0]],
         ]
 
+    def test_keep_loci(self, popA):
+        pop = popA.keep_loci([0])
+        assert pop.as_array().shape == (popA.size, 1, popA.ploidy)
 
-class TestMultiPopulationInteface:
+    def test_map_alleles(self, popA):
+        maps = [{} for _ in range(popA.num_loci)]
+        assert popA == popA.map_alleles(maps)
+
+
+class TestMultiPopulationInteface(TestPopulation):
     @pytest.fixture
     def popA(self):
         from kpop.tests.conftest import popA, popA_data
 
         pop = popA(popA_data())
-        return MultiPopulation([pop])
+        return MultiPopulation([pop], id='A')
+
+
+class TestEmptyPopulations:
+    def test_cannot_initialize_with_empty_frequency_list(self):
+        with pytest.raises(ValueError):
+            Population(freqs=[])
+        with pytest.raises(ValueError):
+            Population(freqs=[[[]]])
+
+    def test_initialize_an_empty_population(self):
+        pop1 = Population(freqs=[{1: 0.5, 2: 0.5}, {1: 1.0, 2: 0.0}])
+        pop2 = Population(freqs=[0.5, 1.0])
+        pop3 = Population(freqs=[[0.5, 0.5], [1.0, 0.0]])
+        assert pop1.freqs == pop2.freqs
+        assert pop2.freqs == pop3.freqs
+
+    def test_set_freqs_attribute(self, popB):
+        with pytest.raises(ValueError):
+            popB.freqs = [0.5, 0.5]
+
+        popB.freqs = [Prob([0.5, 0.5]) for _ in range(popB.num_loci)]
 
 
 class TestSinglePopulations:
     """
     Test specific funtions for the PopulationSingle class"
     """
+
+    def test_random_invalid_args(self):
+        with pytest.raises(ValueError):
+            Population.random(10, num_loci=-1)
+
+    def test_can_init_from_other_population(self, popA):
+        pop = Population(popA)
+        assert pop == popA
+        assert (pop.individual_ids == popA.individual_ids).all()
+
+    def test_population_equality_with_multi_population(self, popA):
+        assert popA == MultiPopulation([popA])
 
     def test_make_random_population(self):
         pop = Population.random(30, 20)
@@ -182,6 +255,23 @@ class TestSinglePopulations:
         popB = Population.random(5, 10, seed=0)
         assert (popA.freqs_vector == popB.freqs_vector).all()
         assert popA == popB
+
+    def test_copy_with_bad_data(self, popA):
+        with pytest.raises(ValueError):
+            popA.copy(data=[0, 1])
+
+    def test_functions_with_bad_data_argument(self, popA):
+        data = popA.as_array()
+
+        with pytest.raises(TypeError):
+            maps = [{} for _ in range(popA.num_loci)]
+            popA.map_alleles(maps, data=data)
+
+        with pytest.raises(TypeError):
+            popA.keep_loci([0, 1], data=data)
+
+        with pytest.raises(TypeError):
+            popA.keep_individuals([0, 1], data=data)
 
 
 class TestMultiPopulation:
@@ -217,3 +307,18 @@ class TestMultiPopulation:
         assert type(pop) == MultiPopulation
         assert len(pop.populations) == 3
         assert pop.populations == [popA, popB, popC]
+
+    def test_prevent_repeated_populations(self, popA):
+        with pytest.raises(ValueError):
+            MultiPopulation([popA, popA])
+
+    def test_filter_individuals(self, popA, popB):
+        pop = popA + popB
+        idx = pop.slice_indexes([0, len(popA)])
+        assert deeplist(idx[0]) == [0]
+        assert deeplist(idx[1]) == [0]
+
+        new = pop.keep_individuals([0, len(popA)])
+        assert new.size == 2
+        assert new[0] == popA[0]
+        assert new[1] == popB[0]

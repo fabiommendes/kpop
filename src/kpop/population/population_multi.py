@@ -1,9 +1,8 @@
 import numpy as np
-from lazyutils import lazy
 
 from kpop.population.population_base import PopulationBase
 from kpop.population.population_single import Population
-from kpop.population.populations import PopulationList
+from kpop.population.population_list import PopulationList
 
 
 class MultiPopulation(PopulationBase):
@@ -13,22 +12,12 @@ class MultiPopulation(PopulationBase):
 
     is_multi_population = True
 
-    @lazy
-    def freqs_vector_pop(self):
-        return np.array([pop.freqs_vector for pop in self.populations])
-
-    @lazy
-    def freqs_matrix_pop(self):
-        return np.array([pop.freqs_matrix for pop in self.populations])
-
-    @lazy
-    def freqs_pop(self):
-        return [pop.freqs for pop in self.populations]
-
     def __init__(self, populations=(), freqs=None, **kwargs):
         if freqs is not None:
-            raise ValueError('cannot specify frequencies on MultiPopulation '
-                             'objects')
+            raise ValueError(
+                'cannot specify frequencies on MultiPopulation objects'
+            )
+
         self.populations = PopulationList()
         for population in populations:
             self.add_population(population)
@@ -64,6 +53,10 @@ class MultiPopulation(PopulationBase):
             return MultiPopulation([other] + populations)
         return NotImplemented
 
+    def _as_array(self):
+        stack = [pop._as_array() for pop in self.populations]
+        return np.vstack(stack)
+
     def add_population(self, population):
         """
         Adds a new sub-population.
@@ -72,8 +65,11 @@ class MultiPopulation(PopulationBase):
             population: A :class:`Population` instance.
         """
 
-        if population in self.populations:
-            raise ValueError('sub-population already present!')
+        for sub in self.populations:
+            if population.id is not None and population.id == sub.id:
+                raise ValueError(
+                    'sub-population with id "%s" already present!' % sub.id
+                )
         self.populations.append(population)
 
     def slice_indexes(self, indexes):
@@ -81,19 +77,19 @@ class MultiPopulation(PopulationBase):
         Map indexes to a list of indexes for each sub-population.
         """
 
-        indexes = [[] for pop in self.populations]
+        slices = [[] for pop in self.populations]
         breakpoints = np.add.accumulate([len(pop) for pop in self.populations])
         for idx in indexes:
             for k, idx_max in enumerate(breakpoints):
                 if idx < idx_max:
-                    if k > 1:
+                    if k > 0:
                         idx -= breakpoints[k - 1]
-                    indexes[k].append(idx)
+                    slices[k].append(idx)
                     break
             else:
                 raise IndexError('index out of bounds: %s' % idx)
 
-        return [np.array(lst) for lst in indexes]
+        return [np.array(lst) for lst in slices]
 
     def copy(self, populations=None, **kwargs):
         new = super().copy(**kwargs)
@@ -108,9 +104,7 @@ class MultiPopulation(PopulationBase):
         return self.copy(populations=populations, **kwargs)
 
     def keep_loci(self, indexes, **kwargs):
-        sliced_indexes = self.slice_indexes(indexes)
-        data = zip(self.populations, sliced_indexes)
-        populations = [pop.keep_loci(indexes) for pop, indexes in data]
+        populations = [pop.keep_loci(indexes) for pop in self.populations]
         return self.copy(populations=populations, **kwargs)
 
     def map_alleles(self, alleles_mapping, **kwargs):

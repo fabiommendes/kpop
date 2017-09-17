@@ -94,8 +94,7 @@ class Simulation(Attr):
 
         pop = self._population
         kwargs['id'] = id or pop._next_id()
-        ind = Individual.from_freqs(pop._freqs_fastest,
-                                    population=pop, **kwargs)
+        ind = Individual.from_freqs(pop.freqs_matrix, population=pop, **kwargs)
         ind.num_alleles = pop.num_alleles
         return ind
 

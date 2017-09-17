@@ -8,7 +8,7 @@ from lazyutils import lazy
 from sidekick import _
 from sklearn import preprocessing
 
-from kpop.population.utils import del_attrs
+from kpop.population.utils import discard_attrs
 from .admixture import Admixture
 from .classification import Classification
 from .clusterization import Clusterization
@@ -17,7 +17,7 @@ from .plot import Plot
 from .projection import Projection
 from .simulation import Simulation
 from .statistics import Statistics
-from .utils import freqs_fastest, get_freqs, set_freqs, hfreqs_vector
+from .utils import get_freqs, set_freqs, hfreqs_vector
 from ..prob import Prob
 from ..utils.frequencies import fill_freqs_vector, freqs_to_matrix
 from ..utils.functional import fn_lazy, fn_property
@@ -57,7 +57,6 @@ class PopulationBase(collections.Sequence, metaclass=abc.ABCMeta):
     freqs_matrix = lazy(lambda _: freqs_to_matrix(_.freqs))
     freqs_vector = lazy(lambda _: np.ascontiguousarray(_.freqs_matrix[:, 0]))
     hfreqs_vector = lazy(hfreqs_vector)
-    _freqs_fastest = property(freqs_fastest)
 
     # Allele statistics
     allele_names = None
@@ -69,9 +68,9 @@ class PopulationBase(collections.Sequence, metaclass=abc.ABCMeta):
     num_populations = fn_property(lambda _: len(_.populations))
 
     # Missing data
-    has_missing = property(lambda _: any(ind.has_missing for ind in _))
-    missing_total = property(lambda _: sum(ind.missing_total for ind in _))
-    missing_ratio = fn_property(_.missing_total / _.data_size)
+    has_missing_data = property(lambda _: any(ind.has_missing for ind in _))
+    missing_data_total = property(lambda _: sum(ind.missing_total for ind in _))
+    missing_data_ratio = fn_property(_.missing_data_total / _.data_size)
 
     # Meta information
     individual_ids = property(lambda _: _.meta['ids'])
@@ -89,7 +88,7 @@ class PopulationBase(collections.Sequence, metaclass=abc.ABCMeta):
 
     # Aliases
     admix = property(lambda self: self.admixture)
-    cls = classify = property(lambda self: self.classification)
+    cls = property(lambda self: self.classification)
     cluster = property(lambda self: self.clusterization)
     proj = property(lambda self: self.projection)
     sim = property(lambda self: self.simulation)
@@ -175,7 +174,7 @@ class PopulationBase(collections.Sequence, metaclass=abc.ABCMeta):
         return '%s%s' % (self.id or 'ind', self._last_id_index)
 
     def _clear_caches(self):
-        del_attrs(self, self._cacheable_attributes)
+        discard_attrs(self, self._cacheable_attributes)
 
     def _as_array(self):
         return NotImplementedError('must be implemented on subclasses')
@@ -263,7 +262,10 @@ class PopulationBase(collections.Sequence, metaclass=abc.ABCMeta):
                 norm = np.where(norm, norm, 1)
                 return (count - mu) / norm
             elif which == 'count-center':
-                return count - self.ploidy / 2
+                if self.ploidy % 2:
+                    return count - self.ploidy / 2
+                else:
+                    return count - self.ploidy // 2
             else:
                 return count
 
