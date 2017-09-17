@@ -1,3 +1,4 @@
+import abc
 import collections
 import copy
 
@@ -7,6 +8,7 @@ from lazyutils import lazy
 from sidekick import _
 from sklearn import preprocessing
 
+from kpop.population.utils import del_attrs
 from .admixture import Admixture
 from .classification import Classification
 from .clustering import Clustering
@@ -21,7 +23,7 @@ from ..utils.frequencies import fill_freqs_vector, freqs_to_matrix
 from ..utils.functional import fn_lazy, fn_property
 
 
-class PopulationBase(collections.Sequence):
+class PopulationBase(collections.Sequence, metaclass=abc.ABCMeta):
     """
     Base class for Population and MultiPopulation.
 
@@ -46,6 +48,9 @@ class PopulationBase(collections.Sequence):
     shape = property(lambda _: (_.size, _.num_loci, _.ploidy))
     data_size = fn_property(_.size * _.num_loci * _.ploidy)
     dtype = np.dtype('uint8')
+    _shape_attrs = (
+        'size', 'num_loci', 'ploidy', 'shape', 'data_size',
+    )
 
     # Frequencies
     freqs = property(get_freqs, set_freqs)
@@ -87,6 +92,13 @@ class PopulationBase(collections.Sequence):
     cls = lazy(lambda self: self.classification)
     sim = lazy(lambda self: self.simulation)
     stats = lazy(lambda self: self.statistics)
+
+    # List of cacheable attributes
+    _cacheable_attributes = (
+        'has_missing', 'missing_total', 'missing_ratio', 'admixture',
+        'clustering', 'classification', 'io', 'plot', 'projection',
+        'simulation', 'statistics', 'admix', 'cls', 'sim', 'stats',
+    )
 
     def __init__(self, freqs=None, allele_names=None, id=None, ploidy=None,
                  num_loci=None, num_alleles=None, individual_ids=None):
@@ -158,6 +170,9 @@ class PopulationBase(collections.Sequence):
     def _next_id(self):
         self._last_id_index += 1
         return '%s%s' % (self.id or 'ind', self._last_id_index)
+
+    def _clear_caches(self):
+        del_attrs(self, self._cacheable_attributes)
 
     def _as_array(self):
         return NotImplementedError('must be implemented on subclasses')
@@ -251,7 +266,7 @@ class PopulationBase(collections.Sequence):
 
         raise ValueError('invalid conversion method: %r' % which)
 
-    def drop_non_biallelic(self):
+    def drop_non_biallelic(self, **kwargs):
         """
         Creates a new population that remove all non-biallelic loci.
 
@@ -260,9 +275,9 @@ class PopulationBase(collections.Sequence):
             of all dropped locus indexes.
         """
         bad_loci = self.statistics.non_biallelic()
-        return self.drop_loci(bad_loci), bad_loci
+        return self.drop_loci(bad_loci, **kwargs), bad_loci
 
-    def force_biallelic(self):
+    def force_biallelic(self, **kwargs):
         """
         Return a new population with forced biallelic data.
 
@@ -270,9 +285,9 @@ class PopulationBase(collections.Sequence):
         as allele 1 and the alternate allele 2 comprises all the other alleles.
         """
         alleles_mapping = [biallelic_mapping(prob) for prob in self.freqs]
-        return self.map_alleles(alleles_mapping)
+        return self.map_alleles(alleles_mapping, **kwargs)
 
-    def sort_by_allele_freq(self):
+    def sort_by_allele_freq(self, **kwargs):
         """
         Return a new population in which the index attributed to each allele
         in each locus is sorted by the frequency in the population. After that,
@@ -280,9 +295,10 @@ class PopulationBase(collections.Sequence):
         and so on.
         """
         alleles_mapping = [sorted_allele_mapping(prob) for prob in self.freqs]
-        return self.map_alleles(alleles_mapping)
+        return self.map_alleles(alleles_mapping, **kwargs)
 
-    def map_alleles(self, alleles_mapping):
+    @abc.abstractmethod
+    def map_alleles(self, alleles_mapping, **kwargs):
         """
         Create new population reorganizing all allele values by the given
         list of allele values mappings.
@@ -295,40 +311,42 @@ class PopulationBase(collections.Sequence):
         """
         raise NotImplementedError('must be implemented in subclasses')
 
-    def drop_loci(self, indexes):
+    def drop_loci(self, indexes, **kwargs):
         """
         Create a new population with all loci in the given indexes removed.
         """
         indexes = set(indexes)
         keep = np.array([i for i in range(self.num_loci) if i not in indexes])
-        return self.keep_loci(keep)
+        return self.keep_loci(keep, **kwargs)
 
-    def drop_individuals(self, indexes):
+    def drop_individuals(self, indexes, **kwargs):
         """
         Creates new population removing the individuals in the given indexes.
         """
         indexes = set(indexes)
         keep = np.array([i for i in range(self.size) if i not in indexes])
-        return self.keep_individuals(keep)
+        return self.keep_individuals(keep, **kwargs)
 
-    def keep_loci(self, indexes):
+    @abc.abstractmethod
+    def keep_loci(self, indexes, **kwargs):
         """
         Creates a new population keeping only the loci in the given indexes.
         """
         raise NotImplementedError('must be implemented in subclasses')
 
-    def keep_individuals(self, indexes):
+    @abc.abstractmethod
+    def keep_individuals(self, indexes, **kwargs):
         """
         Creates new population removing the individuals in the given indexes.
         """
         raise NotImplementedError('must be implemented in subclasses')
 
-    def shuffle_loci(self):
+    def shuffle_loci(self, **kwargs):
         """
         Return a copy with shuffled contents of each locus.
         """
 
-        pop = self.copy()
+        pop = self.copy(**kwargs)
         for ind in pop:
             for loci in ind.data:
                 np.random.shuffle(loci)
@@ -339,7 +357,9 @@ class PopulationBase(collections.Sequence):
         Return a copy of population.
         """
 
-        new = copy.deepcopy(self)
+        new = copy.copy(self)
+        new.populations = copy.copy(self.populations)
+        new._clear_caches()
         if id is not None:
             new.id = id
         return new

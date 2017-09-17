@@ -9,7 +9,7 @@ class TestFrequencyDrift:
         new = frequency_drift_1D(data, 2, 50)
         assert new[0] == 0
         assert new[1] == 1
-        assert abs(new[2] - 0.5) < 1e-6
+        assert abs(new[2] - 0.5) < 1e-1
 
     def test_small_fluctuations_with_large_populations(self):
         data = [0.5, 0.5]

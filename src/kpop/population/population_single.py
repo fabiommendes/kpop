@@ -1,10 +1,10 @@
 import numpy as np
 from lazyutils import lazy
 
-from kpop.population.utils import parse_population_data
 from .individual import IndividualProxy, random_data_from_freqs_matrix
 from .population_base import PopulationBase
 from .populations import ImmutablePopulationList
+from .utils import parse_population_data, del_attrs
 from ..utils.frequencies import random_frequencies
 
 
@@ -103,3 +103,38 @@ class Population(PopulationBase):
 
     def _as_array(self):
         return np.array(self._data)
+
+    def copy(self, data=None, **kwargs):
+        new = super().copy(**kwargs)
+
+        if data is not None:
+            data = np.asarray(data, dtype='uint8')
+            if data.ndim != 3:
+                raise ValueError('invalid number of dimensions: %s' % data.ndim)
+            new._data = data
+
+            if data.shape != self.shape:
+                del_attrs(new, new._shape_attrs)
+
+        return new
+
+    def keep_loci(self, indexes, **kwargs):
+        new_data = self._data[:, indexes, :]
+        return self.copy(data=new_data, **kwargs)
+
+    def keep_individuals(self, indexes, **kwargs):
+        new_data = self._data[indexes]
+        return self.copy(data=new_data, **kwargs)
+
+    def map_alleles(self, alleles_mapping, **kwargs):
+        if 'data' in kwargs:
+            raise TypeError('invalid argument: "data"')
+
+        data = self._data.copy()
+        for i, ind in enumerate(data):
+            for j, locus in enumerate(ind):
+                map = alleles_mapping[j]
+                for k, value in enumerate(locus):
+                    data[i, j, k] = map.get(value, value)
+
+        return self.copy(data=data, **kwargs)

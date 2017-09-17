@@ -112,3 +112,13 @@ def parse_population_data(data):
                 data[i, j, k] = map[data_raw[i, j, k]]
 
     return data, labels
+
+
+def del_attrs(obj, attrs):
+    """
+    Remove all attributes from object, if they exist.
+    """
+
+    for attr in attrs:
+        if attr in obj.__dict__:
+            obj.__delattr__(attr)

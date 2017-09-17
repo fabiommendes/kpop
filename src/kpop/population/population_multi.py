@@ -3,7 +3,6 @@ from lazyutils import lazy
 
 import kpop
 from kpop import admixture
-
 from kpop.admixture import likelihood
 from kpop.population.population_base import PopulationBase
 from kpop.population.population_single import Population
@@ -90,6 +89,48 @@ class MultiPopulation(PopulationBase):
         if population in self.populations:
             raise ValueError('sub-population already present!')
         self.populations.append(population)
+
+    def slice_indexes(self, indexes):
+        """
+        Map indexes to a list of indexes for each sub-population.
+        """
+
+        indexes = [[] for pop in self.populations]
+        breakpoints = np.add.accumulate([len(pop) for pop in self.populations])
+        for idx in indexes:
+            for k, idx_max in enumerate(breakpoints):
+                if idx < idx_max:
+                    if k > 1:
+                        idx -= breakpoints[k - 1]
+                    indexes[k].append(idx)
+                    break
+            else:
+                raise IndexError('index out of bounds: %s' % idx)
+
+        return [np.array(lst) for lst in indexes]
+
+    def copy(self, populations=None, **kwargs):
+        new = super().copy(**kwargs)
+        if populations is not None:
+            new.populations = PopulationList(populations)
+        return new
+
+    def keep_individuals(self, indexes, **kwargs):
+        sliced_indexes = self.slice_indexes(indexes)
+        data = zip(self.populations, sliced_indexes)
+        populations = [pop.keep_individuals(indexes) for pop, indexes in data]
+        return self.copy(populations=populations, **kwargs)
+
+    def keep_loci(self, indexes, **kwargs):
+        sliced_indexes = self.slice_indexes(indexes)
+        data = zip(self.populations, sliced_indexes)
+        populations = [pop.keep_loci(indexes) for pop, indexes in data]
+        return self.copy(populations=populations, **kwargs)
+
+    def map_alleles(self, alleles_mapping, **kwargs):
+        map = alleles_mapping
+        populations = [pop.map_alleles(map) for pop in self.populations]
+        return self.copy(populations=populations, **kwargs)
 
     def classify(self, ind, prior=None):
         """

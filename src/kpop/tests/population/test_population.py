@@ -1,4 +1,5 @@
 import numpy as np
+import pytest
 from numpy.testing import assert_almost_equal
 
 from kpop import Population, Prob, MultiPopulation
@@ -6,9 +7,27 @@ from kpop.population.population_base import sorted_allele_mapping, \
     biallelic_mapping
 
 
-class TestProperties:
-    "Test basic attributes that expose kpop population data"
+def deeplist(array):
+    """
+    Convert array in a list of lists.
+    """
 
+    def conv(arr, depth):
+        if depth <= 1:
+            return list(arr)
+        return [conv(line, depth - 1) for line in arr]
+
+    return conv(array, array.ndim)
+
+
+class TestPopulation:
+    """
+    Test PopulationBase interface.
+    """
+
+    #
+    # Test basic attributes that expose kpop population data
+    #
     def test_population_basic_attributes(self, popA):
         assert popA.is_biallelic
         assert popA.num_alleles == 2
@@ -34,10 +53,9 @@ class TestProperties:
         assert list(popA.freqs_matrix[:, 0]) == [1.0, 0.0, 0.75, 0.25, 0.5]
         assert list(popA.hfreqs_vector) == [0, 0, 0.5, 0.5, 1]
 
-
-class TestAsArray:
-    "Test basic slicing and data transformation interfaces"
-
+    #
+    # Basic slicing and data extraction interfaces
+    #
     def test_conversion_to_array(self, popB):
         arr = popB.as_array('raw')
         assert arr.shape == (4, 5, 2)
@@ -73,10 +91,9 @@ class TestAsArray:
             [0, 0, 0, 1, 1],
         ]).all()
 
-
-class TestAuxiliaryFunctions:
-    "Private functions used in base population class"
-
+    #
+    # Private functions used in base population class
+    #
     def test_sorted_allele_mapping(self):
         prob = Prob({1: 0.6, 2: 0.4})
         assert sorted_allele_mapping(prob) == {}
@@ -97,15 +114,16 @@ class TestAuxiliaryFunctions:
         prob = Prob({2: 0.6, 1: 0.2, 3: 0.2})
         assert biallelic_mapping(prob) == {2: 1, 1: 2, 3: 2}
 
-
-class _TestTransformations:
+    #
+    # Transformations
+    #
     def test_drop_non_biallelic(self):
         pop = Population([
             [[1, 3], [1, 2], [0, 1]],
             [[1, 1], [1, 1], [1, 1]],
         ])
-        new = pop.drop_non_biallelic()
-        assert list(new.as_array()) == [
+        new, indexes = pop.drop_non_biallelic()
+        assert deeplist(new.as_array()) == [
             [[1, 2], [0, 1]],
             [[1, 1], [1, 1]],
         ]
@@ -117,7 +135,7 @@ class _TestTransformations:
             [[1, 2], [1, 1], [1, 1]],
         ])
         new = pop.force_biallelic()
-        assert list(new.as_array()) == [
+        assert deeplist(new.as_array()) == [
             [[2, 2], [1, 2], [0, 1]],
             [[1, 1], [1, 1], [1, 1]],
             [[2, 1], [1, 1], [1, 1]],
@@ -130,15 +148,26 @@ class _TestTransformations:
             [[1, 2], [1, 1], [1, 0]],
         ])
         new = pop.sort_by_allele_freq()
-        assert list(new.as_array()) == [
+        assert deeplist(new.as_array()) == [
             [[2, 3], [1, 2], [0, 1]],
             [[1, 1], [1, 1], [0, 0]],
             [[2, 1], [1, 1], [1, 0]],
         ]
 
 
+class TestMultiPopulationInteface:
+    @pytest.fixture
+    def popA(self):
+        from kpop.tests.conftest import popA, popA_data
+
+        pop = popA(popA_data())
+        return MultiPopulation([pop])
+
+
 class TestSinglePopulations:
-    "Test specific funtions for the PopulationSingle class"
+    """
+    Test specific funtions for the PopulationSingle class"
+    """
 
     def test_make_random_population(self):
         pop = Population.random(30, 20)
@@ -156,6 +185,10 @@ class TestSinglePopulations:
 
 
 class TestMultiPopulation:
+    """
+    Test specific interfaces in MultiPopulation.
+    """
+
     def test_multi_population(self, popA, popB):
         pop = popA + popB
         assert pop[0] == popA[0]
@@ -184,5 +217,3 @@ class TestMultiPopulation:
         assert type(pop) == MultiPopulation
         assert len(pop.populations) == 3
         assert pop.populations == [popA, popB, popC]
-
-
