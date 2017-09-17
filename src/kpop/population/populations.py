@@ -1,7 +1,7 @@
 import collections
 
 
-class PopulationsList(collections.MutableSequence):
+class PopulationList(collections.MutableSequence):
     """
     Class for the .population attribute of a MultiPopulation instance.
     """
@@ -69,7 +69,7 @@ class PopulationsList(collections.MutableSequence):
         return list(gen())
 
 
-class ImmutablePopulationList(PopulationsList):
+class ImmutablePopulationList(PopulationList):
     """
     Immutable version of PopulationList.
     """

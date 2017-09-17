@@ -4,46 +4,37 @@ import numpy as np
 from lazyutils import delegate_to, lazy
 from sidekick import _
 
-from kpop.parser import str_to_data
-from kpop.utils import fn_lazy, fn_property
+from kpop.population.util import id_label_from_parents
+from .utils import parse_population_data
+from ..utils import fn_lazy, fn_property
 
 NOT_GIVEN = object()
 
 
-class Individual(collections.Sequence):
+class IndividualBase:
     """
-    Represents a single individual genotype.
-
-    A genotype data must be an integer array of shape (num_loci, ploidy).
-
-    Args:
-        data:
-            Can be either a string of values or a lisg of raw genotype values
-            represented as integers.
-
-    Attributes:
-        num_loci:
-            Number of loci in the raw genotype data
-        ploidy:
-            Genotype's ploidy
-        data:
-            A numpy array of integers with genotype data. Allele types are
-            represented sequentially by 1, 2, 3, etc. Missing data is
-            represented by zero. By default, data is stored in uint8 form. This
-            supports up to 255 different allele types plus zero.
-        allele_names:
-            A list of mappings between allele integer values to a character
-            representation. If not given, it inherits from parent population.
+    Base class for regular Individual and IndividualProxy objects.
     """
 
+    # Shape
     num_loci = fn_lazy(_.data.shape[0])
     ploidy = fn_lazy(_.data.shape[1])
+    dtype = delegate_to('data')
+    flatten = delegate_to('data')
+
+    # Biallelic data
     is_biallelic = fn_lazy(_.num_alleles == 2)
+
+    # Missing data
     has_missing = fn_property(lambda _: 0 in _.data)
     missing_total = fn_property(lambda _: (_.data == 0).sum())
     missing_ratio = fn_property(_.missing_total / (_.num_loci * _.ploidy))
-    flatten = delegate_to('data')
-    dtype = delegate_to('data')
+
+    # Other
+    _allele_names = None
+    population = None
+    data = None
+    admixture_q = None
 
     @lazy
     def num_alleles(self):
@@ -66,75 +57,6 @@ class Individual(collections.Sequence):
         values = sorted(self.admixture_q.items())
         return np.array([y for x, y in values])
 
-    @classmethod
-    def from_freqs(cls, freqs, ploidy=2, **kwargs):
-        """
-        Returns a random individual from the given frequency distribution.
-
-        Args:
-            freqs:
-                A frequency distribution. Can be a sequence of Prob() elements
-                or an square array of frequencies.
-            ploidy:
-                Individuals ploidy.
-            **kwargs:
-                Additional keyword arguments passed to the constructor.
-
-        Returns:
-            A new :class:`Individual` instance.
-        """
-
-        if isinstance(freqs[0], collections.Mapping):
-            raise NotImplementedError
-        else:
-            data = random_data_from_freqs_matrix(freqs, ploidy=ploidy)
-        return cls(data, **kwargs)
-
-    def __init__(self, data, copy=True, id=None, population=None,
-                 allele_names=None, dtype=np.uint8, meta=None, admixture_q=None,
-                 num_alleles=None):
-
-        # Convert string initial data
-        if isinstance(data, str):
-            if ':' in data:
-                prefix, data = data.split(':')
-                if id is None:
-                    id = prefix
-
-            data = data.strip()
-            data, allele_names_ = str_to_data(data, allele_names)
-            copy = False
-            if population is None and allele_names is None:
-                allele_names = allele_names_
-            if population and population.allele_names is None:
-                population.allele_names = allele_names_
-
-        # Initialize data
-        data = (np.array(data, copy=True, dtype=dtype) if copy else
-                np.asarray(data, dtype=dtype))
-        if len(data.shape) == 1:
-            data = data[:, None]
-        elif len(data.shape) > 2:
-            raise ValueError('invalid data: expect an 2D array of loci')
-
-        # Normalize allele_names
-        if isinstance(allele_names, collections.Mapping):
-            allele_names = dict(allele_names)
-            allele_names = [allele_names for _ in data]
-
-        # Save attributes
-        self.data = data
-        self._allele_names = allele_names
-        self.population = population
-        self.admixture_q = admixture_q
-        self._container = None
-        self.id = id
-        self.meta = dict(meta or {})
-
-        # Save lazy overrides
-        if num_alleles is not None:
-            self.num_alleles = num_alleles
-
     def __getitem__(self, idx):
         return self.data[idx]
 
@@ -142,7 +64,7 @@ class Individual(collections.Sequence):
         return iter(self.data)
 
     def __repr__(self):
-        return '%s(%r)' % (self.__class__.__name__, self.render(limit=20))
+        return 'Individual(%r)' % self.render(limit=20)
 
     def __str__(self):
         return self.render()
@@ -151,7 +73,7 @@ class Individual(collections.Sequence):
         return len(self.data)
 
     def __eq__(self, other):
-        if isinstance(other, Individual):
+        if isinstance(other, IndividualBase):
             return (self.data == other.data).all()
         elif isinstance(other, (np.ndarray, list, tuple)):
             return (self.data == other).all()
@@ -167,20 +89,7 @@ class Individual(collections.Sequence):
 
         return self.data.T
 
-    def shuffle_loci(self):
-        """
-        Randomize the position of values in same locus *inplace*.
-        """
-
-        new = self.copy()
-        for loci in new.data:
-            np.random.shuffle(loci)
-        return new
-
-    #
-    # Coping, saving and serialization
-    #
-    def copy(self, data=None, *, copy=True, meta=NOT_GIVEN, **kwargs):
+    def copy(self, data=None, *, meta=NOT_GIVEN, **kwargs):
         """
         Creates a copy of individual.
         """
@@ -190,9 +99,8 @@ class Individual(collections.Sequence):
         kwargs.setdefault('allele_names', self.allele_names)
         dtype = kwargs.setdefault('dtype', self.dtype)
         kwargs['meta'] = self.meta if meta is NOT_GIVEN else meta
-        kwargs['copy'] = copy
         if data is None:
-            data = np.array(self.data, copy=copy, dtype=dtype)
+            data = np.array(self.data, dtype=dtype)
         return Individual(data, **kwargs)
 
     def render(self, id_align=None, limit=None):
@@ -301,51 +209,120 @@ class Individual(collections.Sequence):
             raise NotImplementedError
 
         kwargs['id'] = id or id_label_from_parents(self.id, other.id)
-        return self.copy(data, copy=False, **kwargs)
+        return self.copy(data, **kwargs)
 
 
-class IndividualProxy(Individual):
-    _data = data = property(lambda _: _._population._data[_._idx])
-    _allele_names = None
-    id = property(lambda _: _._population.individual_ids[_._idx])
-    population = property(lambda _: _._population)
+class Individual(IndividualBase, collections.Sequence):
+    """
+    Represents a single individual genotype.
+
+    A genotype data must be an integer array of shape (num_loci, ploidy).
+
+    Args:
+        data:
+            Can be either a string of values or a list of raw genotype values
+            represented as integers.
+        population:
+            Population to which individual belongs to.
+
+    Attributes:
+        num_loci:
+            Number of loci in the raw genotype data
+        ploidy:
+            Genotype's ploidy
+        data:
+            A numpy array of integers with genotype data. Allele types are
+            represented sequentially by 1, 2, 3, etc. Missing data is
+            represented by zero. By default, data is stored in uint8 form. This
+            supports up to 255 different allele types plus zero.
+        allele_names:
+            A list of mappings between allele integer values to a character
+            representation. If not given, it inherits from parent population.
+    """
+
+    @classmethod
+    def from_freqs(cls, freqs, ploidy=2, **kwargs):
+        """
+        Returns a random individual from the given frequency distribution.
+
+        Args:
+            freqs:
+                A frequency distribution. Can be a sequence of Prob() elements
+                or an square array of frequencies.
+            ploidy:
+                Individuals ploidy.
+            **kwargs:
+                Additional keyword arguments passed to the constructor.
+
+        Returns:
+            A new :class:`Individual` instance.
+        """
+
+        if isinstance(freqs[0], collections.Mapping):
+            raise NotImplementedError
+        else:
+            data = random_data_from_freqs_matrix(freqs, ploidy=ploidy)
+        return cls(data, **kwargs)
+
+    def __init__(self, data, id=None, population=None,
+                 allele_names=None, dtype=np.uint8, meta=None, admixture_q=None,
+                 num_alleles=None):
+
+        # Convert string initial data
+        if isinstance(data, str):
+            data, _id = parse_population_data(data)
+            if _id:
+                id = id or _id[0]
+            data = data[0]
+
+        # Initialize data
+        data = np.asarray(data, dtype=dtype)
+        if len(data.shape) == 1:
+            data = data[:, None]
+        elif len(data.shape) > 2:
+            raise ValueError('invalid data: expect an 2D array of loci')
+
+        # Normalize allele_names
+        if isinstance(allele_names, collections.Mapping):
+            allele_names = dict(allele_names)
+            allele_names = [allele_names for _ in data]
+
+        # Save attributes
+        self.id = id
+        self.data = data
+        self.population = population
+        self.admixture_q = admixture_q
+        self.meta = dict(meta or {})
+        self._allele_names = allele_names
+        self._container = None
+
+        # Optional attributes
+        if num_alleles is not None:
+            self.num_alleles = num_alleles
+
+
+class IndividualProxy(IndividualBase):
+    """
+    Individual-like instance attatched to a Population object. This class simply
+    hold a reference to the population and the index of the individual in that
+    population.
+    """
+    data = property(lambda _: _.population._data[_._idx])
+    id = property(lambda _: _.population.individual_ids[_._idx])
     label = property(lambda _: _.id)
 
+    @lazy
+    def meta(self):
+        return dict(self.population.meta.iloc[self._idx])
+
     def __init__(self, population, idx):
-        self._population = population
+        self.population = population
         self._idx = idx
-
-    def copy(self, *args, **kwargs):
-        return self
-
-
-def id_label_from_parents(l1, l2):
-    """
-    Creates a new id label from parents id labels.
-    """
-
-    if l1 == l2:
-        return l1
-    elif l1 is None:
-        return l2 + '_'
-    elif l2 is None:
-        return l1 + '_'
-
-    common = []
-    for c1, c2 in zip(l1, l2):
-        if c1 == c2:
-            common.append(c1)
-            continue
-        break
-    common = ''.join(common)
-    l1 = l1[len(common):] or '_'
-    l2 = l2[len(common):] or '_'
-    return '%s-%s,%s' % (common, l1, l2)
 
 
 def random_data_from_freqs_matrix(freqs, ploidy=2):
     """
-    Creates a random biallelic individual with given ploidy.
+    Creates a random biallelic individual data with given ploidy.
 
     Freqs can be a list of (p, 1 - p) pairs or a list of p's.
     """

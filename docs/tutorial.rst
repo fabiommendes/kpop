@@ -34,13 +34,13 @@ Basic Kpop concepts
 
 You notice that most of Kpop interactions go through two main object types:
 :class:`kpop.Individual` and :class:`kpop.Population`. Let us start with the first
-of these two, :class:`kpop.Individual`, which represent single individuals by 
+of these two, :class:`kpop.Individual`, which represent single individuals by
 their corresponding genotypes. 
 
 Individual
 ----------
 
-An :class:`kpop.Individual` instance behaves basically as a list of genotype 
+An :class:`kpop.Individual` instance behaves basically as a list of genotype
 values. Kpop represents genotypes by numbers, where zero is used to encode missing
 data and numbers above one represent each allele. We can start a new 
 individual by constructing it from a list of pairs of numbers:
@@ -57,7 +57,7 @@ array([1, 1], dtype=uint8)
 >>> [(1 in locus) for locus in ind]
 [True, True, False, True]
 
-:class:`kpop.Individual` objects can also be inspected in several ways. 
+:class:`kpop.Individual` objects can also be inspected in several ways.
 
 >>> ind.num_loci, ind.ploidy, ind.is_biallelic
 (4, 2, True)
@@ -159,6 +159,7 @@ We can combine all sub-populations into a single population containing all
 individuals by simply adding the population objects together
 
 >>> pop_all = popA + popB + popC
+
 
 This creates a :class:`kpop.MultiPopulation` object which behaves essentially as
 a Population, but keeps track of sub-structuring. 

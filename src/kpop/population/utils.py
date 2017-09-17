@@ -72,3 +72,43 @@ def hfreqs_vector(pop):
         return heterozygote.mean(axis=0)
     else:
         raise NotImplementedError('require diploid populations')
+
+
+def parse_population_data(data):
+    """
+    Initialize population from string data.
+    """
+
+    part_labels = [line.rpartition(':') for line in data.splitlines()]
+    labels = [label or None for label, _, _ in part_labels]
+    if set(labels) == {None}:
+        labels = None
+    data_raw = [line.split() for _, _, line in part_labels]
+    data_raw = np.array([[list(e) for e in line] for line in data_raw])
+
+    # Create a list of locus maps. Each element is a dictionary mapping
+    # chars in raw data to integers
+    locus_map = []
+    for idx in range(data_raw.shape[1]):
+        locus = data_raw[:, idx, :]
+        alleles = set(locus.flat)
+        alleles.discard('-')
+
+        if all(tk.isdigit() for tk in alleles):
+            map = {tk: int(tk) for tk in alleles}
+        else:
+            map = dict(enumerate(sorted(alleles), 1))
+            map = {v: k for k, v in map.items()}
+        map['-'] = 0
+        locus_map.append(map)
+
+    # Convert string data to numeric data
+    data = np.zeros(data_raw.shape, dtype='uint8')
+    ii, jj, kk = data.shape
+    for j in range(jj):
+        map = locus_map[j]
+        for i in range(ii):
+            for k in range(kk):
+                data[i, j, k] = map[data_raw[i, j, k]]
+
+    return data, labels

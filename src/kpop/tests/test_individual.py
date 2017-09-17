@@ -2,7 +2,8 @@ import numpy as np
 import pytest
 from numpy.testing import assert_equal
 
-from kpop.population.individual import Individual, id_label_from_parents
+from kpop.population.individual import Individual
+from kpop.population.util import id_label_from_parents
 from kpop.utils.frequencies import fill_freqs_vector
 
 
@@ -69,18 +70,6 @@ def test_copy_individual(ind):
     assert_equal(cp.data, ind.data)
     assert cp.id == ind.id
     assert cp.allele_names == ind.allele_names
-
-
-def test_shuffle_loci(ind):
-    ind_orig = ind.copy()
-    sum_values = ind.data.sum(axis=-1)
-    for _ in range(10):
-        new = ind.shuffle_loci()
-        assert (new.data.sum(axis=-1) == sum_values).all()
-        if (new.data != ind_orig.data).any():
-            break
-    else:
-        raise ValueError('individual not changed')
 
 
 def test_haplotypes(ind):

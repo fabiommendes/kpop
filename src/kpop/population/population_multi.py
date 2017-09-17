@@ -7,7 +7,7 @@ from kpop import admixture
 from kpop.admixture import likelihood
 from kpop.population.population_base import PopulationBase
 from kpop.population.population_single import Population
-from kpop.population.populations import PopulationsList
+from kpop.population.populations import PopulationList
 from kpop.prob import Prob
 
 
@@ -44,7 +44,7 @@ class MultiPopulation(PopulationBase):
         if freqs is not None:
             raise ValueError('cannot specify frequencies on MultiPopulation '
                              'objects')
-        self.populations = PopulationsList()
+        self.populations = PopulationList()
         for population in populations:
             self.add_population(population)
         super().__init__(**kwargs)
@@ -281,10 +281,6 @@ class MultiPopulation(PopulationBase):
         )
         del classified_pop.populations[0: self.num_populations]
         return classified_pop
-
-    def fill_missing(self):
-        for population in self.populations:
-            population.fill_missing()
 
     def new_admixed_population(self, coeffs, size=0, id=None, **kwargs):
         """
