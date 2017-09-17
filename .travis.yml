@@ -24,7 +24,7 @@ matrix:
 
 # Package installation
 install:
-  - echo "backend: Agg" > $HOME/matplotlibrc
+  - "echo \"backend: Agg\" > $HOME/matplotlibrc"
   - pip install --upgrade pip setuptools wheel
   - pip install --only-binary=numpy,scipy numpy scipy
   - pip install tox codecov Cython
