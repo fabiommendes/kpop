@@ -1,9 +1,6 @@
-import matplotlib
 import pytest
 
 from kpop import Population, Individual
-
-matplotlib.use('SVG')
 
 
 #
