@@ -1,11 +1,10 @@
+import io
 import os
 import subprocess
 import tempfile
 from subprocess import PIPE
 
-import numpy as np
-
-from .result import AdmixtureResult
+from ..parsers.admixture import parse
 
 
 def run_admixture(pop, k, job_dir=None, disp=1, supervised=False):
@@ -13,23 +12,23 @@ def run_admixture(pop, k, job_dir=None, disp=1, supervised=False):
     Runs the ADMIXTURE program.
 
     Args:
-        pop:
+        pop (Population):
             Input population.
-        k:
+        k (int):
             Number of clusters/parental populations.
         job_dir:
-            The directory used to store the temporary files. If not given,
+            The directory used to store the result files. If not given,
             creates a temporary disposable directory.
         disp:
             The verbosity level in the 0-2 range.
-        supervised:
+        supervised (sequence):
             If given, must be a list of populations labels for each individual.
             Label should be None for individuals that have unknown ancestry.
 
     Returns:
-        A AdmixtureResult object.
-
+        An :cls:`kpop.parsers.admixture.Admixture` object.
     """
+
     if job_dir is None:
         tempdir = tempfile.TemporaryDirectory()
         job_dir = tempdir.name
@@ -38,11 +37,9 @@ def run_admixture(pop, k, job_dir=None, disp=1, supervised=False):
 
     # Create .ped and .map files
     with open(os.path.join(job_dir, 'job.ped'), 'w') as F:
-        F.write(pop.render_ped())
-
-    # Creates .map file
+        F.write(pop.io.plink_ped())
     with open(os.path.join(job_dir, 'job.map'), 'w') as F:
-        F.write(pop.render_map())
+        F.write(pop.io.plink_map())
 
     # For supervised learning, create a .pop file
     if supervised:
@@ -70,26 +67,19 @@ def run_admixture(pop, k, job_dir=None, disp=1, supervised=False):
     if disp > 0:
         print('Running ADMIXTURE with command flags:\n'
               '  $ %s' % ' '.join(cmd))
+
+    # Run the admixture program in a subprocess
     try:
         result = subprocess.run(cmd, stdout=PIPE, check=True, cwd=job_dir)
     except subprocess.CalledProcessError as ex:
         msg = 'ADMIXTURE ended with runtime code %s.\n\n' % ex.returncode
         msg += ex.stdout.decode('utf8')
         raise RuntimeError(msg)
-    admix_out = result.stdout.decode('utf8')
+    admix_out = io.StringIO(result.stdout.decode('utf8'))
 
-    # Read the output .P file with allele frequencies
-    with open(os.path.join(job_dir, 'job.%s.P' % k)) as F:
-        data = []
-        for line in F:
-            data.append(list(map(float, line.strip().split())))
-    freqs = np.array(data).T
+    # Read the output of .P and .Q files with allele frequencies
+    with open(os.path.join(job_dir, 'job.%s.P' % k)) as pfile, \
+            open(os.path.join(job_dir, 'job.%s.Q' % k)) as qfile:
+        result = parse(admix_out, qfile=qfile, pfile=pfile)
 
-    # Read the output .Q file with admixture coefficients
-    with open(os.path.join(job_dir, 'job.%s.Q' % k)) as F:
-        data = []
-        for line in F:
-            data.append(list(map(float, line.strip().split())))
-    proportions = np.array(data)
-
-    return AdmixtureResult(admix_out, freqs, proportions, ploidy=pop.ploidy)
+    return result

@@ -2,9 +2,10 @@ import os
 import subprocess
 import tempfile
 
-from kpop.population.population_base import PopulationBase
-from .params import MAINPARAMS_DEFAULTS, EXTRAPARAMS_DEFAULTS
 from .result import StructureResult
+
+from kpop.external.structure_params import MAINPARAMS_DEFAULTS, EXTRAPARAMS_DEFAULTS
+from kpop.population.population_base import PopulationBase
 
 
 def run_structure(pop, k=2, *, method='parental', job_dir=None,

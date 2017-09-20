@@ -3,7 +3,7 @@ import os
 import pytest
 
 from kpop.external.structure import run_structure
-from kpop.external.structure.parser import parse_file
+from kpop.parsers.structure import parse_file
 from kpop.tests import is_ci
 
 pytestmark = pytest.mark.skipif(

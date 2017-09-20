@@ -3,7 +3,9 @@ engines:
     enabled: true
     config:
       languages:
-      - python
+        python:
+          mass_threshold: 40
+          python_version: 3
   fixme:
     enabled: true
   radon:

@@ -31,17 +31,7 @@ class StructureParser:
         self.lines = deque(lines)
         self.result = SimpleNamespace()
 
-    def pop(self):
-        "Pops the first line."
-
-        return self.lines.popleft()
-
-    def push(self, value):
-        "Append string to the begining of file"
-
-        self.lines.appendleft(value)
-
-    def run(self):
+    def parse(self):
         self.parse_header()
         self.parse_config()
         self.parse_membership()
@@ -54,6 +44,16 @@ class StructureParser:
         self.parse_options()
         self.parse_strat()
         return self.result
+
+    def pop(self):
+        "Pops the first line."
+
+        return self.lines.popleft()
+
+    def push(self, value):
+        "Append string to the begining of file"
+
+        self.lines.appendleft(value)
 
     def parse_re(self, re):
         """
@@ -399,7 +399,7 @@ def parse_lines(lines, parser=StructureParser):
     Use the given parser to parse the list of lines.
     """
     parser = parser(lines)
-    return parser.run()
+    return parser.parse()
 
 
 def parse_file(file, parser=StructureParser):

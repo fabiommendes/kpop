@@ -1,8 +1,8 @@
 import numpy as np
 
 from .attr import Attr
-from ..prob import Prob
 from ..admixture import admixture
+from ..prob import Prob
 
 
 class Admixture(Attr):
@@ -18,7 +18,7 @@ class Admixture(Attr):
             respective admixture coefficients.
         """
 
-        from kpop.external.admixture.base import run_admixture
+        from kpop.external.admixture import run_admixture
         pop = self._population
 
         if not pop.is_biallelic:
