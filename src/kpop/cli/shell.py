@@ -2,6 +2,7 @@ import os
 import re
 import sys
 from collections import defaultdict
+from types import ModuleType
 
 import click
 
@@ -40,13 +41,13 @@ def shell(verbose=False, notebook=False):
 
 
 def start_ipython_shell(verbose):
-    from IPython.terminal.embed import InteractiveShellEmbed as Shell
+    from IPython.terminal.interactiveshell import InteractiveShell as Shell
+    from IPython import start_ipython
 
     Shell.banner = BANNER
     namespace = start_shell_namespace(os.getcwd(), verbose)
     exec('from kpop.all import *', namespace)
-    shell = Shell.instance()
-    shell(local_ns=namespace)
+    start_ipython(user_ns=namespace, argv=[])
 
 
 def start_notebook(verbose, filename='kpop.ipynb'):
@@ -212,4 +213,15 @@ def python_name(name):
         if NAME_RE.match(name):
             return name
     else:
-        raise ValueError('canot convert to valid python name: %r' % old_name)
+        raise ValueError('cannot convert to valid python name: %r' % old_name)
+
+
+def namespace_to_module(namespace):
+    """
+    Convert a namespace dictionary to a Python module.
+    """
+
+    mod = ModuleType('builtins')
+    for k, v in namespace.items():
+        setattr(mod, k, v)
+    return mod

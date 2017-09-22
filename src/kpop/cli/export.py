@@ -10,8 +10,8 @@ from .util import printif, verbose, file_to_pop
               help='output format (structure, admixture, or arlequin)')
 @click.option('--output', '-o', default=None,
               help='output file')
-@click.option('--label', '-l', default=None,
-              help='population label')
+@click.option('--id', '-i', default=None,
+              help='a string identifier for the population')
 @verbose()
 @file_to_pop()
 def export(pop, format=None, output=None, verbose=False, id=None):

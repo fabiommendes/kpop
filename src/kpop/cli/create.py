@@ -9,12 +9,14 @@ SYMBOL_TABLE = string.ascii_letters
 
 @click.command()
 @click.argument('file')
-@click.option('--size', '-I', type=int, prompt='size', help='population size')
+@click.option('--size', '-I', type=int, prompt='size',
+              help='population size')
 @click.option('--num-loci', '-J', type=int, prompt='num loci',
               help='number of loci')
 @click.option('--clusters', '-K', type=int, default=1,
               help='number of sub populations')
-@click.option('--label', '-l', default='random', help='population label')
+@click.option('--id', '-i', default='random',
+              help='a string identifier for the population')
 def create(file, size=100, num_loci=100, clusters=1, id='random'):
     """
     Random synthetic populations.

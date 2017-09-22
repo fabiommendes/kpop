@@ -33,7 +33,7 @@ class Io(Attr):
         if names is None:
             names = ['loci%s' % i for i in range(1, pop.size + 1)]
         header = 'label,' + ','.join(names)
-        data = '\n'.join(x.render_csv(**kwargs) for x in self)
+        data = '\n'.join(x.render_csv(**kwargs) for x in self._population)
         return '%s\n%s' % (header, data)
 
     def plink_ped(self):

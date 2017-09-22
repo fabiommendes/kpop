@@ -20,8 +20,8 @@ from kpop.io import load_pickle
               help='a comma separated list of columns to ignore')
 @click.option('--skip-rows', '-r', default=None,
               help='a comma separated list of rows to ignore')
-@click.option('--label', '-l', default=None,
-              help='a string label that describes population')
+@click.option('--id', default=None,
+              help='a string identifier for the population')
 @click.option('--meta', default=None,
               help='a comma separated list of meta:col pairs mapping meta '
                    'information with their respective columns')

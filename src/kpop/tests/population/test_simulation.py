@@ -1,8 +1,13 @@
+import numpy as np
+
 from kpop.simulation.genetic_drift import frequency_drift_1d, frequency_drift
+from kpop.simulation.mixtures import linear_mixture
 
 
 class TestFrequencyDrift:
-    "Test genetic drift functions"
+    """
+    Genetic drift functions
+    """
 
     def test_fixed_alleles_stay_fixed(self):
         data = [0, 1, 0.5]
@@ -20,6 +25,16 @@ class TestFrequencyDrift:
         data = [[0.5, 0.5], [0.5, 0.5]]
         new = frequency_drift(data, 1, 500)
         assert (0.4 <= new).all() and (new <= 0.6).all()
+
+    def test_linear_mixture(self, popA, popB):
+        popC = linear_mixture(popA, popB, 5)
+        fA = popA.freqs_matrix
+        fB = popB.freqs_matrix
+        fC = popC.freqs_matrix
+        fmean = (fA + fB) / 2
+
+        # they happen to be equal because we use such small values
+        np.testing.assert_allclose(fC, fmean, atol=0.21)
 
 
 class TestEvolutionAndOffspring:
