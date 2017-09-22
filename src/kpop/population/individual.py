@@ -36,6 +36,10 @@ class IndividualBase:
     data = None
     admixture_q = None
 
+    # Simple queries
+    is_individual = True
+    is_population = False
+
     @lazy
     def num_alleles(self):
         if self.population:

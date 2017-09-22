@@ -65,6 +65,20 @@ that all individuals belong to a single population.
 ['B', 'B', 'B', 'B', 'B']
 
 
+Probabilistic classifiers
+-------------------------
+
+Some classifiers allow for probabilistic classification. That is, instead of
+assigning a single label per individual, it assigns a probability distribution
+with the probability that each individual belongs to each label. This is
+accomplished by the ``.prob_*`` methods of the classifier. Each method
+represents the probability distribution in a different way.
+
+>>> probs = classifier.prob_list(popA)
+>>> probs[0]                                                    # doctest: +SKIP
+Prob({'A': 0.951, 'B': 0.049})
+
+
 API docs
 --------
 
