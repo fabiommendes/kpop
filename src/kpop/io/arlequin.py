@@ -42,20 +42,20 @@ def export_arlequin(pop: Population,
 #
 # Auxiliary functions.
 #
-def create_header(pop, F=sys.stdout, title=None, missing='-'):
+def create_header(pop, file=sys.stdout, title=None, missing='-'):
     title = title or getattr(pop, 'label', None) or 'Sample Arlequin data'
-    F.write('[Profile]\n')
-    F.write('Title="%s"\n' % title)
-    F.write('NbSamples=%s\n' % len(pop.populations))
-    F.write('DataType=STANDARD\n')
-    F.write('GenotypicData=1\n')
-    F.write('LocusSeparator=WHITESPACE\n')
-    F.write('GameticPhase=0\n')
-    F.write('RecessiveData=0\n')
-    F.write("MissingData='%s'\n" % missing)
+    file.write('[Profile]\n')
+    file.write('Title="%s"\n' % title)
+    file.write('NbSamples=%s\n' % len(pop.populations))
+    file.write('DataType=STANDARD\n')
+    file.write('GenotypicData=1\n')
+    file.write('LocusSeparator=WHITESPACE\n')
+    file.write('GameticPhase=0\n')
+    file.write('RecessiveData=0\n')
+    file.write("MissingData='%s'\n" % missing)
 
 
-def create_sample_data(subpop, F, missing):
+def create_sample_data(subpop, file, missing):
     labels = (ind.id or 'ind%s' % i for i, ind in enumerate(subpop))
     labels = ['    %s ' % label for label in labels]
     label_size = len(max(labels, key=len))
@@ -63,33 +63,33 @@ def create_sample_data(subpop, F, missing):
 
     for label, ind in zip(labels, subpop):
         # First line
-        F.write(label.ljust(label_size))
-        F.write('1 ')
-        F.write(' '.join(render(ind[:, 0], missing=missing)))
-        F.write('\n')
+        file.write(label.ljust(label_size))
+        file.write('1 ')
+        file.write(' '.join(render(ind[:, 0], missing=missing)))
+        file.write('\n')
 
         # Second line
-        F.write(indent)
-        F.write(' '.join(render(ind[:, 0], missing=missing)))
-        F.write('\n')
+        file.write(indent)
+        file.write(' '.join(render(ind[:, 0], missing=missing)))
+        file.write('\n')
 
 
-def create_data(pop, F=sys.stdout, names=None, missing='-'):
+def create_data(pop, file=sys.stdout, names=None, missing='-'):
     names = itertools.repeat(None) if names is None else names
     names = iter(names)
 
-    F.write('[Data]\n')
-    F.write('[[Samples]]\n')
+    file.write('[Data]\n')
+    file.write('[[Samples]]\n')
 
     for idx, subpop in enumerate(pop.populations):
         name = next(names) or subpop.id or 'pop%s' % idx
-        F.write('SampleName="%s"\n' % name.replace('"', ''))
-        F.write('SampleSize=%s\n' % len(subpop))
-        F.write('SampleData={\n')
-        create_sample_data(subpop, F, missing)
-        F.write('}\n')
+        file.write('SampleName="%s"\n' % name.replace('"', ''))
+        file.write('SampleSize=%s\n' % len(subpop))
+        file.write('SampleData={\n')
+        create_sample_data(subpop, file, missing)
+        file.write('}\n')
         if idx != len(pop) - 1:
-            F.write('\n')
+            file.write('\n')
 
 
 def render(data, missing='-'):

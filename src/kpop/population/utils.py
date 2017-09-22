@@ -117,12 +117,15 @@ def id_label_from_parents(l1, l2):
     return '%s-%s,%s' % (common, l1, l2)
 
 
-def random_individual_data(freqs, ploidy=2):
+def random_individual_data(freqs, ploidy=2, seed=None):
     """
     Creates a random biallelic individual data with given ploidy.
 
     Freqs can be a list of (p, 1 - p) pairs or a list of p's.
     """
+
+    if seed is not None:
+        np.random.seed(seed)
 
     freq_array = np.asarray(freqs)
     num_loci = len(freq_array)

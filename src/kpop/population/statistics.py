@@ -46,9 +46,7 @@ class Statistics(Attr):
 
         data = self.fst_matrix(sizes)
         populations = self._population.populations
-        names = [
-            pop.id or str(i + 1) for i, pop in enumerate(populations)
-            ]
+        names = [pop.id or str(i + 1) for i, pop in enumerate(populations)]
         colsize = max(map(len, names))
         rownames = [name.ljust(colsize) for name in names[1:]]
         colwidth = max(colsize, 9)

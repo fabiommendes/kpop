@@ -11,7 +11,7 @@ def file_or_path(func):
     def decorated(file, *args, **kwargs):
         if isinstance(file, str):
             with open(file) as F:
-                result = func(file, *args, **kwargs)
+                result = func(F, *args, **kwargs)
             return result
         else:
             return func(file, *args, **kwargs)

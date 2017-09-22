@@ -15,8 +15,7 @@ SYMBOL_TABLE = string.ascii_letters
 @click.option('--clusters', '-K', type=int, default=1,
               help='number of sub populations')
 @click.option('--label', '-l', default='random', help='population label')
-def create(file, size=100, num_loci=100, clusters=1,
-           id='random'):
+def create(file, size=100, num_loci=100, clusters=1, id='random'):
     """
     Random synthetic populations.
     """
@@ -24,9 +23,9 @@ def create(file, size=100, num_loci=100, clusters=1,
     pops = []
     for i in range(clusters):
         symbol = SYMBOL_TABLE[i]
-        label_x = label if clusters == 1 else '%s-%s' % (label, symbol)
+        label_x = id if clusters == 1 else '%s-%s' % (id, symbol)
         pop = Population.random(size, num_loci, id=label_x)
         pops.append(pop)
 
     pop_total = MultiPopulation(pops)
-    pop_total.save(file, format='auto')
+    pop_total.io.save(file, format='auto')

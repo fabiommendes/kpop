@@ -343,16 +343,16 @@ def fuzzyfy_coords(coords, scale):
     """
 
     scale = float(scale)
-    N = len(coords)
+    n = len(coords)
     xmin = coords[:, 0].min()
     xmax = coords[:, 0].max()
     ymin = coords[:, 1].min()
     ymax = coords[:, 1].max()
     dx = scale * (xmax - xmin) / 50
     dy = scale * (ymax - ymin) / 50
-    DX = np.random.uniform(-dx, dx, size=N)
-    DY = np.random.uniform(-dy, dy, size=N)
+    random_dx = np.random.uniform(-dx, dx, size=n)
+    random_dy = np.random.uniform(-dy, dy, size=n)
     coords = np.array(coords)
-    coords[:, 0] += DX
-    coords[:, 1] += DY
+    coords[:, 0] += random_dx
+    coords[:, 1] += random_dy
     return coords

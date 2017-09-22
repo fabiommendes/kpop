@@ -73,14 +73,14 @@ def admixture_bars(coeffs, colors=None, legend=True,
 
     # Create stacked bars
     ax = plt.axes() if axes is None else axes
-    X = np.arange(num_individuals)
+    xdata = np.arange(num_individuals)
     bottom = np.zeros(num_individuals, dtype=float)
-    for i, Y in enumerate(coeffs.T):
+    for i, ydata in enumerate(coeffs.T):
         color = colors[i]
         label = parental_labels[i]
-        ax.bar(X, Y, bottom=bottom, color=color, width=1.0, linewidth=0,
+        ax.bar(xdata, ydata, bottom=bottom, color=color, width=1.0, linewidth=0,
                id=label)
-        bottom += Y
+        bottom += ydata
     ax.axis([0, num_individuals, 0, 1])
 
     # Create vertical lines for separating populations

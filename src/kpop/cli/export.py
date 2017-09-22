@@ -26,9 +26,9 @@ def export(pop, format=None, output=None, verbose=False, id=None):
     if format == 'structure':
         return export_structure(pop, output, verbose)
     elif format == 'admixture':
-        return export_admixture(pop, output, label)
+        return export_admixture(pop, output, id)
     elif format == 'arlequin':
-        return export_arlequin(pop, output, label)
+        return export_arlequin(pop, output, id)
     else:
         raise SystemExit('invalid format: %r' % format)
 
@@ -52,7 +52,7 @@ def export_structure(pop, output, verbose):
     with open(os.path.join(folder, 'mainparams'), 'w') as F:
         F.write(mainparams(pop, outfile='result'))
     with open(os.path.join(folder, 'extraparams'), 'w') as F:
-        F.write(extraparams(pop))
+        F.write(extraparams())
 
     # Create database
     printif(verbose, 'Converting database')

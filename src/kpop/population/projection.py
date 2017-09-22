@@ -231,11 +231,9 @@ class Projection(Attr):
 
         """
         isomap = manifold.Isomap
-        kwargs = with_defaults(
-            kwargs,
-            n_neighbors=n_neighbors or
-                        min(n_neighbors or 25, self._population.size - 1),
-        )
+        if n_neighbors is None:
+            n_neighbors = min(n_neighbors or 25, self._population.size - 1)
+        kwargs = with_defaults(kwargs, n_neighbors=n_neighbors)
         return self.sklearn(isomap, k, data, **kwargs)
 
     def lle(self, k=2, *, data='count', n_neighbors=None, reg=1.0, **kwargs):
@@ -249,11 +247,9 @@ class Projection(Attr):
             :cls:`sklearn.manifold.LocallyLinearEmbedding`
         """
         lle = manifold.LocallyLinearEmbedding
-        kwargs_ = with_defaults(
-            kwargs,
-            n_neighbors=n_neighbors or
-                        min(n_neighbors or 25, self._population.size - 1),
-        )
+        if n_neighbors is None:
+            n_neighbors = min(n_neighbors or 25, self._population.size - 1)
+        kwargs_ = with_defaults(kwargs, n_neighbors=n_neighbors)
         return self.sklearn(lle, k, data, **kwargs_)
 
     def spectral(self, k=2, *, data='count-unity', **kwargs):

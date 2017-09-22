@@ -53,8 +53,6 @@ class Classification(Attr):
 
         if data == 'count':
             classifier = naive_bayes.MultinomialNB
-        elif data == 'flat':
-            classifier = naive_bayes.BernoulliNB
         else:
             raise ValueError(
                 'naive bayes only accets "count" and "flat" for the data '
@@ -66,7 +64,9 @@ class Classification(Attr):
         """
         Classify objects using the Support Vector Machine (SVM) classifier.
         """
-        from sklearn.svm import SVC as classifier
+        from sklearn.svm import SVC
+
+        classifier = SVC
         return self.sklearn(classifier, labels, data=data, **kwargs)
 
     def sklearn(self, classifier, labels=None, data='count', **kwargs):

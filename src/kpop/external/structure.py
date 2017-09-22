@@ -92,7 +92,7 @@ def structure_population(pop, *, id='ind', onerowperind=False,
     Args:
         pop:
             An array of individuals.
-        label:
+        id:
             An optional list of row. If a string is given, treats as the
             prefix to all individual names.
         onerowperind:
@@ -162,8 +162,7 @@ def prepare_setup_files(pop, save_files=True, save_dir=None,
                         id='ind', population_file='population.dat',
                         outfile='out',
                         popdata=None, popflag=None, locdata=None,
-                        phenotype=None, onerowperind=True,
-                        **kwargs):
+                        phenotype=None, onerowperind=True, **kwargs):
     """
     Creates and return the 'mainparams', 'extraparams', and 'sample' files
     for a structure job.
@@ -187,7 +186,7 @@ def prepare_setup_files(pop, save_files=True, save_dir=None,
         locdata=to_bool(locdata),
         phenotype=to_bool(phenotype),
     )
-    extraparams_data = extraparams(EXTRAPARAMS_DEFAULTS.copy())
+    extraparams_data = extraparams(**kwargs)
 
     # Compute sample file
     popfile = structure_population(pop, id=id,
@@ -196,9 +195,7 @@ def prepare_setup_files(pop, save_files=True, save_dir=None,
     # Save files in the specified directory
     if save_files:
         save_dir = os.path.abspath(save_dir) if save_dir else os.getcwd()
-
-        def path(x):
-            return os.path.join(save_dir, x)  # noqa: E731
+        path = lambda x: os.path.join(save_dir, x)  # noqa: E731
 
         with open(path('mainparams'), 'w', encoding='utf8') as F:
             F.write(mainparams_data)
@@ -226,7 +223,7 @@ def mainparams(pop, infile='data.txt', **kwargs):
     return params_file(data)
 
 
-def extraparams(pop, **kwargs):
+def extraparams(**kwargs):
     """
     Creates data for a mainparams file.
     """

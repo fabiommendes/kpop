@@ -25,8 +25,8 @@ def main():
     """
 
     init()
-    # cli.add_command(admix)
-    # cli.add_command(cluster)
+    cli.add_command(admix)
+    cli.add_command(cluster)
     cli.add_command(create)
     cli.add_command(export)
     cli.add_command(shell)

@@ -8,7 +8,8 @@ class Io(Attr):
     Implements the population.io attribute.
     """
 
-    def load(cls, file, format='pickle'):
+    @staticmethod
+    def load(file, format='pickle'):
         """
         Loads population from file.
         """

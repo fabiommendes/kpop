@@ -1,7 +1,7 @@
 import numpy as np
 
-from ..result import transform_result
 from .attr import Attr
+from ..result import transform_result
 
 
 class Clusterization(Attr):

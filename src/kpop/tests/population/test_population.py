@@ -322,3 +322,11 @@ class TestMultiPopulation:
         assert new.size == 2
         assert new[0] == popA[0]
         assert new[1] == popB[0]
+
+    def test_random_creates_multipopulation_when_given_a_list_of_sizes(self):
+        pops = Population.random([1, 2, 3], 5)
+        assert isinstance(pops, MultiPopulation)
+        assert len(pops.populations) == 3
+
+        p1, p2, p3 = pops.populations
+        assert (p1.freqs_vector != p2.freqs_vector).all()

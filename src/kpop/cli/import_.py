@@ -45,7 +45,7 @@ def import_(file, output=None, id=None,
             ignore_cols=normalize_list(skip_cols),
             ignore_rows=normalize_list(skip_rows),
             meta=meta,
-            id=label
+            id=id
         )
         kwargs = {k: v for k, v in kwargs.items() if v is not None}
         try:

@@ -7,7 +7,6 @@ from lazyutils import lazy
 from sidekick import _
 from sklearn import preprocessing
 
-from kpop.population.utils import discard_attrs
 from .admixture import Admixture
 from .classification import Classification
 from .clusterization import Clusterization
@@ -16,12 +15,15 @@ from .plot import Plot
 from .projection import Projection
 from .simulation import Simulation
 from .statistics import Statistics
-from .utils import get_freqs, set_freqs, hfreqs_vector
+from .utils import discard_attrs
+from .utils import get_freqs, set_freqs, hfreqs_vector, random_individual_data
 from ..prob import Prob
 from ..utils import fill_freqs_vector, freqs_to_matrix, fn_lazy, fn_property, \
     lazy_module
+from ..utils import random_frequencies
 
 pd = lazy_module('pandas')
+kpop = lazy_module('kpop')
 
 
 class PopulationBase(collections.Sequence, metaclass=abc.ABCMeta):
@@ -102,6 +104,65 @@ class PopulationBase(collections.Sequence, metaclass=abc.ABCMeta):
         'admixture', 'clustering', 'classification', 'io', 'plot', 'projection',
         'simulation', 'statistics',
     )
+
+    @classmethod
+    def random(cls, size=0, num_loci=0, alleles=2, ploidy=2, id=None,
+               seed=None):
+        """
+        Creates a new random population.
+
+        Args:
+            size:
+                Number of individuals. If a list of numbers is given, creates
+                a Multipopulation object with sub-populations of the assigned
+                sizes.
+            num_loci:
+                Number of loci in the genotype.
+            alleles:
+                Number of alleles for all loci.
+            ploidy:
+                Ploidy of genotype.
+            min_prob:
+                Minimum value for a frequency probability.
+
+        Returns:
+            A new population object.
+        """
+        if num_loci <= 0:
+            raise ValueError('num_loci must be at least one!')
+
+        is_multipopulation = isinstance(size, collections.Sequence)
+        sizes = [size] if not is_multipopulation else size
+        seeds = get_seeds(len(sizes), seed)
+
+        # Create frequencies and data
+        all_data = []
+        all_freqs = [random_frequencies(num_loci, alleles, seed=k)
+                     for k in seeds]
+        for pre_seed, freqs, size in zip(seeds, all_freqs, sizes):
+            data = []
+            ind_seeds = get_seeds(size, pre_seed)
+            for seed in ind_seeds:
+                ind = random_individual_data(freqs, ploidy=ploidy, seed=seed)
+                data.append(ind)
+            all_data.append(np.array(data))
+
+        # Return population
+        if is_multipopulation:
+            sub_populations = []
+            for i in range(len(sizes)):
+                id_i = None if id is None else '%s%s' % (id, i + 1)
+                pop = kpop.Population(
+                    all_data[i], freqs=all_freqs[i], id=id_i,
+                    num_loci=num_loci, num_alleles=alleles, ploidy=ploidy
+                )
+                sub_populations.append(pop)
+            return kpop.MultiPopulation(sub_populations)
+        else:
+            return kpop.Population(
+                all_data[0], freqs=all_freqs[0], id=id,
+                num_loci=num_loci, num_alleles=alleles, ploidy=ploidy
+            )
 
     def __init__(self, freqs=None, allele_names=None, id=None, ploidy=None,
                  num_loci=None, num_alleles=None, individual_ids=None):
@@ -384,3 +445,14 @@ def biallelic_mapping(prob):
         mapping = {i: 2 for i in prob}
         mapping[idx] = 1
         return mapping
+
+
+def get_seeds(n, seed, salt=0):
+    """
+    Return a list of seeds from the given initial seed.
+    """
+    if seed is None:
+        return [None] * n
+    else:
+        np.random.seed(seed + salt)
+        return list(np.random.randint(0, 2 ** 31 - 1, size=n))

@@ -73,5 +73,6 @@ def transform_result(transform: type, data: np.ndarray, **kwargs) -> Transform:
 class Classification(Result):
     pass
 
+
 def classification_result(classifier, data, **kwargs) -> Classification:
     pass

@@ -19,17 +19,17 @@ def frequency_drift(freqs, n_generations, size):
 
     freqs = np.asarray(freqs)
     if freqs.ndim == 1:
-        freqs = frequency_drift_1D(freqs, n_generations, size)
+        freqs = frequency_drift_1d(freqs, n_generations, size)
         return fill_freqs_vector(freqs)
     elif freqs.shape[1] == 2:
         freqs_vector = flatten_frequencies(freqs)
-        freqs = frequency_drift_1D(freqs_vector, n_generations, size)
+        freqs = frequency_drift_1d(freqs_vector, n_generations, size)
         return fill_freqs_vector(freqs)
     else:
         raise NotImplementedError('only biallelic data is supported')
 
 
-def frequency_drift_1D(freqs_vector, n_generations, size):
+def frequency_drift_1d(freqs_vector, n_generations, size):
     """
     Simulate the genetic drift from a vector after the given number of
     generations.

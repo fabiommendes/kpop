@@ -4,8 +4,7 @@ from lazyutils import lazy
 from .individual import IndividualProxy
 from .population_base import PopulationBase
 from .population_list import ImmutablePopulationList
-from .utils import parse_population_data, discard_attrs, random_individual_data
-from ..utils.frequencies import random_frequencies
+from .utils import parse_population_data, discard_attrs
 
 
 class Population(PopulationBase):
@@ -18,48 +17,6 @@ class Population(PopulationBase):
     @lazy
     def populations(self):
         return ImmutablePopulationList([self])
-
-    @classmethod
-    def random(cls, size=0, num_loci=0, alleles=2, ploidy=2, id=None,
-               min_prob=0.0, seed=None):
-        """
-        Creates a new random population.
-
-        Args:
-            size:
-                Number of individuals.
-            num_loci:
-                Number of loci in the genotype.
-            alleles:
-                Number of alleles for all loci.
-            ploidy:
-                Ploidy of genotype.
-            min_prob:
-                Minimum value for a frequency probability.
-
-        Returns:
-            A new population object.
-        """
-        if num_loci <= 0:
-            raise ValueError('num_loci must be at least one!')
-        if seed is not None:
-            np.random.seed(seed)
-
-        # Frequencies
-        freqs = random_frequencies(num_loci, alleles, clip=min_prob, seed=seed)
-
-        # Create data
-        data = []
-        for _ in range(size):
-            ind = random_individual_data(freqs, ploidy=ploidy)
-            data.append(ind)
-        data = np.array(data)
-
-        # Return population
-        return Population(
-            data, freqs=freqs, id=id,
-            num_loci=num_loci, num_alleles=alleles, ploidy=ploidy
-        )
 
     def __init__(self, data=(), id=None, individual_ids=None, **kwargs):
         if isinstance(data, str):

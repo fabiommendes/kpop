@@ -117,7 +117,9 @@ def load_csv(file=sys.stdout, *,
     if pop_col is None:
         result = Population(populations[None], id=pop_label)
     else:
-        def factory(x): return Population(x[1], id=x[0])
+        def factory(x):
+            return Population(x[1], id=x[0])
+
         populations = map(factory, populations.items())
         result = MultiPopulation(populations, id=pop_label)
     result.loci_names = header
@@ -215,6 +217,7 @@ def col_normalizer(head):
                 if optional:
                     return None
                 raise
+
     return func
 
 

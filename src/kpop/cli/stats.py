@@ -27,14 +27,14 @@ def stats(pop: PopulationBase, verbose=False, json=False,
     """
 
     if fst:
-        click.echo(pop.render_fst())
+        click.echo(pop.stats.render_fst())
         return
     elif freqs_biallelic:
         kwargs = {'sep': sep}
         if csv:
             kwargs['align'] = None
             kwargs['sep'] = sep.strip() or ','
-        click.echo(pop.render_biallelic_freqs(**kwargs))
+        click.echo(pop.stats.render_biallelic_freqs(**kwargs))
         return
     else:
         click.echo(click.style('summary:', bold=True))
@@ -42,13 +42,13 @@ def stats(pop: PopulationBase, verbose=False, json=False,
         if sub_populations:
             click.echo(click.style('populations:', bold=True))
             for i, subpop in enumerate(pop.populations, 1):
-                entry('- %s' % (subpop.label or 'pop%s' % i))
+                entry('- %s' % (subpop.id or 'pop%s' % i))
                 pop_summary(subpop, indent=3, id=False)
 
 
 def pop_summary(pop, indent=1, id=True):
-    if label and pop.label:
-        entry('label', pop.label, indent)
+    if id and pop.id:
+        entry('label', pop.id, indent)
     entry('size', pop.size, indent)
     entry('num_loci', pop.num_loci, indent)
     entry('ploidy', pop.ploidy, indent)
