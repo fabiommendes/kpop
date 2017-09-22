@@ -1,5 +1,6 @@
 import numpy as np
 
+from kpop.classifiers import SklearnClassifier
 from .attr import Attr
 from ..admixture import likelihood
 from ..prob import Prob
@@ -13,7 +14,7 @@ class Classification(Attr):
 
     _methods = ('naive_bayes',)
 
-    def __call__(self, labels, which='naive_bayes', **kwargs):
+    def __call__(self, labels=None, which='naive_bayes', **kwargs):
         if is_sklearn_classifier(which):
             return self.sklearn(which, labels, **kwargs)
         elif callable(which):
@@ -24,7 +25,30 @@ class Classification(Attr):
                 method = getattr(self, which_)
                 return method(labels, **kwargs)
 
-    def naive_bayes(self, labels, data='count', **kwargs):
+    def _normalize_labels(self, labels):
+        "Normalizes the labels attribute and return a sequence of labels."
+
+        pop = self._population
+        if labels is None or labels == '':
+            try:
+                return pop.meta['labels']
+            except KeyError:
+                raise ValueError('could not fetch labels from metadata')
+        elif isinstance(labels, str):
+            if labels in pop.meta:
+                return pop.meta[labels]
+            if labels == 'ancestry':
+                return ancestry_labels(pop)
+            raise ValueError('could not find %r metadata' % labels)
+        else:
+            labels = list(labels)
+            if len(labels) != pop.size:
+                raise ValueError(
+                    'list of labels must have the same size as the population'
+                )
+            return labels
+
+    def naive_bayes(self, labels=None, data='count', **kwargs):
         """
         Classify objects using the naive_bayes classifier.
         """
@@ -41,7 +65,14 @@ class Classification(Attr):
             )
         return self.sklearn(classifier, labels, data=data, **kwargs)
 
-    def sklearn(self, classifier, labels, data='count', **kwargs):
+    def svm(self, labels=None, data='count', **kwargs):
+        """
+        Classify objects using the Support Vector Machine (SVM) classifier.
+        """
+        from sklearn.svm import SVC as classifier
+        return self.sklearn(classifier, labels, data=data, **kwargs)
+
+    def sklearn(self, classifier, labels=None, data='count', **kwargs):
         """
         Uses a scikit learn classifier to classify population.
 
@@ -56,7 +87,10 @@ class Classification(Attr):
                 It uses the same options as in the :meth:`Population.as_array`
                 method.
         """
-        return None
+        func = lambda pop: pop.as_array(data)
+        raw_data = func(self._population)
+        labels = self._normalize_labels(labels)
+        return SklearnClassifier(classifier, raw_data, func, labels, **kwargs)
 
     def populations(self, populations=None):
         """
@@ -129,3 +163,16 @@ class Classification(Attr):
             return Prob(data)
         else:
             raise NotImplementedError('only biallelic data is supported')
+
+
+def ancestry_labels(pop):
+    """
+    Return a list of labels from a population object using subpopulation ids as
+    data.
+    """
+
+    labels = []
+    for i, subpop in enumerate(pop.populations):
+        label = subpop.id or i
+        labels.extend([label] * subpop.size)
+    return labels
