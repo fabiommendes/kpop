@@ -402,7 +402,7 @@ def parse_lines(lines, parser=StructureParser):
     return parser.parse()
 
 
-def parse_file(file, parser=StructureParser):
+def parse(file, parser=StructureParser):
     """
     Parse the given file.
     """

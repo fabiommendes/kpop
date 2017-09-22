@@ -2,12 +2,14 @@ import os
 import subprocess
 import tempfile
 
+from .runner import run_or_quit
 from .structure_params import MAINPARAMS_DEFAULTS, EXTRAPARAMS_DEFAULTS
+from ..parsers.structure import parse
 from ..population.population_base import PopulationBase
 
 
 def run_structure(pop, k=2, *, method='parental', job_dir=None,
-                  outfile='out.structure', disp=1, keep_dir=False):
+                  outfile='out.structure', disp=1):
     """
     Runs the 'Structure' program for the given population.
 
@@ -26,18 +28,13 @@ def run_structure(pop, k=2, *, method='parental', job_dir=None,
         disp:
             Controls the verbosity level. (0 = no output, 1 = normal, and
             2 = verbose).
-        keep_dir:
-            If True, do not remove the temporary build directory. If job_dir
-            is explicitly given, it is never removed.
 
     Returns:
         A :class:`StructureResult` object
     """
 
     # Create temporary job directory
-    if job_dir is None and keep_dir:
-        job_dir = tempfile.mkdtemp(prefix='structure-')
-    elif job_dir is None:
+    if job_dir is None:
         tempdir = tempfile.TemporaryDirectory(prefix='structure-')
         job_dir = tempdir.name
 
@@ -66,30 +63,24 @@ def run_structure(pop, k=2, *, method='parental', job_dir=None,
         print('EXTRAPARAMS\n' + '-' * 80, '\n' + extra, '\n\n')
         print('POPULATION FILE\n' + '-' * 80, '\n' + popfile, '\n\n')
 
-    # Prepare structure command
+    # Run structure command
     cmd = 'structure'
+    kwargs = {}
     if disp < 1:
-        cmd += ' &> /dev/null'
-    if disp >= 1:
-        print('Running structure command\n\n    $', cmd)
-
-    # Execute
-    error = subprocess.check_call(cmd, shell=True, cwd=job_dir)
-    if error != 0:
-        raise RuntimeError('structure returned with error code: %s' % error)
+        kwargs['stdout'] = subprocess.DEVNULL
+    run_or_quit(cmd, job_dir=job_dir)
 
     # Read output file
-    # (I don't know why Structure prepends an "_f" to the end of file)
+    # (I don't know why Structure adds an "_f" to the end of file)
     outfile = os.path.join(job_dir, outfile + '_f')
     with open(outfile, encoding='utf8') as F:
         data = F.read()
-
     if disp >= 2:
         print('\nOUTFILE')
         print('-' * 80)
         print(data)
 
-    return StructureResult(data, job_dir=job_dir)
+    return parse(data)
 
 
 def structure_population(pop, *, id='ind', onerowperind=False,

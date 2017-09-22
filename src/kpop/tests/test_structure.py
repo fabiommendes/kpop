@@ -3,7 +3,7 @@ import os
 import pytest
 
 from kpop.external.structure import run_structure
-from kpop.parsers.structure import parse_file
+from kpop.parsers.structure import parse
 from kpop.tests import is_ci
 
 pytestmark = pytest.mark.skipif(
@@ -28,7 +28,7 @@ class TestStructureParser:
     def example(self):
         folder = os.path.dirname(__file__)
         with open(os.path.join(folder, 'structure.example')) as F:
-            data = parse_file(F)
+            data = parse(F)
         return data
 
     def test_structure_parser_extracts_basic_info(self, example):
