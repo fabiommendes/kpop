@@ -1,8 +1,9 @@
 import numpy as np
+import pandas as pd
 
-from kpop.population.population_base import PopulationBase
-from kpop.population.population_single import Population
-from kpop.population.population_list import PopulationList
+from .population_base import PopulationBase
+from .population_list import PopulationList
+from .population_single import Population
 
 
 class MultiPopulation(PopulationBase):
@@ -11,6 +12,21 @@ class MultiPopulation(PopulationBase):
     """
 
     is_multi_population = True
+
+    @property
+    def meta(self):
+        # Collect common columns
+        cols, tail = [set(pop.meta.columns) for pop in self.populations]
+        for new in tail:
+            cols.intersection_update(new)
+        cols = sorted(cols)
+
+        # Create dataframe
+        metas = [pop.meta[cols] for pop in self.populations]
+        df = pd.DataFrame(columns=cols)
+        for meta in metas:
+            df = df.append(meta)
+        return df
 
     def __init__(self, populations=(), freqs=None, **kwargs):
         if freqs is not None:

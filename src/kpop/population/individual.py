@@ -4,7 +4,7 @@ import numpy as np
 from lazyutils import delegate_to, lazy
 from sidekick import _
 
-from kpop.population.utils import id_label_from_parents, random_individual_data
+from kpop.population.utils import id_from_parents, random_individual_data
 from .utils import parse_population_data
 from ..utils import fn_lazy, fn_property
 
@@ -212,7 +212,7 @@ class IndividualBase:
         else:
             raise NotImplementedError
 
-        kwargs['id'] = id or id_label_from_parents(self.id, other.id)
+        kwargs['id'] = id or id_from_parents(self.id, other.id)
         return self.copy(data, **kwargs)
 
 
@@ -312,8 +312,10 @@ class IndividualProxy(IndividualBase):
     population.
     """
     data = property(lambda _: _.population._data[_._idx])
-    id = property(lambda _: _.population.individual_ids[_._idx])
-    label = property(lambda _: _.id)
+
+    @lazy
+    def id(self):
+        return self.population.individual_ids[self._idx]
 
     @lazy
     def meta(self):

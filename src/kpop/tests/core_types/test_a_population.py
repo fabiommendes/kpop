@@ -118,6 +118,10 @@ class TestPopulation:
         with pytest.raises(ValueError):
             popA.as_array('bad-method')
 
+    def test_individual_id_labels(self, popB):
+        assert popB.individual_ids == ['B1', 'B2', 'B3', 'B4']
+        assert popB[0].id == 'B1'
+
     #
     # Private functions used in base population class
     #
@@ -237,7 +241,7 @@ class TestSinglePopulations:
     def test_can_init_from_other_population(self, popA):
         pop = Population(popA)
         assert pop == popA
-        assert (pop.individual_ids == popA.individual_ids).all()
+        assert pop.individual_ids == popA.individual_ids
 
     def test_population_equality_with_multi_population(self, popA):
         assert popA == MultiPopulation([popA])

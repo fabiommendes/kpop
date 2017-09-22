@@ -3,7 +3,7 @@ import pytest
 from numpy.testing import assert_equal
 
 from kpop.population.individual import Individual
-from kpop.population.utils import id_label_from_parents
+from kpop.population.utils import id_from_parents
 from kpop.utils.frequencies import fill_freqs_vector
 
 
@@ -79,7 +79,7 @@ def test_haplotypes(ind):
 
 
 def test_label_from_parents():
-    f = id_label_from_parents
+    f = id_from_parents
     assert f(None, None) is None
     assert f('foo', None) == 'foo_'
     assert f(None, 'foo') == 'foo_'

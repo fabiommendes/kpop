@@ -1,6 +1,10 @@
+import os
 import pickle
 
 from .attr import Attr
+from ..utils import lazy_module
+
+io = lazy_module('kpop.io')
 
 
 class Io(Attr):
@@ -9,10 +13,21 @@ class Io(Attr):
     """
 
     @staticmethod
-    def load(file, format='pickle'):
+    def load(file, format='auto', **kwargs):
         """
         Loads population from file.
+
+        It accepts a few formats:
+
+        * 'pickle': Python serialization protocol
+        * 'csv': comma separated values
+
+        See Also:
+            :func:`kpop.load_csv` for more options for the csv loader.
         """
+
+        if format == 'auto':
+            format = format_from_path(file)
 
         if format == 'pickle':
             if isinstance(file, str):
@@ -20,6 +35,8 @@ class Io(Attr):
                     return pickle.load(F)
             else:
                 return pickle.load(file)
+        elif format == 'csv':
+            return io.load_csv(file, **kwargs)
         else:
             raise NotImplementedError
 
@@ -32,7 +49,7 @@ class Io(Attr):
         names = pop.allele_names
         if names is None:
             names = ['loci%s' % i for i in range(1, pop.size + 1)]
-        header = 'label,' + ','.join(names)
+        header = 'id,' + ','.join(names)
         data = '\n'.join(x.render_csv(**kwargs) for x in self._population)
         return '%s\n%s' % (header, data)
 
@@ -64,16 +81,11 @@ class Io(Attr):
         """
 
         if format == 'auto':
-            if file.endswith('.pickle'):
-                return self.save(file, 'pickle', **kwargs)
-            elif file.endswith('.csv'):
-                return self.save(file, 'csv', **kwargs)
-            else:
-                raise ValueError('could not determine file format')
+            format = format_from_path(file)
 
         if format == 'pickle':
             with open(file, 'w+b') as F:
-                pickle.dump(self, F)
+                pickle.dump(self._population, F)
         elif format in ['csv', 'ped', 'map', 'plink_ped', 'plink_map']:
             attr = {'ped': 'plink_ped', 'map': 'plink_map'}
             render = getattr(self, attr.get(format, format))
@@ -96,9 +108,9 @@ class Io(Attr):
         else:
             good_idx = set(range(size))
 
-        # Find best align if no label align is set
+        # Find best align if no id align is set
         if id_align == 'best':
-            id_align = max(len(x.label) + 1 for x in pop)
+            id_align = max(len(x.id) + 1 for x in pop)
 
         # Render individuals
         data = [x.render(id_align=id_align, limit=limit)
@@ -109,3 +121,14 @@ class Io(Attr):
             data.insert(ind_limit // 2 + 1, '...')
 
         return '\n'.join(data)
+
+
+def format_from_path(path):
+    if path.endswith('.pickle'):
+        return 'pickle'
+    elif path.endswith('.csv'):
+        return 'csv'
+    elif path.endswith('.ped'):
+        return 'ped'
+    else:
+        raise ValueError('invalid type: %r' % os.path.splitext(path)[-1])

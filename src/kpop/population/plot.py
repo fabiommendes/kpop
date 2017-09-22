@@ -1,9 +1,9 @@
 import numpy as np
 
-from ..utils import lazy_module
 from .attr import Attr
 from ..plot import admixture_scatter, admixture_bars
 from ..plot.utils import group_individuals, _colors
+from ..utils import lazy_module
 
 plt = lazy_module('matplotlib.pyplot')
 
@@ -159,17 +159,17 @@ class Plot(Attr):
 
         if merge:
             coords_list = [coords]
-            pop_labels = [self._population.label or None]
+            pop_ids = [self._population.id or None]
         elif labels is not None:
-            pop_labels = sorted(set(labels))
+            pop_ids = sorted(set(labels))
             coords_list = [np.array(
-                [pt for label_, pt in zip(labels, coords) if label_ == label]
-            ) for label in pop_labels]
+                [pt for id_, pt in zip(labels, coords) if id_ == id]
+            ) for id in pop_ids]
         else:
             pop_sizes = [len(pop) for pop in self._populations]
             coords_list = group_individuals(coords, pop_sizes)
-            pop_labels = [pop.id or i for i, pop in
-                          enumerate(self._populations)]
+            pop_ids = [pop.id or i for i, pop in
+                       enumerate(self._populations)]
 
         colors = _colors(colors, len(coords_list))
 
@@ -177,7 +177,7 @@ class Plot(Attr):
         ax = axes or plt.axes()
         for i, coords in enumerate(coords_list):
             X, Y = np.asarray(coords).T
-            label = pop_labels[i]
+            label = pop_ids[i]
             ax.plot(X, Y, 'o', color=colors[i], label=label, alpha=alpha)
 
         # Additional plot elements

@@ -13,12 +13,12 @@ NOT_GIVEN = object()
 
 def load_csv(file=sys.stdout, *,
              missing='-',
-             label_col: Union[str, int] = NOT_GIVEN,
+             id_col: Union[str, int] = NOT_GIVEN,
              pop_col: Union[str, int] = NOT_GIVEN,
              ignore_cols: List[Union[str, int]] = None,
              ignore_rows: List[int] = None,
              meta: Dict[str, Union[str, int]] = None,
-             label: str = None,
+             id: str = None,
              ploidy=2):
     """
     Load population data from CSV file.
@@ -31,10 +31,10 @@ def load_csv(file=sys.stdout, *,
             Index or name of the population column. This column identify each
             individual with its respective population. Default value for k-pop
             generated CSV files is "population".
-        label_col (optional):
-            Index or name for the label column. This column identifies each
-            individual with a unique label within its population. Default value
-            for k-pop generated CSV files is "label".
+        id_col (optional):
+            Index or name for the individual id column. This column identifies
+            each individual with a unique label within its population. Default
+            value for k-pop generated CSV files is "id".
         missing:
             Character used to specify missing data. The default value is a
             single dash character per loci. Empty cells are also treated as
@@ -47,8 +47,8 @@ def load_csv(file=sys.stdout, *,
         meta:
             A dictionary mapping meta information labels to their corresponding
             columns.
-        label:
-            The label for the new resulting population.
+        id:
+            The string identifier for the resulting population.
 
     Returns:
         If pop_col is given, return a new MultiPopulation object. Otherwise,
@@ -66,17 +66,17 @@ def load_csv(file=sys.stdout, *,
     n_ind = len(body)
 
     # Extract pop_values, ind_labels, etc
-    pop_label = label
+    pop_label = id
     pop_col = col_normalize(pop_col, 'population')
     pop_values = [None] * n_ind if pop_col is None else body[:, pop_col]
-    label_col = col_normalize(label_col, 'label')
-    label_values = [None] * n_ind if label_col is None else body[:, label_col]
+    id_col = col_normalize(id_col, 'id')
+    label_values = [None] * n_ind if id_col is None else body[:, id_col]
     meta = {k: col_normalize(v) for k, v in (meta or {}).items()}
 
     # Compute ignore cols and remove them from the body
     ignore_cols = {col_normalize(x) for x in (ignore_cols or ())}
     ignore_cols.update(meta.values())
-    ignore_cols.update([x for x in [pop_col, label_col] if x is not None])
+    ignore_cols.update([x for x in [pop_col, id_col] if x is not None])
     body, col_map = extract_cols(body, ignore_cols)
 
     # Normalize missing data
@@ -109,8 +109,8 @@ def load_csv(file=sys.stdout, *,
     # Recreate populations from body data
     body = new_body
     populations = OrderedDict((p, []) for p in pop_values)
-    for i, (label, pop, row) in enumerate(zip(label_values, pop_values, body)):
-        ind = Individual(row, id=label)
+    for i, (ind_id, pop, row) in enumerate(zip(label_values, pop_values, body)):
+        ind = Individual(row, id=ind_id)
         populations[pop].append(ind)
 
     # Create population or multipopulation return value

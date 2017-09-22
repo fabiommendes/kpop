@@ -1,10 +1,10 @@
 import matplotlib as mpl
 import pytest
-import os
 
 mpl.use('Agg')
 
 from kpop import Population, Individual
+from kpop.tests import load_data, data_path
 
 
 #
@@ -65,3 +65,13 @@ def popB_random(num_loci):
 @pytest.fixture
 def popAB(popA_random, popB_random):
     return popA + popB
+
+
+@pytest.fixture(scope='session')
+def loader():
+    return load_data
+
+
+@pytest.fixture(scope='session')
+def path():
+    return data_path

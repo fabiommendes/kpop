@@ -70,7 +70,7 @@ def import_(file, output=None, id=None,
 
     # Saves loaded population
     if output:
-        pop.save(output)
+        pop.io.save(output)
     else:
         click.echo(click.style('Population data', bold=True))
         click.echo('\n' + repr(pop) + '\n')

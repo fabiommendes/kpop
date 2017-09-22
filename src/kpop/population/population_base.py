@@ -76,7 +76,7 @@ class PopulationBase(collections.Sequence, metaclass=abc.ABCMeta):
     missing_data_ratio = fn_property(_.missing_data_total / _.data_size)
 
     # Meta information
-    individual_ids = property(lambda _: _.meta['ids'])
+    individual_ids = lazy(lambda _: list(_.meta.index))
 
     # Special attributes. These will be inserted later via monkey patching
     populations = ()
@@ -165,7 +165,7 @@ class PopulationBase(collections.Sequence, metaclass=abc.ABCMeta):
             )
 
     def __init__(self, freqs=None, allele_names=None, id=None, ploidy=None,
-                 num_loci=None, num_alleles=None, individual_ids=None):
+                 num_loci=None, num_alleles=None):
 
         # Normalize frequencies
         if freqs is None:
@@ -197,16 +197,9 @@ class PopulationBase(collections.Sequence, metaclass=abc.ABCMeta):
         elif num_loci is not None:
             self.num_loci = num_loci
 
-        # Individual ids
-        if individual_ids is None:
-            fmt = 'ind%s' if id is None else '%s%%s' % id
-            individual_ids = [fmt % i for i in range(1, self.size + 1)]
-
         # Save required attributes
         self.allele_names = allele_names
         self.id = id
-        self._last_id_index = 0
-        self.meta = pd.DataFrame({'ids': individual_ids})
 
         # Save optional given lazy attributes
         if ploidy is not None:
@@ -230,10 +223,6 @@ class PopulationBase(collections.Sequence, metaclass=abc.ABCMeta):
     def _population(self, *args, **kwargs):
         from kpop import Population
         return Population(*args, **kwargs)
-
-    def _next_id(self):
-        self._last_id_index += 1
-        return '%s%s' % (self.id or 'ind', self._last_id_index)
 
     def _clear_caches(self):
         discard_attrs(self, self._cacheable_attributes)

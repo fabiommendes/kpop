@@ -27,19 +27,20 @@ class TestFrequencyDrift:
         assert (0.4 <= new).all() and (new <= 0.6).all()
 
     def test_linear_mixture(self, popA, popB):
-        popC = linear_mixture(popA, popB, 5)
+        popC = linear_mixture(popA, popB, 10)
         fA = popA.freqs_matrix
         fB = popB.freqs_matrix
         fC = popC.freqs_matrix
         fmean = (fA + fB) / 2
 
         # they happen to be equal because we use such small values
-        np.testing.assert_allclose(fC, fmean, atol=0.21)
+        np.testing.assert_allclose(fC, fmean, atol=0.25)
 
 
 class TestEvolutionAndOffspring:
-    def test_create_individual_labels(self, popA):
-        assert popA[0].id == 'A1'
+    """
+    Test creation of new offspring
+    """
 
     def test_create_offspring(self, popA):
         ind3 = popA.simulation.random_individual()

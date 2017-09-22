@@ -25,9 +25,9 @@ class TestStructureProgram:
 
 class TestStructureParser:
     @pytest.fixture(scope='class')
-    def example(self):
+    def example(self, loader):
         folder = os.path.dirname(__file__)
-        with open(os.path.join(folder, 'structure.example')) as F:
+        with loader('structure.example') as F:
             data = parse(F)
         return data
 

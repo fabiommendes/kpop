@@ -93,7 +93,7 @@ def parse_population_data(data):
     return data, labels
 
 
-def id_label_from_parents(l1, l2):
+def id_from_parents(l1, l2):
     """
     Creates a new id label from parents id labels.
     """

@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 from lazyutils import lazy
 
 from .individual import IndividualProxy
@@ -19,18 +20,33 @@ class Population(PopulationBase):
         return ImmutablePopulationList([self])
 
     def __init__(self, data=(), id=None, individual_ids=None, **kwargs):
+        # Prepare data
         if isinstance(data, str):
             data, _labels = parse_population_data(data)
             individual_ids = individual_ids or _labels
         elif isinstance(data, PopulationBase):
             individual_ids = individual_ids or data.individual_ids
             data = data.as_array()
+        elif len(data) != 0 and getattr(data[0], 'is_individual', False):
+            if individual_ids is None:
+                individual_ids = [ind.id for ind in data]
+            if set(individual_ids) == {None}:
+                individual_ids = None
+            data = np.array([ind.data for ind in data])
         else:
             data = np.array(data, dtype='uint8')
 
+        # Save values
         self._data = np.asarray(data)
-        kwargs.update(id=id, individual_ids=individual_ids)
+        kwargs.update(id=id)
         super(Population, self).__init__(**kwargs)
+
+        # Individual ids and meta data
+        if individual_ids is None:
+            fmt = ('ind' if id is None else id) + '%s'
+            individual_ids = [fmt % (i + 1) for i in range(self.size)]
+        self.individual_ids = list(individual_ids)
+        self.meta = pd.DataFrame(index=individual_ids)
 
     def __len__(self):
         return len(self._data)
