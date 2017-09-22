@@ -3,4 +3,4 @@ from .frequencies import (
     random_frequencies
 )
 from .functional import fn_lazy, fn_property, lazy_module
-from .checks import is_transformer
+from .checks import is_sklearn_transformer

@@ -126,7 +126,7 @@ class Plot(Attr):
 
         kwargs.pop('self', None)
         pop = self._population
-        coords = pop.projection(which, 2, **coords_kwargs)
+        coords = pop.projection(2, which, **coords_kwargs)
         return self.scatter_coords(coords, **scatter_kwargs)
 
     def scatter_coords(self, coords, merge=False, colors=None, title=None,

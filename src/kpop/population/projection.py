@@ -1,9 +1,8 @@
-import numpy as np
 from sklearn import manifold, decomposition
 
 from .attr import Attr
 from ..result import transform_result
-from ..utils import is_transformer
+from ..utils import is_sklearn_transformer
 
 NOT_GIVEN = object()
 
@@ -17,7 +16,7 @@ class Projection(Attr):
     _methods = {'pca', 'tsne', 'lle', 'mds', 'isomap', 'spectral',
                 'kernel_pca', 'nmf', 'ica'}
 
-    def __call__(self, which='pca', k=2, **kwargs):
+    def __call__(self, k=2, which='pca', **kwargs):
         """
         Embed population data into a low dimensionality sub-space using one of
         the flowing methods:
@@ -30,7 +29,7 @@ class Projection(Attr):
         For more details, see the corresponding method name in the class
         documentation.
         """
-        if is_transformer(which):
+        if is_sklearn_transformer(which):
             return self.sklearn(which, k=k, **kwargs)
         elif callable(which):
             raise NotImplementedError('do not accept function transformers')
@@ -45,12 +44,13 @@ class Projection(Attr):
     def _as_array(self, data='count'):
         return self._population.as_array(data)
 
-    def project(self, which, k=2, **kwargs):
+    def project(self, which='PCA', k=2, **kwargs):
         """
-        Alias to population.project(which, k, ...)
+        Alias to population.project(k, which, ...) which flips the order of the
+        first two arguments.
         """
 
-        return self(which, k, **kwargs)
+        return self(k, which, **kwargs)
 
     def pca(self, k=2, data='count-unity', **kwargs):
         """
@@ -207,7 +207,8 @@ class Projection(Attr):
         else:
             kwargs.update(n_topics=n_populations)
 
-        q_matrix = transform_result(lda, data, learning_method='batch', **kwargs)
+        q_matrix = transform_result(lda, data, learning_method='batch',
+                                    **kwargs)
         return decomposition.PCA(k).fit_transform(q_matrix)
 
     def nmf(self, k=2, *, data='count', **kwargs):

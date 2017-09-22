@@ -21,6 +21,7 @@ Table of contents
    Overview <intro.rst>
    Installation instructions <install.rst>
    Tutorial <tutorial.rst>
+   Classification <classification.rst>
    Examples <examples.rst>
    API Reference <apidoc.rst>
    Frequently asked questions <faq.rst>

@@ -1,5 +1,15 @@
-def is_transformer(obj):
+import sklearn.base as skbase
+
+
+def is_sklearn_transformer(obj):
     """
-    Return True if obj respects a basic Scikit Learn transform API.
+    Return True if obj has a basic Scikit Learn transform API.
     """
     return isinstance(obj, type) and hasattr(obj, 'fit_transform')
+
+
+def is_sklearn_classifier(obj):
+    """
+    Return True if obj has a basic Scikit Learn classifier API.
+    """
+    return skbase.is_classifier(obj)

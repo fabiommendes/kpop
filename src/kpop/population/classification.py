@@ -3,12 +3,60 @@ import numpy as np
 from .attr import Attr
 from ..admixture import likelihood
 from ..prob import Prob
+from ..utils.checks import is_sklearn_classifier
 
 
 class Classification(Attr):
     """
     Implements the population.classification attribute.
     """
+
+    _methods = ('naive_bayes',)
+
+    def __call__(self, labels, which='naive_bayes', **kwargs):
+        if is_sklearn_classifier(which):
+            return self.sklearn(which, labels, **kwargs)
+        elif callable(which):
+            raise NotImplementedError('do not accept function classifiers')
+        elif isinstance(which, str):
+            which_ = which.lower().replace('-', '_')
+            if which_ in self._methods:
+                method = getattr(self, which_)
+                return method(labels, **kwargs)
+
+    def naive_bayes(self, labels, data='count', **kwargs):
+        """
+        Classify objects using the naive_bayes classifier.
+        """
+        from sklearn import naive_bayes
+
+        if data == 'count':
+            classifier = naive_bayes.MultinomialNB
+        elif data == 'flat':
+            classifier = naive_bayes.BernoulliNB
+        else:
+            raise ValueError(
+                'naive bayes only accets "count" and "flat" for the data '
+                'argument'
+            )
+        return self.sklearn(classifier, labels, data=data, **kwargs)
+
+    def sklearn(self, classifier, labels, data='count', **kwargs):
+        """
+        Uses a scikit learn classifier to classify population.
+
+        Args:
+            classifier:
+                A scikit learn classifier class (e.g.,
+                sklearn.naive_bayes.BernoulliNB)
+            labels:
+                A sequence of labels used to train the classifier.
+            data (str):
+                The method used to convert the population to a usable data set.
+                It uses the same options as in the :meth:`Population.as_array`
+                method.
+        """
+        return None
 
     def populations(self, populations=None):
         """

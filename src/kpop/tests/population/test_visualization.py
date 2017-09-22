@@ -66,7 +66,7 @@ class TestProjection:
     def test_transformer(self, popB):
         from sklearn.decomposition import PCA
 
-        data = popB.projection(PCA)
+        data = popB.projection(2, PCA)
         assert data.shape == (4, 2)
 
     def test_project_alias(self, popB):
@@ -75,7 +75,7 @@ class TestProjection:
 
     def test_called_with_invalid_method(self, popB):
         with pytest.raises(ValueError):
-            popB.projection('wrong-value')
+            popB.projection(2, 'wrong-value')
 
         with pytest.raises(ValueError):
             popB.projection(42)
