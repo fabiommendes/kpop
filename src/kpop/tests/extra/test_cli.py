@@ -74,3 +74,35 @@ class TestImport:
             with open('test.csv') as dest, open(path('popAB.csv')) as src:
                 for line_dest, line_src in zip(dest, src):
                     assert line_dest == line_src
+
+    def test_stats(self, path):
+        file = path('popAB.pickle')
+        out = exec_main(['kpop', 'stats', file])
+        assert out == (
+            'summary:\n'
+            '  size: 12\n'
+            '  num_loci: 5\n'
+            '  ploidy: 2\n'
+            '  num_alleles: 2\n'
+            '  missing_ratio: 0.0\n'
+            '  num_populations: 1\n'
+        )
+
+    def test_shell(self):
+        args = []
+        kwargs = {}
+        with patch(
+                'IPython.start_ipython',
+                lambda *args_, **kwargs_:
+                        args.extend(args_) or kwargs.update(kwargs_)):
+            exec_main(['kpop', 'shell'])
+
+            # Check if kpop functions and utilities are present in the namespace
+            names = {'np', 'pd', 'sp', 'plt', 'Population'}
+            assert names.issubset(kwargs['user_ns'])
+
+    def test_show(self, path, temp_path):
+        file = path('popAB.pickle')
+        with temp_path() as tmp:
+            exec_main(['kpop', 'show', file, '-o', 'plot.svg', '-m', 'pca'])
+            assert os.path.exists(os.path.join(tmp, 'plot.svg'))

@@ -35,7 +35,7 @@ def test_individual_properties(ind, ind_data):
     assert ind.num_alleles == 2
     assert ind.is_biallelic
     assert not ind.has_missing
-    assert ind.missing_ratio == 0
+    assert ind.missing_data_ratio == 0
     assert_equal(ind.data, ind_data)
     assert ind.dtype == np.uint8
 
@@ -43,7 +43,7 @@ def test_individual_properties(ind, ind_data):
 def test_render_individual(ind):
     assert repr(ind) == "Individual('ind: 12 11 22 21')"
     assert str(ind) == 'ind: 12 11 22 21'
-    assert ind.render(limit=2) == 'ind: 12 ... 21'
+    assert ind.render(max_loci=2) == 'ind: 12 ... 21'
 
 
 def test_individual_as_sequence(ind, ind_data):

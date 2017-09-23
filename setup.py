@@ -88,6 +88,7 @@ setup(
             'pytest',
             'pytest-cov',
             'manuel',
+            'mock',
         ],
         'all': [
             'notebook',

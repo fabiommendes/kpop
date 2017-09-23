@@ -1,13 +1,8 @@
 import pytest
+from sidekick import L
 from sklearn.naive_bayes import MultinomialNB
 
 from kpop.classifiers import SklearnClassifier
-
-
-class TestClustering:
-    """
-    Tests the Population.clusterization attribute.
-    """
 
 
 class TestClassification:
@@ -21,11 +16,11 @@ class TestClassification:
 
     def test_simple_classification(self, popA, popB):
         cls = (popA + popB).classification(['A'] * 8 + ['B'] * 4)
-        assert cls.classify(popB) == ['B', 'B', 'B', 'B']
+        assert list(cls.classify(popB)) == ['B', 'B', 'B', 'B']
 
     def test_ancestry_classification(self, popA, popB):
         cls = (popA + popB).classification('ancestry')
-        assert cls.classify(popB) == ['B', 'B', 'B', 'B']
+        assert list(cls.classify(popB)) == ['B', 'B', 'B', 'B']
 
     def test_random_classification(self, cls, popB):
         # Prob matrix

@@ -1,8 +1,8 @@
 import os
 import pickle
 
-from .attr import Attr
 from kpop.libs import lazy_module
+from .attr import Attr
 
 io = lazy_module('kpop.io')
 
@@ -95,30 +95,40 @@ class Io(Attr):
         else:
             raise ValueError('invalid file format: %r' % format)
 
-    def render(self, id_align=None, limit=None, ind_limit=None):
+    def render(self, id_align=None, max_loci=None, max_ind=None):
         """
         Renders population data to string.
+
+        Args:
+            id_align:
+                Size of column used to print id values. Ids are aligned to
+                the right in this column. If not given, it tries to infer
+                an optimal value.
+            max_loci:
+                Maximum number of loci printed before collapsing.
+            max_ind:
+                Maximum number of individuals printed before collapsing.
         """
 
         pop = self._population
         size = len(pop)
-        if ind_limit and size > ind_limit:
-            good_idx = set(range(limit // 2))
-            good_idx.update(range(size - limit // 2, size))
+        if max_ind and size > max_ind:
+            good_idx = set(range(max_ind // 2))
+            good_idx.update(range(size - max_ind // 2, size))
         else:
             good_idx = set(range(size))
 
         # Find best align if no id align is set
-        if id_align == 'best':
-            id_align = max(len(x.id) + 1 for x in pop)
+        if id_align is None:
+            id_align = max(len(x.id) for x in pop)
 
         # Render individuals
-        data = [x.render(id_align=id_align, limit=limit)
+        data = [x.render(id_align=id_align, max_loci=max_loci)
                 for i, x in enumerate(pop) if i in good_idx]
 
         # Add ellipsis for large data sets
-        if ind_limit and size > ind_limit:
-            data.insert(ind_limit // 2 + 1, '...')
+        if max_ind and size > max_ind:
+            data.insert(max_ind // 2 + 1, '...')
 
         return '\n'.join(data)
 

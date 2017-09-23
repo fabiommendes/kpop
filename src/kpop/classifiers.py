@@ -26,8 +26,8 @@ class Classifier:
         return np.array([map[label] for label in self.labels])
 
     def __init__(self, training_data, transformer, labels):
-        self.training_data = training_data
-        self.labels = labels
+        self.training_data = np.asarray(training_data)
+        self.labels = np.asarray(labels)
         self._transformer = transformer
 
     def __call__(self, pop):
@@ -141,7 +141,7 @@ class SklearnClassifier(Classifier):
     def classify_data(self, data):
         int_labels = self.classifier.predict(data)
         map = self._labels_encoder
-        return [map[i] for i in int_labels]
+        return np.array([map[i] for i in int_labels])
 
     def log_prob_matrix(self, pop):
         data = self.transform(pop)

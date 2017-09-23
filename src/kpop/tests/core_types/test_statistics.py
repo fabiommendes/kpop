@@ -1,4 +1,3 @@
-import pytest
 from kpop.statistics import biallelic_pairwise_fst, biallelic_fst
 
 
@@ -42,6 +41,31 @@ class TestBiallelicFst:
             [0.78011826, 0.66045591, 0.]]
 
         assert abs(data - result).sum() <= 1e-6
+
+    def test_render_population_biallelic_freqs(self, popA, popB):
+        freqs_render = (popA + popB).stats.render_biallelic_freqs()
+        assert freqs_render == '''
+locus         A         B
+   L1  1.000000  0.000000
+   L2  0.000000  0.250000
+   L3  0.750000  0.500000
+   L4  0.250000  0.375000
+   L5  0.500000  0.375000
+'''[1:]
+
+        assert (popA + popB).stats.render_biallelic_freqs(sep=', ') == '''
+locus,        A,        B
+   L1, 1.000000, 0.000000
+   L2, 0.000000, 0.250000
+   L3, 0.750000, 0.500000
+   L4, 0.250000, 0.375000
+   L5, 0.500000, 0.375000
+'''[1:]
+
+    def _test_render_population_frequencies(self, popA, popB):
+        assert (popA + popB).render_biallelic_frequencies(sep=', ') == '''
+
+'''.strip()
 
 
 def llist(L):

@@ -68,7 +68,7 @@ class PopulationBase(collections.Sequence, metaclass=abc.ABCMeta):
 
     # Missing data
     has_missing_data = property(lambda _: any(ind.has_missing for ind in _))
-    missing_data_total = property(lambda _: sum(ind.missing_total for ind in _))
+    missing_data_total = property(lambda _: sum(ind.missing_data_total for ind in _))
     missing_data_ratio = fn_property(_.missing_data_total / _.data_size)
 
     # Meta information
@@ -204,10 +204,10 @@ class PopulationBase(collections.Sequence, metaclass=abc.ABCMeta):
             self.num_alleles = num_alleles
 
     def __repr__(self):
-        return self.io.render(id_align='best', limit=20, ind_limit=10)
+        return self.io.render(max_loci=20, max_ind=10)
 
     def __str__(self):
-        return self.io.render(id_align='best')
+        return self.io.render()
 
     def __eq__(self, other):
         if not isinstance(other, PopulationBase):

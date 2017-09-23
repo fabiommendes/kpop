@@ -1,3 +1,9 @@
+import numpy as np
+
+from kpop import Population
+from kpop.population.io import format_from_path
+
+
 class TestRender:
     "Test functions that render a population to string"
 
@@ -13,27 +19,16 @@ A7: 11 22 11 12 12
 A8: 11 22 21 22 12
     '''.strip()
 
-    def test_render_population_biallelic_freqs(self, popA, popB):
-        freqs_render = (popA + popB).stats.render_biallelic_freqs()
-        assert freqs_render == '''
-locus         A         B
-   L1  1.000000  0.000000
-   L2  0.000000  0.250000
-   L3  0.750000  0.500000
-   L4  0.250000  0.375000
-   L5  0.500000  0.375000
-'''[1:]
+    def test_load_file(self, path):
+        file = path('popAB.pickle')
+        pop = Population.io.load(file)
+        assert len(pop) == 12
 
-        assert (popA + popB).stats.render_biallelic_freqs(sep=', ') == '''
-locus,        A,        B
-   L1, 1.000000, 0.000000
-   L2, 0.000000, 0.250000
-   L3, 0.750000, 0.500000
-   L4, 0.250000, 0.375000
-   L5, 0.500000, 0.375000
-'''[1:]
+    def test_file_format_inference(self):
+        for fmt in ['csv', 'pickle', 'ped']:
+            assert format_from_path('foo.' + fmt) == fmt
 
-    def _test_render_population_frequencies(self, popA, popB):
-        assert (popA + popB).render_biallelic_frequencies(sep=', ') == '''
-
-'''.strip()
+    def test_render_hides_info_from_large_populations(self):
+        pop = Population(np.ones([10, 2, 2]))
+        out = pop.io.render(max_ind=5)
+        assert '...' in out

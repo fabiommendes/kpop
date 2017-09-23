@@ -1,6 +1,8 @@
 from .attr import Attr
 from ..classifiers import SklearnClassifier
+from ..libs import np
 from ..libs import sk_naive_bayes, sk_svm
+from ..prob import Prob
 from ..utils.checks import is_sklearn_classifier
 
 
@@ -46,16 +48,51 @@ class Classification(Attr):
                 )
             return labels
 
-    def naive_bayes(self, labels=None, data='count', **kwargs):
+    def naive_bayes(self, labels=None, data='count', prior='uniform',
+                    alpha=0.5):
         """
         Classify objects using the naive_bayes classifier.
+
+
+        Args:
+            labels:
+                List of labels or a string with the metadata column used as
+                label. Optionally, the 'ancestry' string classify using the
+                sub-populations as labels.
+            alpha:
+                Additive (Laplace/Lidstone) smoothing parameter (0 for no
+                smoothing).
+            prior:
+                The prior probability for each label. Must be either a Prob()
+                object, the string 'uniform' or None. The default value is
+                'uniform' that assigns a fixed uniform prior. If prior is None,
+                it learns priors from data. Finally, it can also be specified
+                as a Prob() object or a mapping from labels to probabilities.
         """
+
+        kwargs = {'alpha': alpha}
+
+        # Prepare prior data
+        if prior == 'uniform':
+            kwargs['fit_prior'] = False
+            kwargs['class_prior'] = None
+        elif prior is None:
+            kwargs['fit_prior'] = True
+            kwargs['class_prior'] = None
+        else:
+            labels = self._normalize_labels(labels)
+            prob = Prob(prior)
+            prob_vector = np.zeros(len(prob))
+            for i, label in enumerate(sorted(set(labels))):
+                prob_vector[i] = prob[label]
+            kwargs['fit_prior'] = True
+            kwargs['class_prior'] = prob_vector
 
         if data == 'count':
             classifier = sk_naive_bayes.MultinomialNB
         else:
             raise ValueError(
-                'naive bayes only accets "count" and "flat" for the data '
+                'naive bayes only accepts "count" and "flat" for the data '
                 'argument'
             )
         return self.sklearn(classifier, labels, data=data, **kwargs)

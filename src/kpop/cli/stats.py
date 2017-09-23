@@ -53,7 +53,7 @@ def pop_summary(pop, indent=1, id=True):
     entry('num_loci', pop.num_loci, indent)
     entry('ploidy', pop.ploidy, indent)
     entry('num_alleles', pop.num_alleles, indent)
-    entry('missing_ratio', pop.missing_ratio, indent)
+    entry('missing_ratio', pop.missing_data_ratio, indent)
     entry('num_populations', pop.num_populations, indent)
 
 

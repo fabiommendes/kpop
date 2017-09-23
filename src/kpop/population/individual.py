@@ -27,8 +27,11 @@ class IndividualBase:
 
     # Missing data
     has_missing = fn_property(lambda _: 0 in _.data)
-    missing_total = fn_property(lambda _: (_.data == 0).sum())
-    missing_ratio = fn_property(_.missing_total / (_.num_loci * _.ploidy))
+    missing_data_total = fn_property(lambda _: (_.data == 0).sum())
+
+    @property
+    def missing_data_ratio(self):
+        return self.missing_data_total / (self.num_loci * self.ploidy)
 
     # Other
     _allele_names = None
@@ -68,7 +71,7 @@ class IndividualBase:
         return iter(self.data)
 
     def __repr__(self):
-        return 'Individual(%r)' % self.render(limit=20)
+        return 'Individual(%r)' % self.render(max_loci=20)
 
     def __str__(self):
         return self.render()
@@ -107,7 +110,7 @@ class IndividualBase:
             data = np.array(self.data, dtype=dtype)
         return Individual(data, **kwargs)
 
-    def render(self, id_align=None, limit=None):
+    def render(self, id_align=None, max_loci=None):
         """
         Renders individual genotype.
         """
@@ -128,13 +131,13 @@ class IndividualBase:
                 return ''.join(str(mapping.get(x, x)) for x in locus)
 
         size = len(self)
-        id_align = -1 if id_align is None else id_align
-        data = [((self.id or 'ind') + ':').rjust(id_align + 1)]
+        id_align = -1 if id_align is None else int(id_align)
+        data = [('%s:' % (self.id or 'ind')).rjust(id_align + 1)]
 
         # Select items
-        if limit and size > limit:
-            good_idx = set(range(limit // 2))
-            good_idx.update(range(size - limit // 2, size))
+        if max_loci and size > max_loci:
+            good_idx = set(range(max_loci // 2))
+            good_idx.update(range(size - max_loci // 2, size))
         else:
             good_idx = set(range(size))
 
@@ -144,8 +147,8 @@ class IndividualBase:
                 data.append(render_locus(i))
 
         # Add ellipsis for large data
-        if limit and size > limit:
-            data.insert(limit // 2 + 1, '...')
+        if max_loci and size > max_loci:
+            data.insert(max_loci // 2 + 1, '...')
 
         return ' '.join(data)
 

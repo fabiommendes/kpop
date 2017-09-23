@@ -1,8 +1,10 @@
 import collections
 
-from ..libs import np
+from lazyutils import lazy
 
+from kpop.info_tree import InfoTree
 from .attr import Attr
+from ..libs import np
 from ..prob import Prob
 from ..statistics import biallelic_pairwise_fst
 from ..utils import freqs_to_matrix
@@ -12,6 +14,31 @@ class Statistics(Attr):
     """
     Implements the population.stats attribute.
     """
+
+    @lazy
+    def info(self):
+        pop = self._population
+        data = pop._as_array()
+        info = InfoTree()
+
+        # Basic shape
+        info.id = pop.id or '<unknown>'
+        info.size = pop.size
+        info.num_loci = pop.num_loci
+        info.ploidy = pop.ploidy
+
+        # Data
+        info.missing_data_ratio = pop.missing_data_ratio
+        info.max_num_alleles = pop.num_alleles
+        info.mean_num_alleles = data.max(axis=(0, 2)).mean()
+        info.sub_population_ids = [sub.id for sub in pop.populations]
+        info.sub_population_sizes = [sub.size for sub in pop.populations]
+        info.metadata = list(pop.meta.columns)
+
+        return info
+
+    def __repr__(self):
+        return repr(self.info)
 
     def allele_count(self, allele=1):
         """
