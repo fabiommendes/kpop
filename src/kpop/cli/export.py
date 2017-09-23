@@ -34,7 +34,7 @@ def export(pop, format=None, output=None, verbose=False, id=None):
 
 
 def export_structure(pop, output, verbose):
-    from ..external.structure import structure_population, mainparams, \
+    from kpop.external.structure import structure_population, mainparams, \
         extraparams
 
     # Load folder
@@ -69,4 +69,4 @@ def export_arlequin(pop, output, title):
 
 
 def export_admixture(pop, output):
-    pass
+    raise NotImplementedError('admixture export is not implemented yet')

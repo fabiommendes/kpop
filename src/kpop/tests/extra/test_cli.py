@@ -1,9 +1,13 @@
 import io
+import os
 import sys
 
 import pytest
+from mock import patch
 
+from kpop import Population
 from kpop.cli import main
+from kpop.population.io import Io
 
 pytestmark = [pytest.mark.slow]
 
@@ -23,7 +27,40 @@ def exec_main(argv):
     return data
 
 
+def save_to_list(lst):
+    def save(obj, path, format='auto', **kwargs):
+        kwargs['format'] = format
+        lst.append((obj._population, path, kwargs))
+
+    return patch.object(Io, 'save', save)
+
+
 class TestImport:
+    def test_create_command(self, path):
+        lst = []
+        with save_to_list(lst):
+            exec_main(
+                ['kpop', 'create', '-s', '5', '-l', '8', '-i', 'A', 'file.csv'])
+        pop, path, kwargs = lst[0]
+        assert pop.shape == (5, 8, 2)
+        assert pop.id == 'A'
+        assert path == 'file.csv'
+        assert isinstance(pop, Population)
+
+    def test_export_command(self, path, temp_path, popA):
+        with temp_path() as tmp:
+            os.unlink(os.path.join(tmp, 'popAB', 'data.txt'))
+            os.unlink(os.path.join(tmp, 'popAB', 'mainparams'))
+            os.unlink(os.path.join(tmp, 'popAB', 'extraparams'))
+
+            file = path('popAB.pickle')
+            cmd = ['kpop', 'export', '-f', 'structure', '-o', 'popAB', file]
+            exec_main(cmd)
+
+            # TODO: fix the label
+            with open(os.path.join(tmp, 'popAB', 'data.txt')) as F:
+                assert F.readline() == 'A1  1 1 2 2 1 2 1 2 1 2\n'
+
     def test_import_command(self, path):
         for file in ['popAB.csv', 'popAB.pickle']:
             path_ = path(file)

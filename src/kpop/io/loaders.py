@@ -135,7 +135,7 @@ def load_pickle(file):
     method, but it is not portable to other languages.
     """
 
-    return Population.load(file, 'pickle')
+    return Population.io.load(file, 'pickle')
 
 
 def load(file):

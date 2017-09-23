@@ -37,8 +37,7 @@ class Population(PopulationBase):
 
         # Save values
         self._data = np.asarray(data)
-        kwargs.update(id=id)
-        super(Population, self).__init__(**kwargs)
+        super(Population, self).__init__(id=id, **kwargs)
 
         # Individual ids and meta data
         if individual_ids is None:

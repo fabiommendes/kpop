@@ -129,7 +129,7 @@ def structure_population(pop, *, id='ind', onerowperind=False,
     if isinstance(id, (list, tuple)):
         minsize = max(len(x) for x in id)
     elif isinstance(pop, PopulationBase):
-        minsize = max(len(x.label) for x in pop)
+        minsize = max(len(x.id) for x in pop)
     else:
         minsize = len(id) + len(str(len(pop)))
 
@@ -137,7 +137,7 @@ def structure_population(pop, *, id='ind', onerowperind=False,
         if isinstance(id, (list, tuple)):
             row = [id[i]]
         else:
-            row = [getattr(ind, 'label', id + str(i + 1))]
+            row = [getattr(ind, 'id', id + str(i + 1))]
         row[0] = row[0].ljust(minsize + 1)
         table.append(row)
 

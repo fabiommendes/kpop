@@ -1,11 +1,18 @@
+import os
 import subprocess
 
 
-def whereis(bin):
+def which(cmd):
     """
     Returns the path to the executable or None if executable is not found.
     """
+    if os.access(cmd, os.X_OK):
+        return cmd
 
+    for path in os.environ.get('PATH').split(os.pathsep):
+        cmd_path = os.path.join(path, cmd)
+        if os.access(cmd_path, os.X_OK):
+            return cmd_path
     return None
 
 
@@ -24,7 +31,7 @@ def run_or_quit(cmd, *args, message=None, job_dir=None):
         >>> run_or_quit('plink', '--noweb', '--file', 'test')
     """
 
-    bin_path = whereis(cmd)
+    bin_path = which(cmd)
 
     if bin_path is None:
         if not message:

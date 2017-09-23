@@ -4,7 +4,7 @@ import pytest
 mpl.use('Agg')
 
 from kpop import Population, Individual
-from kpop.tests import load_data, data_path
+from kpop.tests import load_data, data_path, temporary_location
 
 
 #
@@ -63,7 +63,7 @@ def popB_random(num_loci):
 
 
 @pytest.fixture
-def popAB(popA_random, popB_random):
+def popAB(popA, popB):
     return popA + popB
 
 
@@ -75,3 +75,8 @@ def loader():
 @pytest.fixture(scope='session')
 def path():
     return data_path
+
+
+@pytest.fixture(scope='session')
+def temp_path():
+    return temporary_location

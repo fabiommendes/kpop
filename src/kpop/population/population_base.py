@@ -153,7 +153,7 @@ class PopulationBase(collections.Sequence, metaclass=abc.ABCMeta):
                     num_loci=num_loci, num_alleles=alleles, ploidy=ploidy
                 )
                 sub_populations.append(pop)
-            return kpop.MultiPopulation(sub_populations)
+            return kpop.MultiPopulation(sub_populations, id=id)
         else:
             return kpop.Population(
                 all_data[0], freqs=all_freqs[0], id=id,
