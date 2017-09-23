@@ -2,14 +2,11 @@ import io
 import os
 import sys
 
-import pytest
 from mock import patch
 
 from kpop import Population
 from kpop.cli import main
 from kpop.population.io import Io
-
-pytestmark = [pytest.mark.slow]
 
 
 def exec_main(argv):
@@ -69,3 +66,11 @@ class TestImport:
             assert out.startswith('Population data')
             assert 'A1: 11 22 12 12 12' in out
             assert 'B1: 22 22 22 12 22' in out
+
+    def test_import_and_save_command(self, path, temp_path):
+        with temp_path() as tmp:
+            path_ = path('popAB.pickle')
+            out = exec_main(['kpop', 'import', path_, '-o', 'test.csv']).strip()
+            with open('test.csv') as dest, open(path('popAB.csv')) as src:
+                for line_dest, line_src in zip(dest, src):
+                    assert line_dest == line_src

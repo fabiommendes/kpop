@@ -2,6 +2,10 @@ import codecs
 import os
 import sys
 from setuptools import setup, find_packages, Extension
+try:
+    import fastentrypoints
+except ImportError:
+    pass
 
 # Include typing module in the dependencies
 typing_dep = [] if sys.version_info >= (3, 5) else ['typing']

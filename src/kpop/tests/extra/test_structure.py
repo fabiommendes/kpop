@@ -6,7 +6,7 @@ from kpop.external.structure import run_structure
 from kpop.parsers.structure import parse
 from kpop.tests import is_ci
 
-pytestmark = pytest.mark.skipif(
+mark_external = pytest.mark.skipif(
     is_ci,
     reason='structure is not installed on CI environments'
 )

@@ -4,3 +4,4 @@ include LICENSE
 include VERSION
 include requirements.txt
 include tasks.py
+include fastentrypoints.py

@@ -32,7 +32,7 @@ def import_(file, output=None, id=None,
             skip_rows=None, skip_cols=None,
             meta=None, debug=False):
     """
-    Import file to kpop's .csv or .pickle formats.
+    Import CSV file.
     """
     name, ext = os.path.splitext(file)
 
