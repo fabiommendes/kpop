@@ -40,7 +40,7 @@ def import_(file, output=None, id=None,
     if ext == '.csv':
         kwargs = dict(
             pop_col=number_or_text(pop_col, -1),
-            label_col=number_or_text(ind_col, -1),
+            id_col=number_or_text(ind_col, -1),
             missing=missing_data,
             ignore_cols=normalize_list(skip_cols),
             ignore_rows=normalize_list(skip_rows),

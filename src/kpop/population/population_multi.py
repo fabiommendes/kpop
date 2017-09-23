@@ -14,7 +14,7 @@ class MultiPopulation(PopulationBase):
     @property
     def meta(self):
         # Collect common columns
-        cols, tail = [set(pop.meta.columns) for pop in self.populations]
+        cols, *tail = [set(pop.meta.columns) for pop in self.populations]
         for new in tail:
             cols.intersection_update(new)
         cols = sorted(cols)
