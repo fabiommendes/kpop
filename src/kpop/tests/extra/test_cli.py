@@ -1,9 +1,11 @@
 import io
 import sys
 
+import pytest
+
 from kpop.cli import main
 
-pytestmark = ['slow']
+pytestmark = [pytest.mark.slow]
 
 
 def exec_main(argv):

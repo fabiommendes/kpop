@@ -3,7 +3,7 @@ from collections import defaultdict
 from math import log
 from random import random
 
-import numpy as np
+from .libs import np
 
 
 class Prob(collections.Mapping):

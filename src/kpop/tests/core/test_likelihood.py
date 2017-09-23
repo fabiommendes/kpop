@@ -1,6 +1,9 @@
-from kpop.admixture.likelihood import *
-from kpop.utils import fill_freqs_vector
 from math import log
+
+import numpy as np
+from kpop.admixture.likelihood import loglike, loglike_logf, like
+
+from kpop.utils import fill_freqs_vector
 
 
 def test_loglike():

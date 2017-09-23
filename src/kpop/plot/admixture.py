@@ -1,13 +1,9 @@
-import numpy as np
-
 from .utils import (
     normalize_coeffs, sort_coeffs,
     _colors, _pop_labels, _pop_sizes,
     group_individuals, admixture_coords
 )
-from ..utils import lazy_module
-
-plt = lazy_module('matplotlib.plt')
+from ..libs import np, plt
 
 
 def admixture_bars(coeffs, colors=None, legend=True,

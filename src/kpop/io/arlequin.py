@@ -2,9 +2,8 @@ import itertools
 import sys
 from typing import List
 
-import numpy as np
-
 from ..population import Population
+from ..libs import np
 
 
 def export_arlequin(pop: Population,

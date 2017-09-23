@@ -1,8 +1,8 @@
-import numpy as np
 from lazyutils import lazy
 
+from .libs import lazy_module
+from .libs import np
 from .prob import Prob
-from .utils import lazy_module
 
 population = lazy_module('kpop.population')
 

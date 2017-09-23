@@ -1,7 +1,5 @@
-import numpy as np
-
 from .attr import Attr
-from ..result import transform_result
+from ..libs import np, kpop_result
 
 
 class Clusterization(Attr):
@@ -16,7 +14,7 @@ class Clusterization(Attr):
         if callable(which):
             method = kwargs.pop('method', 'count')
             data = self._as_array(method)
-            return transform_result(which, data, k, **kwargs)
+            return kpop_result.transform_result(which, data, k, **kwargs)
 
         elif isinstance(which, str):
             which_ = which.lower().replace('-', '')

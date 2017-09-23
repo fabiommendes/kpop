@@ -2,10 +2,8 @@ import abc
 import collections
 import copy
 
-import numpy as np
 from lazyutils import lazy
 from sidekick import _
-from sklearn import preprocessing
 
 from .admixture import Admixture
 from .classification import Classification
@@ -17,13 +15,11 @@ from .simulation import Simulation
 from .statistics import Statistics
 from .utils import discard_attrs
 from .utils import get_freqs, set_freqs, hfreqs_vector, random_individual_data
+from ..libs import kpop
+from ..libs import np, sk_preprocessing
 from ..prob import Prob
-from ..utils import fill_freqs_vector, freqs_to_matrix, fn_lazy, fn_property, \
-    lazy_module
+from ..utils import fill_freqs_vector, freqs_to_matrix, fn_lazy, fn_property
 from ..utils import random_frequencies
-
-pd = lazy_module('pandas')
-kpop = lazy_module('kpop')
 
 
 class PopulationBase(collections.Sequence, metaclass=abc.ABCMeta):
@@ -50,7 +46,7 @@ class PopulationBase(collections.Sequence, metaclass=abc.ABCMeta):
     ploidy = lazy(lambda _: _[0].ploidy)
     shape = property(lambda _: (_.size, _.num_loci, _.ploidy))
     data_size = fn_property(_.size * _.num_loci * _.ploidy)
-    dtype = np.dtype('uint8')
+    dtype = lazy(lambda _: np.dtype('uint8'))
     _shape_attrs = (
         'size', 'num_loci', 'ploidy', 'shape', 'data_size',
     )
@@ -296,7 +292,7 @@ class PopulationBase(collections.Sequence, metaclass=abc.ABCMeta):
         elif which in {'flat', 'flat-unity'}:
             data = data.reshape(self.size, self.num_loci * self.ploidy)
             if which == 'flat-unity':
-                return preprocessing.scale(data.astype(float))
+                return sk_preprocessing.scale(data.astype(float))
             return data
         elif which in {'rflat', 'rflat-unity'}:
             return self.shuffle_loci().as_array(which[1:])
@@ -305,7 +301,7 @@ class PopulationBase(collections.Sequence, metaclass=abc.ABCMeta):
         elif which in {'count', 'count-unity', 'count-snp', 'count-center'}:
             count = (np.array(data) == 1).sum(axis=2)
             if which == 'count-unity':
-                return preprocessing.scale(count.astype(float))
+                return sk_preprocessing.scale(count.astype(float))
             elif which == 'count-snp':
                 mu = count.mean(axis=0)
                 p = mu / self.ploidy

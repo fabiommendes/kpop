@@ -4,7 +4,7 @@ import sys
 from collections import OrderedDict
 from typing import List, Union, Dict
 
-import numpy as np
+from ..libs import np
 
 from ..population import Individual, Population, MultiPopulation
 

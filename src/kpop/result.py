@@ -1,4 +1,4 @@
-import numpy as np
+from .libs import np
 from lazyutils import delegate_ro
 
 

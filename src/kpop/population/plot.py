@@ -1,9 +1,9 @@
-import numpy as np
+from ..libs import np
 
 from .attr import Attr
 from ..plot import admixture_scatter, admixture_bars
 from ..plot.utils import group_individuals, _colors
-from ..utils import lazy_module
+from kpop.libs import lazy_module
 
 plt = lazy_module('matplotlib.pyplot')
 

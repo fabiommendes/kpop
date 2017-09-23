@@ -1,5 +1,6 @@
-from kpop.classifiers import SklearnClassifier
 from .attr import Attr
+from ..classifiers import SklearnClassifier
+from ..libs import sk_naive_bayes, sk_svm
 from ..utils.checks import is_sklearn_classifier
 
 
@@ -49,10 +50,9 @@ class Classification(Attr):
         """
         Classify objects using the naive_bayes classifier.
         """
-        from sklearn import naive_bayes
 
         if data == 'count':
-            classifier = naive_bayes.MultinomialNB
+            classifier = sk_naive_bayes.MultinomialNB
         else:
             raise ValueError(
                 'naive bayes only accets "count" and "flat" for the data '
@@ -64,9 +64,8 @@ class Classification(Attr):
         """
         Classify objects using the Support Vector Machine (SVM) classifier.
         """
-        from sklearn.svm import SVC
 
-        classifier = SVC
+        classifier = sk_svm.SVC
         return self.sklearn(classifier, labels, data=data, **kwargs)
 
     def sklearn(self, classifier, labels=None, data='count', **kwargs):

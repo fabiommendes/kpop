@@ -1,4 +1,4 @@
-import numpy as np
+from ..libs import np
 
 from ..utils import fill_freqs_vector, flatten_frequencies
 

@@ -1,4 +1,4 @@
-import numpy as np
+from ..libs import np
 import pytest
 
 from kpop import Population

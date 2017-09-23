@@ -1,7 +1,7 @@
-import numpy as np
+from ..libs import np
 
 from ..population.utils import random_individual_data
-from ..utils import lazy_module
+from kpop.libs import lazy_module
 
 kpop = lazy_module('kpop')
 

@@ -3,8 +3,7 @@ from collections import deque
 from functools import lru_cache
 from types import SimpleNamespace
 
-import numpy as np
-import pandas as pd
+from ..libs import np, pd
 
 
 @lru_cache(maxsize=256)

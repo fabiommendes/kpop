@@ -1,9 +1,7 @@
 import codecs
 import os
 import sys
-from distutils.extension import Extension
-
-from setuptools import setup, find_packages
+from setuptools import setup, find_packages, Extension
 
 # Include typing module in the dependencies
 typing_dep = [] if sys.version_info >= (3, 5) else ['typing']
@@ -49,24 +47,20 @@ setup(
 
     # Classifiers (see https://pypi.python.org/pypi?%3Aaction=list_classifiers)
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: GNU General Public License (GPL)',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
         'Topic :: Software Development :: Libraries',
     ],
 
     # Entry points
-    entry_points={
-        'console_scripts': [
-            'kpop = kpop.__main__:main'
-        ],
-    },
+    entry_points={'console_scripts': ['kpop = kpop.__main__:main']},
 
     # Packages and dependencies
     package_dir={'': 'src'},

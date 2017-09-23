@@ -2,7 +2,7 @@ import os
 import pickle
 
 from .attr import Attr
-from ..utils import lazy_module
+from kpop.libs import lazy_module
 
 io = lazy_module('kpop.io')
 

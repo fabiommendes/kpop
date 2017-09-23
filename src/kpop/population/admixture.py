@@ -1,7 +1,5 @@
-import numpy as np
-
 from .attr import Attr
-from ..admixture import admixture
+from ..libs import np, kpop_admixture as admixture
 from ..prob import Prob
 
 

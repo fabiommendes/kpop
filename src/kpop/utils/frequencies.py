@@ -1,4 +1,4 @@
-import numpy as np
+from ..libs import np
 
 
 def fill_freqs_vector(freqs):

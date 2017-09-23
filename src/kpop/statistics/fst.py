@@ -1,11 +1,11 @@
 from collections import Sequence
 
-import numpy as np
+from ..libs import np
 
 
 def biallelic_pairwise_fst(freqs: Sequence,
                            h_freqs: Sequence,
-                           sizes: Sequence) -> np.ndarray:
+                           sizes: Sequence):
     """
     Return a matrix of pairwise Fst components from frequency data. The Fst
     coefficients are computed using the method introduced by B. S. Weir and C.

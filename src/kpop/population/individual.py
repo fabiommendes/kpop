@@ -1,11 +1,11 @@
 import collections
 
-import numpy as np
 from lazyutils import delegate_to, lazy
 from sidekick import _
 
 from kpop.population.utils import id_from_parents, random_individual_data
 from .utils import parse_population_data
+from ..libs import np
 from ..utils import fn_lazy, fn_property
 
 NOT_GIVEN = object()
@@ -269,7 +269,7 @@ class Individual(IndividualBase, collections.Sequence):
         return cls(data, **kwargs)
 
     def __init__(self, data, id=None, population=None,
-                 allele_names=None, dtype=np.uint8, meta=None, admixture_q=None,
+                 allele_names=None, dtype=None, meta=None, admixture_q=None,
                  num_alleles=None):
 
         # Convert string initial data
@@ -280,6 +280,7 @@ class Individual(IndividualBase, collections.Sequence):
             data = data[0]
 
         # Initialize data
+        dtype = np.uint8 if dtype is None else dtype
         data = np.asarray(data, dtype=dtype)
         if len(data.shape) == 1:
             data = data[:, None]

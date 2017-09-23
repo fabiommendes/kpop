@@ -1,11 +1,10 @@
-import numpy as np
-import pandas as pd
 from lazyutils import lazy
 
 from .individual import IndividualProxy
 from .population_base import PopulationBase
 from .population_list import ImmutablePopulationList
 from .utils import parse_population_data, discard_attrs
+from ..libs import np, pd
 
 
 class Population(PopulationBase):

@@ -1,4 +1,4 @@
-import sklearn.base as skbase
+from ..libs import sk_base
 
 
 def is_sklearn_transformer(obj):
@@ -12,4 +12,4 @@ def is_sklearn_classifier(obj):
     """
     Return True if obj has a basic Scikit Learn classifier API.
     """
-    return skbase.is_classifier(obj)
+    return sk_base.is_classifier(obj)

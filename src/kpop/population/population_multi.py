@@ -1,9 +1,7 @@
-import numpy as np
-import pandas as pd
-
 from .population_base import PopulationBase
 from .population_list import PopulationList
 from .population_single import Population
+from ..libs import np, pd
 
 
 class MultiPopulation(PopulationBase):

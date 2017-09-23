@@ -1,5 +1,5 @@
 from kpop import *
-import numpy as np
+from ..libs import np
 from matplotlib import pyplot as plt
 
 p1 = Population.random(100, 100)

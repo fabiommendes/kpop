@@ -1,6 +1,6 @@
 import collections
 
-import numpy as np
+from ..libs import np
 
 from .attr import Attr
 from ..prob import Prob

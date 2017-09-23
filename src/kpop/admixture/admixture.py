@@ -1,12 +1,10 @@
 import math
 
-import numpy as np
-import scipy.integrate
-import scipy.optimize
-from kpop.admixture.likelihood import loglike, loglike_mix, loglike_logf, \
+from .likelihood import loglike, loglike_mix, loglike_logf, \
     logbayes
+from ..libs import np, sp_integrate, sp_optimize
 
-
+raise
 def admixture_em_single(x, f_pops):
     f_pops = np.asarray(f_pops)
     k = len(f_pops)
@@ -60,12 +58,12 @@ def admixture(x, f_pops, method='bayes'):
             return (p - pmean) * (p - pmean) * pdf(p)
 
         # Compute the normalization factor
-        normalization, _ = scipy.integrate.quad(pdf, 0, 1)
-        Ip, _ = scipy.integrate.quad(p_func, 0, 1)
+        normalization, _ = sp_integrate.quad(pdf, 0, 1)
+        Ip, _ = sp_integrate.quad(p_func, 0, 1)
         p = pmean = Ip / normalization
 
         if full:
-            Ip2, _ = scipy.integrate.quad(p2_func, 0, 1)
+            Ip2, _ = sp_integrate.quad(p2_func, 0, 1)
             dp = np.sqrt(Ip2 / normalization)
             return np.array([[p, dp], [1 - p, dp]])
         else:
@@ -154,7 +152,7 @@ def admixture_maxlike(x, f_pops, optimizer='slsqrp', q0=None):
     bounds = np.array([(0, 1) for _ in range(k)])
 
     # Minimize using sequential least squares programming
-    fmin = scipy.optimize.fmin_slsqp
+    fmin = sp_optimize.fmin_slsqp
     if optimizer == 'slsqrp':
         return fmin(
             # Function and gradient definition
@@ -213,22 +211,22 @@ def admixture_maxlike_1d(x, f_pops, method='bound'):
 
     # Optimize function using any of the desired methods
     if method == 'bound':
-        q = scipy.optimize.fminbound(func_q, 0, 1)
+        q = sp_optimize.fminbound(func_q, 0, 1)
 
     elif method == 'brent':
-        u = scipy.optimize.brent(func_u)
+        u = sp_optimize.brent(func_u)
         q = 0.5 + arctan(u) / pi
 
     elif method == 'bfgs':
-        u = scipy.optimize.fmin_bfgs(func_u, np.array(0), fprime_u, disp=0)
+        u = sp_optimize.fmin_bfgs(func_u, np.array(0), fprime_u, disp=0)
         q = 0.5 + arctan(u) / pi
 
     elif method == 'cg':
-        u = scipy.optimize.fmin_cg(func_u, np.array(0), fprime_u, disp=0)
+        u = sp_optimize.fmin_cg(func_u, np.array(0), fprime_u, disp=0)
         q = 0.5 + arctan(u) / pi
 
     elif method == 'ncg':
-        u = scipy.optimize.fmin_ncg(func_u, np.array(0), fprime_u, disp=0)
+        u = sp_optimize.fmin_ncg(func_u, np.array(0), fprime_u, disp=0)
         q = 0.5 + arctan(u) / pi
 
     else:
@@ -269,7 +267,7 @@ def admixture_logbayes(x, f_pops, normalize=False):
                     loglike(x, p * fi + (1 - p) * fj) - log_min) / np.sqrt(
                     p * (1 - p))
 
-            Z, _ = scipy.integrate.quad(func, 0, 1)
+            Z, _ = sp_integrate.quad(func, 0, 1)
             map[i, j] = np.log(Z) + log_min
 
     if normalize:

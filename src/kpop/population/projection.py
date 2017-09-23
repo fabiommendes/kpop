@@ -1,7 +1,5 @@
-from sklearn import manifold, decomposition
-
 from .attr import Attr
-from ..result import transform_result
+from ..libs import kpop_result, sklearn, sk_manifold, sk_decomposition
 from ..utils import is_sklearn_transformer
 
 NOT_GIVEN = object()
@@ -86,7 +84,7 @@ class Projection(Attr):
             principal axis.
 
         See Also:
-            http://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html
+            http://scikit-learn.org/stable/modules/generated/sklearn.sk_decomposition.PCA.html
 
         Example:
 
@@ -111,9 +109,9 @@ class Projection(Attr):
         if 'pca' in kwargs:
             raise TypeError('invalid argument: pca')
 
-        pca = decomposition.PCA
+        pca = sk_decomposition.PCA
         data = self._as_array(data)
-        return transform_result(pca, data, n_components=k, **kwargs)
+        return kpop_result.transform_result(pca, data, n_components=k, **kwargs)
 
     def mds(self, k=2, *, data='count-unity', **kwargs):
         """
@@ -122,7 +120,7 @@ class Projection(Attr):
         This is a low dimensional representation of data that tries to preserve
         the same distance matrix as in the original high dimensionality space.
         """
-        return self.sklearn(manifold.MDS, k, data, **kwargs)
+        return self.sklearn(sk_manifold.MDS, k, data, **kwargs)
 
     def kernel_pca(self, k=2, *, data='count-unity', **kwargs):
         """
@@ -136,7 +134,7 @@ class Projection(Attr):
                 :method:`kpop.Population.as_data` method.
 
         """
-        kernel_pca = decomposition.KernelPCA
+        kernel_pca = sk_decomposition.KernelPCA
         kwargs = with_defaults(
             kwargs,
             kernel='sigmoid',
@@ -176,17 +174,17 @@ class Projection(Attr):
         See Also:
             http://scikit-learn.org/stable/modules/generated/sklearn.manifold.TSNE.html#sklearn.manifold.TSNE
         """
-        pca = manifold.TSNE
+        pca = sk_manifold.TSNE
         pca_dims = None if self._population.num_loci < 15 else 15
         kwargs = with_defaults(kwargs, perplexity=30, pca=pca_dims)
         return self.sklearn(pca, k, data, **kwargs)
 
     def ica(self, k=2, *, data='count-unity', **kwargs):
-        ica = decomposition.FastICA
+        ica = sk_decomposition.FastICA
         return self.sklearn(ica, k, data, **kwargs)
 
     def factor(self, k=2, *, data='count-unity', **kwargs):
-        factor = decomposition.FactorAnalysis
+        factor = sk_decomposition.FactorAnalysis
         return self.sklearn(factor, k, data, **kwargs)
 
     def lda_projection(self, k=2, n_populations=5, **kwargs):
@@ -199,7 +197,7 @@ class Projection(Attr):
         if k >= n_populations:
             raise ValueError('k must be greater than n_populations')
 
-        lda = decomposition.LatentDirichletAllocation
+        lda = sk_decomposition.LatentDirichletAllocation
         data = self._as_array('count')
 
         if is_sklearn_version_gt(19):
@@ -207,14 +205,15 @@ class Projection(Attr):
         else:
             kwargs.update(n_topics=n_populations)
 
-        q_matrix = transform_result(lda, data, learning_method='batch',
-                                    **kwargs)
-        return decomposition.PCA(k).fit_transform(q_matrix)
+        q_matrix = kpop_result.transform_result(lda, data,
+                                                learning_method='batch',
+                                                **kwargs)
+        return sk_decomposition.PCA(k).fit_transform(q_matrix)
 
     def nmf(self, k=2, *, data='count', **kwargs):
         if 'pca' in kwargs:
             raise TypeError('nmf does not support PCA pre-processing')
-        nmf = decomposition.NMF
+        nmf = sk_decomposition.NMF
         return self.sklearn(nmf, k, data, **kwargs)
 
     def isomap(self, k=2, *, data='count-unity', n_neighbors=None, **kwargs):
@@ -230,7 +229,7 @@ class Projection(Attr):
         Returns:
 
         """
-        isomap = manifold.Isomap
+        isomap = sk_manifold.Isomap
         if n_neighbors is None:
             n_neighbors = min(n_neighbors or 25, self._population.size - 1)
         kwargs = with_defaults(kwargs, n_neighbors=n_neighbors)
@@ -246,14 +245,14 @@ class Projection(Attr):
         See Also:
             :cls:`sklearn.manifold.LocallyLinearEmbedding`
         """
-        lle = manifold.LocallyLinearEmbedding
+        lle = sk_manifold.LocallyLinearEmbedding
         if n_neighbors is None:
             n_neighbors = min(n_neighbors or 25, self._population.size - 1)
         kwargs_ = with_defaults(kwargs, n_neighbors=n_neighbors)
         return self.sklearn(lle, k, data, **kwargs_)
 
     def spectral(self, k=2, *, data='count-unity', **kwargs):
-        spectral = manifold.SpectralEmbedding
+        spectral = sk_manifold.SpectralEmbedding
         kwargs = with_defaults(kwargs, affinity='rbf')
         return self.sklearn(spectral, k, data, **kwargs)
 
@@ -281,7 +280,8 @@ class Projection(Attr):
             arr_data = self._as_array(data)
         else:
             arr_data = self.pca(pca, data)
-        return transform_result(transformer, arr_data, n_components=k, **kwargs)
+        return kpop_result.transform_result(transformer, arr_data,
+                                            n_components=k, **kwargs)
 
 
 #
@@ -302,5 +302,4 @@ def is_sklearn_version_gt(version=19):
     """
     Test Scikit Learn minor version.
     """
-    import sklearn
     return int(sklearn.__version__.split('.')[1]) >= version

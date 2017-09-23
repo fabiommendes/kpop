@@ -1,4 +1,4 @@
-from kpop.utils import lazy_module
+from kpop.libs import lazy_module
 
 
 def test_lazy_module():

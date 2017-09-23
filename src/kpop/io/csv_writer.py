@@ -1,6 +1,6 @@
 import os
 
-import numpy as np
+from ..libs import np
 
 
 def csv_lines(data, sep=',', columns=None, align=None, end=os.linesep,

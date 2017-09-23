@@ -1,6 +1,6 @@
-import numpy as np
+from ..libs import np
 
-from ..utils import lazy_module
+from kpop.libs import lazy_module
 
 cm = lazy_module('matplotlib.cm')
 

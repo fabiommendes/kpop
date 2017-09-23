@@ -1,4 +1,4 @@
-import numpy as np
+from ..libs import np
 from sidekick import Record, field, record_to_dict
 
 from ..io.utils import file_or_path
