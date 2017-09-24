@@ -15,8 +15,9 @@ from .simulation import Simulation
 from .statistics import Statistics
 from .utils import discard_attrs
 from .utils import get_freqs, set_freqs, hfreqs_vector, random_individual_data
+from ..data_converter import DataConverter
 from ..libs import kpop
-from ..libs import np, sk_preprocessing
+from ..libs import np
 from ..prob import Prob
 from ..utils import fill_freqs_vector, freqs_to_matrix, fn_lazy, fn_property
 from ..utils import random_frequencies
@@ -165,6 +166,27 @@ class PopulationBase(collections.Sequence, metaclass=abc.ABCMeta):
                  num_loci=None, num_alleles=None):
 
         # Normalize frequencies
+        self._init_freqs(freqs)
+
+        # Fix num_loci from data
+        if self._freqs is not None:
+            self.num_loci = len(self._freqs)
+            if num_loci is not None and num_loci != self.num_loci:
+                raise ValueError('invalid value for num_loci')
+        elif num_loci is not None:
+            self.num_loci = num_loci
+
+        # Save required attributes
+        self.allele_names = allele_names
+        self.id = id
+
+        # Save optional given lazy attributes
+        if ploidy is not None:
+            self.ploidy = ploidy
+        if num_alleles is not None:
+            self.num_alleles = num_alleles
+
+    def _init_freqs(self, freqs):
         if freqs is None:
             self._freqs = None
         elif len(freqs) == 0:
@@ -185,24 +207,6 @@ class PopulationBase(collections.Sequence, metaclass=abc.ABCMeta):
                 self.num_alleles = 2
             else:
                 raise ValueError('invalid frequency data')
-
-        # Fix num_loci from data
-        if self._freqs is not None:
-            self.num_loci = len(self._freqs)
-            if num_loci is not None and num_loci != self.num_loci:
-                raise ValueError('invalid value for num_loci')
-        elif num_loci is not None:
-            self.num_loci = num_loci
-
-        # Save required attributes
-        self.allele_names = allele_names
-        self.id = id
-
-        # Save optional given lazy attributes
-        if ploidy is not None:
-            self.ploidy = ploidy
-        if num_alleles is not None:
-            self.num_alleles = num_alleles
 
     def __repr__(self):
         return self.io.render(max_loci=20, max_ind=10)
@@ -274,7 +278,7 @@ class PopulationBase(collections.Sequence, metaclass=abc.ABCMeta):
                 Flatten data, but first shuffle the positions of alleles at
                 each loci. This is recommended if data does not carry reliable
                 haplotype information.
-            * raw-unity, flat-unity, rflat-unity:
+            * raw-norm, flat-norm, rflat-norm:
                 Normalized versions of "raw", "flat", and "rflat" methods. All
                 components are rescaled with zero mean and unity variance.
             * count:
@@ -282,7 +286,7 @@ class PopulationBase(collections.Sequence, metaclass=abc.ABCMeta):
                 occurrences of the first allele. Most methdds will require
                 normalization, so you probably should consider an specific
                 method such as count-unity, count-snp, etc
-            * count-unity:
+            * count-norm:
                 Normalized version of count scaled to zero mean and unity
                 variance.
             * count-snp:
@@ -301,46 +305,8 @@ class PopulationBase(collections.Sequence, metaclass=abc.ABCMeta):
         Returns:
             An ndarray with transformed data.
         """
-        data = self._as_array()
-
-        # Raw conversion
-        if which == 'raw':
-            return data
-        elif which == 'raw-unity':
-            data = data - data.mean(axis=0)
-            std = data.std(axis=0)
-            data /= np.where(std, std, 1)
-            return data
-
-        # Flattened representations
-        elif which in {'flat', 'flat-unity'}:
-            data = data.reshape(self.size, self.num_loci * self.ploidy)
-            if which == 'flat-unity':
-                return sk_preprocessing.scale(data.astype(float))
-            return data
-        elif which in {'rflat', 'rflat-unity'}:
-            return self.shuffle_loci().as_array(which[1:])
-
-        # Counters
-        elif which in {'count', 'count-unity', 'count-snp', 'count-center'}:
-            count = (np.array(data) == 1).sum(axis=2)
-            if which == 'count-unity':
-                return sk_preprocessing.scale(count.astype(float))
-            elif which == 'count-snp':
-                mu = count.mean(axis=0)
-                p = mu / self.ploidy
-                norm = np.sqrt(p * (1 - p))
-                norm = np.where(norm, norm, 1)
-                return (count - mu) / norm
-            elif which == 'count-center':
-                if self.ploidy % 2:
-                    return count - self.ploidy / 2
-                else:
-                    return count - self.ploidy // 2
-            else:
-                return count
-
-        raise ValueError('invalid conversion method: %r' % which)
+        data_converter = DataConverter(self._as_array())
+        return data_converter(which)
 
     def drop_non_biallelic(self, **kwargs):
         """

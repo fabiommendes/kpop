@@ -84,16 +84,16 @@ class TestPopulation:
 
     def test_conversion_to_raw_array(self, popB):
         assert (popB.as_array() == popB.as_array('raw')).all()
-        assert popB.as_array('raw-unity').shape == (4, 5, 2)
+        assert popB.as_array('raw-norm' ).shape == (4, 5, 2)
 
     def test_flat_conversion(self, popB):
         assert popB.as_array('flat').shape == (4, 10)
         assert popB.as_array('rflat').shape == (4, 10)
 
-        flat = popB.as_array('flat-unity')
+        flat = popB.as_array('flat-norm' )
         assert_almost_equal(flat.mean(0), 0)
 
-        flat = popB.as_array('rflat-unity')
+        flat = popB.as_array('rflat-norm' )
         assert_almost_equal(flat.mean(0), 0)
 
     def test_conversion_to_count_array(self, popB):

@@ -1,3 +1,4 @@
+from kpop.plot.utils import add_graphical_elements
 from .utils import (
     normalize_coeffs, sort_coeffs,
     _colors, _pop_labels, _pop_sizes,
@@ -85,16 +86,8 @@ def admixture_bars(coeffs, colors=None, legend=True,
             ax.plot([x, x], [0, 1], 'k--', lw=2)
 
     # Create additional graphic elements
-    if legend:
-        ax.legend()
-    if ylabel:
-        plt.ylabel(ylabel, axes=ax)
-    if pop_ticks is not None:
-        plt.xticks(pop_ticks, pop_labels, axes=ax)
-    else:
-        plt.xticks([], axes=ax)
-    if title:
-        plt.title(title, axes=ax)
+    add_graphical_elements(ax, legend=legend, ylabel=ylabel, xticks=pop_ticks,
+                           xticks_labels=pop_labels, title=title)
     return ax
 
 

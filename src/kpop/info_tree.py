@@ -1,6 +1,7 @@
+import json
 from collections import OrderedDict
 from os import linesep
-import json
+
 
 class InfoTree:
     """

@@ -30,7 +30,7 @@ class Clusterization(Attr):
         """
         An alias to Population.cluster(...)
         """
-        return cluster(which, k, **kwargs)
+        # return cluster(which, k, **kwargs)
 
     def labels(self, which, k=5, **kwargs):
         """
@@ -43,7 +43,8 @@ class Clusterization(Attr):
         """
 
     def lda(self, k, **kwargs):
-        data = self._population.as_array('count')
+        # data = self._population.as_array('count')
+        pass
 
     def missclassifications(self, which, labels='populations'):
         """

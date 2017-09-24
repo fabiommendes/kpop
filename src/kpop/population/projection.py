@@ -50,7 +50,7 @@ class Projection(Attr):
 
         return self(k, which, **kwargs)
 
-    def pca(self, k=2, data='count-unity', **kwargs):
+    def pca(self, k=2, data='count-norm', **kwargs):
         """
         Principal component analysis.
 
@@ -113,7 +113,7 @@ class Projection(Attr):
         data = self._as_array(data)
         return kpop_result.transform_result(pca, data, n_components=k, **kwargs)
 
-    def mds(self, k=2, *, data='count-unity', **kwargs):
+    def mds(self, k=2, *, data='count-norm', **kwargs):
         """
         Multidimensional scaling.
 
@@ -122,7 +122,7 @@ class Projection(Attr):
         """
         return self.sklearn(sk_manifold.MDS, k, data, **kwargs)
 
-    def kernel_pca(self, k=2, *, data='count-unity', **kwargs):
+    def kernel_pca(self, k=2, *, data='count-norm', **kwargs):
         """
         Kernel PCA transformation of data.
 
@@ -141,7 +141,7 @@ class Projection(Attr):
         )
         return self.sklearn(kernel_pca, k, data, **kwargs)
 
-    def tsne(self, k=2, *, data='count-unity', **kwargs):
+    def tsne(self, k=2, *, data='count-norm', **kwargs):
         """
         t-distributed stochastic neighbor embedding.
 
@@ -179,11 +179,11 @@ class Projection(Attr):
         kwargs = with_defaults(kwargs, perplexity=30, pca=pca_dims)
         return self.sklearn(pca, k, data, **kwargs)
 
-    def ica(self, k=2, *, data='count-unity', **kwargs):
+    def ica(self, k=2, *, data='count-norm', **kwargs):
         ica = sk_decomposition.FastICA
         return self.sklearn(ica, k, data, **kwargs)
 
-    def factor(self, k=2, *, data='count-unity', **kwargs):
+    def factor(self, k=2, *, data='count-norm', **kwargs):
         factor = sk_decomposition.FactorAnalysis
         return self.sklearn(factor, k, data, **kwargs)
 
@@ -216,7 +216,7 @@ class Projection(Attr):
         nmf = sk_decomposition.NMF
         return self.sklearn(nmf, k, data, **kwargs)
 
-    def isomap(self, k=2, *, data='count-unity', n_neighbors=None, **kwargs):
+    def isomap(self, k=2, *, data='count-norm', n_neighbors=None, **kwargs):
         """
         Isomap Embedding.
 
@@ -251,12 +251,12 @@ class Projection(Attr):
         kwargs_ = with_defaults(kwargs, n_neighbors=n_neighbors)
         return self.sklearn(lle, k, data, **kwargs_)
 
-    def spectral(self, k=2, *, data='count-unity', **kwargs):
+    def spectral(self, k=2, *, data='count-norm', **kwargs):
         spectral = sk_manifold.SpectralEmbedding
         kwargs = with_defaults(kwargs, affinity='rbf')
         return self.sklearn(spectral, k, data, **kwargs)
 
-    def sklearn(self, transformer, k=2, data='count-unity', pca=None,
+    def sklearn(self, transformer, k=2, data='count-norm', pca=None,
                 **kwargs):
         """
         Apply a scikit-learn dimensionality reduction method to data. Users
@@ -269,7 +269,7 @@ class Projection(Attr):
             k (int):
                 Number of dimensions of target space.
             data ('count-?' or 'flat-?'):
-                See the :method:`as_array` method. Defaults to 'count-unity'.
+                See the :method:`as_array` method. Defaults to 'count-norm' .
             pca (int or None):
                 If given, preprocess data with PCA and reduce it to the given
                 number of dimensions. Many algoritms perform better (both in

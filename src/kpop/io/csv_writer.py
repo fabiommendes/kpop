@@ -3,8 +3,8 @@ import os
 from ..libs import np
 
 
-def csv_lines(data, sep=',', columns=None, align=None, end=os.linesep,
-              decimal_places=None):
+def csv_lines(data, sep=',', columns=None, align=None,  # noqa: C901
+              end=os.linesep, decimal_places=None):
     """
     Renders 2D table ``data`` as CSV. It returns a list of lines that should
     be written in a file object. This function accepts many formatting options

@@ -54,7 +54,7 @@ class Admixture(Attr):
         else:
             raise NotImplementedError
 
-    def admixture_classify(self, pop, classifier='admixture',
+    def admixture_classify(self, pop, classifier='admixture',  # noqa: C901
                            keep_parental=False, **kwargs):
         """
         Compute admixture coefficients for individuals in the given population

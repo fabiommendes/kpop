@@ -43,22 +43,11 @@ def run_admixture(pop, k, job_dir=None, disp=1, supervised=False):
 
     # For supervised learning, create a .pop file
     if supervised:
-        with open(os.path.join(job_dir, 'job.pop'), 'w') as F:
-            for label in supervised:
-                if label is None:
-                    F.write('-\n')
-                else:
-                    F.write('%s\n' % label)
+        create_pop_file(os.path.join(job_dir, 'job.pop'), supervised)
 
     # Convert everything to a binary format since it seems that ADMIXTURE does
     # not support the regular .ped files (?)
-    cmd = ['plink', '--file', 'job', '--out', 'job', '--make-bed', '--noweb']
-    try:
-        subprocess.run(cmd, stdout=PIPE, check=True, cwd=job_dir)
-    except subprocess.CalledProcessError as ex:
-        msg = 'plink ended with runtime code %s.\n\n' % ex.returncode
-        msg += ex.stdout.decode('utf8')
-        raise RuntimeError(msg)
+    convert_to_bed('job', cwd=job_dir)
 
     # Set command line options to the admixture program
     cmd = ['admixture', 'job.bed', str(k)]
@@ -83,3 +72,29 @@ def run_admixture(pop, k, job_dir=None, disp=1, supervised=False):
         result = parse(admix_out, qfile=qfile, pfile=pfile)
 
     return result
+
+
+def create_pop_file(path, labels):
+    """
+    Creates a .pop file from the given list of labels.
+    """
+    with open(path, 'w') as F:
+        for label in labels:
+            if label is None:
+                F.write('-\n')
+            else:
+                F.write('%s\n' % label)
+
+
+def convert_to_bed(file, cwd):
+    """
+    Convert plink's .ped files to a .bed file.
+    """
+
+    cmd = ['plink', '--file', file, '--out', file, '--make-bed', '--noweb']
+    try:
+        subprocess.run(cmd, stdout=PIPE, check=True, cwd=cwd)
+    except subprocess.CalledProcessError as ex:
+        msg = 'plink ended with runtime code %s.\n\n' % ex.returncode
+        msg += ex.stdout.decode('utf8')
+        raise RuntimeError(msg)

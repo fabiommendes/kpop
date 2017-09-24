@@ -69,7 +69,7 @@ class TestClassification:
 
     def test_naive_bayes_with_bad_method(self, popB):
         labels = list('aabb')
-        for method in ['count-unity', 'flat-unity', 'count-snp']:
+        for method in ['count-norm' , 'flat-norm' , 'count-snp']:
             with pytest.raises(ValueError):
                 popB.classification.naive_bayes(labels, data=method)
 

@@ -3,12 +3,14 @@ from colorama import init
 
 from .create import create
 from .export import export
+from .import_ import import_
+from .shell import shell
 from .show import show
 from .stats import stats
-from .cluster import cluster
-from .admix import admix
-from .shell import shell
-from .import_ import import_
+
+
+# from .cluster import cluster
+# from .admix import admix
 
 
 @click.group()

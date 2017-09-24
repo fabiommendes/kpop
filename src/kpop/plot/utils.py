@@ -1,6 +1,4 @@
-from ..libs import np
-
-from kpop.libs import lazy_module
+from ..libs import np, lazy_module, plt
 
 cm = lazy_module('matplotlib.cm')
 
@@ -106,3 +104,25 @@ def admixture_coords(pop, vertices):
             coords += p * v
         result.append(list(coords))
     return np.array(result)
+
+
+def add_graphical_elements(ax, *, legend=False, ylabel=None, xticks=None,
+                           xticks_labels=(),
+                           title=None):
+    """
+    Include additional graphic elements to an axis instance.
+    """
+
+    if legend:
+        ax.legend()
+
+    if ylabel:
+        plt.ylabel(ylabel, axes=ax)
+
+    if xticks is not None:
+        plt.xticks(xticks, xticks_labels, axes=ax)
+    else:
+        plt.xticks([], axes=ax)
+
+    if title:
+        plt.title(title, axes=ax)
