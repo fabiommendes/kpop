@@ -161,7 +161,7 @@ class TestPopulation:
             [[1, 3], [1, 2], [0, 1]],
             [[1, 1], [1, 1], [1, 1]],
         ])
-        new, indexes = pop.drop_non_biallelic()
+        new = pop.drop_non_biallelic()
         assert deeplist(new.as_array()) == [
             [[1, 2], [0, 1]],
             [[1, 1], [1, 1]],
@@ -201,13 +201,14 @@ class TestPopulation:
         maps = [{} for _ in range(popA.num_loci)]
         assert popA == popA.map_alleles(maps)
 
-    def drop_missing_data(self):
+    def test_drop_missing_data(self):
         pop = Population([
             [[1, 3], [1, 2], [1, 1]],
             [[2, 2], [1, 1], [0, 0]],
             [[1, 2], [1, 1], [1, 0]],
         ])
-        assert pop.drop_missing_data().shape == (1, 3, 2)
+        assert pop.drop_missing_data(0).shape == (1, 3, 2)
+        assert pop.drop_missing_data(0, .3).shape == (2, 3, 2)
         assert pop.drop_missing_data(1).shape == (3, 2, 2)
 
 

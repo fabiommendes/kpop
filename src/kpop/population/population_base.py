@@ -228,6 +228,11 @@ class PopulationBase(collections.Sequence, metaclass=abc.ABCMeta):
             return self._getitem_by_label(idx)
         elif isinstance(idx, slice):
             return self._getslice(idx)
+        elif isinstance(idx, np.ndarray) and idx.dtype.kind == 'i':
+            return self.keep_individuals(idx)
+        elif isinstance(idx, np.ndarray) and idx.dtype.kind == 'b':
+            idx = np.arange(self.size)[idx]
+            return self.keep_individuals(idx)
         else:
             typename = idx.__class__.__name__
             raise TypeError('invalid index type: %s' % typename)
@@ -308,16 +313,18 @@ class PopulationBase(collections.Sequence, metaclass=abc.ABCMeta):
         data_converter = DataConverter(self._as_array())
         return data_converter(which)
 
+    def find_non_biallelic(self):
+        """
+        Finds all non-biallelic loci in population.
+        """
+        return self.statistics.non_biallelic()
+
     def drop_non_biallelic(self, **kwargs):
         """
-        Creates a new population that remove all non-biallelic loci.
-
-        Returns:
-            A (population, removed) tuple with the new population and a list of
-            of all dropped locus indexes.
+        Creates a new population removing all non-biallelic loci.
         """
-        bad_loci = self.statistics.non_biallelic()
-        return self.drop_loci(bad_loci, **kwargs), bad_loci
+        bad_loci = self.find_non_biallelic()
+        return self.drop_loci(bad_loci, **kwargs)
 
     def force_biallelic(self, **kwargs):
         """
@@ -369,7 +376,36 @@ class PopulationBase(collections.Sequence, metaclass=abc.ABCMeta):
         keep = np.array([i for i in range(self.size) if i not in indexes])
         return self.keep_individuals(keep, **kwargs)
 
-    def drop_missing_data(self, axis=0, thresh=0, **kwargs):
+    def find_missing_data(self, axis=0, thresh=0.0):
+        """
+        Return the indexes for all all individuals or loci that have a
+        proportion of missing data higher than the given threshold.
+
+        Args:
+            axis (0 or 1):
+                If axis=0 or 'individuals' (default), it will scan individuals
+                with a minimum amount of missing data values. If axis=1 or
+                'loci', it will drop all loci with the minimum ammount of
+                missing data.
+            thresh (float, between 0 and 1):
+                The maximum proportion of missing data tolerated.
+
+        Returns:
+            An array of indexes.
+        """
+
+        missing = self._as_array() == 0
+
+        if axis in (0, 'individuals'):
+            mask = np.mean(missing, axis=(1, 2)) > thresh
+            return np.arange(self.size)[mask]
+        elif axis in (1, 'loci'):
+            mask = np.mean(missing, axis=(0, 2)) > thresh
+            return np.arange(self.size)[mask]
+        else:
+            raise ValueError('invalid value for axis: %r' % axis)
+
+    def drop_missing_data(self, axis=0, thresh=0.0, **kwargs):
         """
         Drop all individuals or loci that have a proportion of missing data
         higher than the given threshold.
@@ -386,18 +422,11 @@ class PopulationBase(collections.Sequence, metaclass=abc.ABCMeta):
         Returns:
             A new population.
         """
-        missing = self._as_array() == 0
-
+        indexes = self.find_missing_data(axis, thresh)
         if axis in (0, 'individuals'):
-            mask = np.mean(missing, axis=(1, 2)) < thresh
-            indexes = np.arange(self.size)[mask]
             return self.drop_individuals(indexes, **kwargs)
-        elif axis in (1, 'loci'):
-            mask = np.mean(missing, axis=(0, 2)) < thresh
-            indexes = np.arange(self.size)[mask]
-            return self.drop_loci(indexes, **kwargs)
         else:
-            raise ValueError('invalid value for axis: %r' % axis)
+            return self.drop_loci(indexes, **kwargs)
 
     @abc.abstractmethod
     def keep_loci(self, indexes, **kwargs):
