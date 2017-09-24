@@ -369,6 +369,36 @@ class PopulationBase(collections.Sequence, metaclass=abc.ABCMeta):
         keep = np.array([i for i in range(self.size) if i not in indexes])
         return self.keep_individuals(keep, **kwargs)
 
+    def drop_missing_data(self, axis=0, thresh=0, **kwargs):
+        """
+        Drop all individuals or loci that have a proportion of missing data
+        higher than the given threshold.
+
+        Args:
+            axis (0 or 1):
+                If axis=0 or 'individuals' (default), it will scan individuals
+                with a minimum amount of missing data values. If axis=1 or
+                'loci', it will drop all loci with the minimum ammount of
+                missing data.
+            thresh (float, between 0 and 1):
+                The maximum proportion of missing data tolerated.
+
+        Returns:
+            A new population.
+        """
+        missing = self._as_array() == 0
+
+        if axis in (0, 'individuals'):
+            mask = np.mean(missing, axis=(1, 2)) < thresh
+            indexes = np.arange(self.size)[mask]
+            return self.drop_individuals(indexes, **kwargs)
+        elif axis in (1, 'loci'):
+            mask = np.mean(missing, axis=(0, 2)) < thresh
+            indexes = np.arange(self.size)[mask]
+            return self.drop_loci(indexes, **kwargs)
+        else:
+            raise ValueError('invalid value for axis: %r' % axis)
+
     @abc.abstractmethod
     def keep_loci(self, indexes, **kwargs):
         """
