@@ -40,15 +40,14 @@ class MultiPopulation(PopulationBase):
     def __len__(self):
         return sum(len(x) for x in self.populations)
 
-    def __getitem__(self, idx):
-        if isinstance(idx, int):
-            i = idx
-            for pop in self.populations:
-                size = len(pop)
-                if i >= size:
-                    i -= size
-                else:
-                    return pop[i]
+    def _getitem_by_index(self, idx):
+        i = idx
+        for pop in self.populations:
+            size = len(pop)
+            if i >= size:
+                i -= size
+            else:
+                return pop[i]
         raise IndexError(idx)
 
     def __iter__(self):

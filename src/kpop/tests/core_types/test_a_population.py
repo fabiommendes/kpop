@@ -66,7 +66,7 @@ class TestPopulation:
         assert list(popA.hfreqs_vector) == [0, 0, 0.5, 0.5, 1]
 
     #
-    # Basic slicing and data extraction interfaces
+    # Basic indexing, slicing and data extraction interfaces
     #
     def test_conversion_to_array(self, popB):
         arr = popB.as_array('raw')
@@ -78,6 +78,9 @@ class TestPopulation:
             [[2, 2], [1, 2], [1, 1], [1, 2], [2, 1]],
             [[2, 2], [2, 2], [2, 2], [2, 1], [1, 2]],
         ]).all()
+
+    def test_accept_fetch_individual_by_label(self, popB):
+        assert popB['B1'] == popB[0]
 
     def test_conversion_to_raw_array(self, popB):
         assert (popB.as_array() == popB.as_array('raw')).all()

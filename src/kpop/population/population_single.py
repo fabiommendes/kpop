@@ -49,8 +49,11 @@ class Population(PopulationBase):
     def __len__(self):
         return len(self._data)
 
-    def __getitem__(self, idx):
+    def _getitem_by_index(self, idx):
         return IndividualProxy(self, idx)
+
+    def _getslice(self, slice):
+        return Population(self._data[slice], id=self.id)
 
     def __iter__(self):
         for idx in range(self.size):

@@ -68,7 +68,8 @@ class PopulationBase(collections.Sequence, metaclass=abc.ABCMeta):
 
     # Missing data
     has_missing_data = property(lambda _: any(ind.has_missing for ind in _))
-    missing_data_total = property(lambda _: sum(ind.missing_data_total for ind in _))
+    missing_data_total = property(
+        lambda _: sum(ind.missing_data_total for ind in _))
     missing_data_ratio = fn_property(_.missing_data_total / _.data_size)
 
     # Meta information
@@ -215,6 +216,29 @@ class PopulationBase(collections.Sequence, metaclass=abc.ABCMeta):
         if self.shape != other.shape:
             return False
         return all(x == y for x, y in zip(self, other))
+
+    def __getitem__(self, idx):
+        if isinstance(idx, int):
+            return self._getitem_by_index(idx)
+        elif isinstance(idx, str):
+            return self._getitem_by_label(idx)
+        elif isinstance(idx, slice):
+            return self._getslice(idx)
+        else:
+            typename = idx.__class__.__name__
+            raise TypeError('invalid index type: %s' % typename)
+
+    def _getitem_by_label(self, key):
+        idx = self.meta.index.get_loc(key)
+        return self._getitem_by_index(idx)
+
+    def _getitem_by_index(self, idx):
+        raise NotImplementedError
+
+    def _getslice(self, slice):
+        item = self._getitem_by_index
+        data = [item(i) for i in range(*slice.indices(self.size))]
+        return kpop.Population(data, id=self.id)
 
     def _population(self, *args, **kwargs):
         from kpop import Population
