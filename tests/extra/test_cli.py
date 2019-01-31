@@ -10,9 +10,11 @@ from kpop.population.io import Io
 
 
 def exec_main(argv):
+    old_out = sys.stdout
+    old_argv = sys.argv
+
     try:
-        old_out, sys.stdout = sys.stdout, io.StringIO()
-        old_argv = sys.argv
+        sys.stdout = io.StringIO()
         sys.argv = argv
         main()
     except SystemExit:

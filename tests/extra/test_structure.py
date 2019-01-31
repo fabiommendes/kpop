@@ -75,7 +75,7 @@ class TestStructureParser:
         data1 = locus1['data']
         assert list(data1.columns) == \
                ['total', 'cluster_0', 'cluster_1', 'cluster_2']
-        assert (data1.as_matrix() == [
+        assert (data1.values == [
             [0.605, 0.813, 0.840, 0.434],
             [0.395, 0.187, 0.160, 0.566]
         ]).all()
@@ -115,7 +115,7 @@ class TestStructureParser:
         assert (abs(totals - 1) < 2e-3).all()
 
     def test_structure_parser_extracts_memberships(self, example):
-        assert (example.pre_defined_membership.as_matrix() == [
+        assert (example.pre_defined_membership.values == [
             [0.012, 0.978, 0.010, 105],
             [0.011, 0.008, 0.980, 154],
             [0.944, 0.008, 0.048, 59],

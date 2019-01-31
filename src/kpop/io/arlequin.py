@@ -54,7 +54,7 @@ def create_header(pop, file=sys.stdout, title=None, missing='-'):
     file.write("MissingData='%s'\n" % missing)
 
 
-def create_sample_data(subpop, file, missing):
+def create_sample_data(subpop, file, missing='-'):
     labels = (ind.id or 'ind%s' % i for i, ind in enumerate(subpop))
     labels = ['    %s ' % label for label in labels]
     label_size = len(max(labels, key=len))
@@ -69,7 +69,7 @@ def create_sample_data(subpop, file, missing):
 
         # Second line
         file.write(indent)
-        file.write(' '.join(render(ind[:, 0], missing=missing)))
+        file.write(' '.join(render(ind[:, 1], missing=missing)))
         file.write('\n')
 
 

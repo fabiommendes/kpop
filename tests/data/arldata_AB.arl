@@ -17,7 +17,7 @@ SampleData={
     popA1 1 1 2 1 2
             1 2 1 2
     popA2 1 1 1 1 1
-            1 1 1 1
+            2 2 2 2
 }
 
 SampleName="popB"
@@ -26,6 +26,6 @@ SampleData={
     popB1 1 2 1 2 1
             2 1 2 1
     popB2 1 1 1 1 1
-            1 1 1 1
+            2 2 2 2
 }
 

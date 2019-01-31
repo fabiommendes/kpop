@@ -33,3 +33,4 @@ src/pystructure/__meta__.py
 # Testing and temporary files
 .tox/
 /.coverage
+tests/tmp/
