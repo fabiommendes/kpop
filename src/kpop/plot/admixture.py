@@ -10,7 +10,7 @@ from ..libs import np, plt
 def admixture_bars(coeffs, colors=None, legend=True,
                    ylabel='Ancestry proportions',
                    pop_sizes=None, pop_labels=None, parental_labels=None,
-                   separaton_lines=True, sort=None,
+                   separation_lines=True, sort=None,
                    title='Admixture coefficients', axes=None):
     """
     Makes an bar plot of admixture coefficients.
@@ -36,7 +36,7 @@ def admixture_bars(coeffs, colors=None, legend=True,
         parental_labels (list[str]):
             A list of labels for the parental populations. The bar plot shows
             the proportions for each parental population.
-        separaton_lines (bool):
+        separation_lines (bool):
             If true, draws a thin line separating each population.
         sort (int):
             Corresponds to the index of a parental population that is used to
@@ -81,7 +81,7 @@ def admixture_bars(coeffs, colors=None, legend=True,
     ax.axis([0, num_individuals, 0, 1])
 
     # Create vertical lines for separating populations
-    if separaton_lines and pop_sizes is not None:
+    if separation_lines and pop_sizes is not None:
         for x in np.add.accumulate(pop_sizes)[:-1]:
             ax.plot([x, x], [0, 1], 'k--', lw=2)
 
