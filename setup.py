@@ -13,11 +13,12 @@ typing_dep = [] if sys.version_info >= (3, 5) else ['typing']
 # Cython support
 try:
     from Cython.Distutils import build_ext
-
     mod_ext = '.pyx'
+    print('Using Cython to build extensions')
 except ImportError:
     mod_ext = '.c'
     build_ext = None
+    print('Cython not found!')
 
 # Include numpy headers
 try:
@@ -84,7 +85,6 @@ setup(
     ],
     extras_require={
         'dev': [
-            'python-boilerplate',
             'pytest',
             'pytest-cov',
             'manuel',

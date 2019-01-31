@@ -4,7 +4,7 @@ import pytest
 mpl.use('Agg')
 
 from kpop import Population, Individual
-from kpop.tests import load_data, data_path, temporary_location
+from tests import load_data, data_path, temporary_location
 
 
 #
@@ -12,6 +12,10 @@ from kpop.tests import load_data, data_path, temporary_location
 #
 @pytest.fixture
 def popA_data():
+    return popA_data_()
+
+
+def popA_data_():
     return [
         '11 22 12 12 12',
         '11 22 11 22 21',
@@ -36,7 +40,11 @@ def popB_data():
 
 @pytest.fixture
 def popA(popA_data):
-    return Population([Individual(x) for x in popA_data], id='A')
+    return popA_(popA_data)
+
+
+def popA_(data):
+    return Population([Individual(x) for x in data], id='A')
 
 
 @pytest.fixture

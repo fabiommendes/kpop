@@ -4,7 +4,7 @@ import pytest
 
 from kpop import Population
 from kpop.io import export_arlequin, csv_lines
-from kpop.tests import load_data
+from tests import load_data
 
 
 @pytest.fixture

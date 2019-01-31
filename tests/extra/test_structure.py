@@ -4,7 +4,7 @@ import pytest
 
 from kpop.external.structure import run_structure
 from kpop.parsers.structure import parse
-from kpop.tests import is_ci
+from tests import is_ci
 
 mark_external = pytest.mark.skipif(
     is_ci,

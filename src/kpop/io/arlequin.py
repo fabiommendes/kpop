@@ -2,11 +2,11 @@ import itertools
 import sys
 from typing import List
 
-from ..population import Population
+from ..population import PopulationBase
 from ..libs import np
 
 
-def export_arlequin(pop: Population,
+def export_arlequin(pop: PopulationBase,
                     file=sys.stdout, *,
                     title: str = None,
                     names: List[str] = None,

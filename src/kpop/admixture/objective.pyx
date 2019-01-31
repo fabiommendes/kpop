@@ -1,4 +1,4 @@
-#cython: boundscheck=False, cdivision=True, wraparound=False, initializedcheck=False, overflowcheck=False
+# cython: boundscheck=False, cdivision=True, wraparound=False, initializedcheck=False, overflowcheck=False, language_level=3
 
 """
 Definitions for the objective function phi(Q, F; G) and its decompositions and
@@ -19,42 +19,38 @@ cdef extern from "alloca.h" nogil:
     void* alloca(size_t)
 
 
-ctypedef struct state:
-    int ii, jj, kk
-    double[:, :] Q
-    double[:, :] F
-    int[:, :] G
+cdef class State:
+    cdef int ii, jj, kk
+    cdef double[:, :] Q
+    cdef double[:, :] F
+    cdef int[:, :] G
 
+    def __cinit__(self, double[:, :] Q, double[:, :] F, int[:, :] G):
+        """
+        Return state from input data.
+        """
 
-cdef state make_state(double[:, :] Q, double[:, :] F, int[:, :] G) except *:
-    """
-    Return state from input data.
-    """
+        self.Q = Q
+        self.F = F
+        self.G = G
 
-    cdef state st
-    st.Q = Q
-    st.F = F
-    st.G = G
+        if G is None:
+            raise ValueError('G matrix is required')
+        self.ii = G.shape[0]
+        self.jj = G.shape[1]
 
-    if G is None:
-        raise ValueError('G matrix is required')
-    st.ii = G.shape[0]
-    st.jj = G.shape[1]
-
-    if Q is None and F is None:
-        raise ValueError('Q or F matrix is required')
-    if (Q is not None and Q.shape[0] != st.ii or
-                    F is not None and F.shape[0] != st.jj or
-            (Q is not None and F is not None and Q.shape[1] != F.shape[1])):
-        raise ValueError('Invalid shapes: Q[%s, %s], F[%s, %s], G[%s, %s]' % (
-            Q.shape[0], Q.shape[1], F.shape[0], F.shape[1], st.ii, st.jj
-        ))
-    if Q is not None:
-        st.kk = Q.shape[1]
-    else:
-        st.kk = F.shape[1]
-
-    return st
+        if Q is None and F is None:
+            raise ValueError('Q or F matrix is required')
+        if (Q is not None and Q.shape[0] != self.ii or
+                        F is not None and F.shape[0] != self.jj or
+                (Q is not None and F is not None and Q.shape[1] != F.shape[1])):
+            raise ValueError('Invalid shapes: Q[%s, %s], F[%s, %s], G[%s, %s]' % (
+                Q.shape[0], Q.shape[1], F.shape[0], F.shape[1], self.ii, self.jj
+            ))
+        if Q is not None:
+            self.kk = Q.shape[1]
+        else:
+            self.kk = F.shape[1]
 
 
 def validate_input(Q, F, G):
@@ -62,7 +58,7 @@ def validate_input(Q, F, G):
     Validate input for Q, F and G matrices.
     """
 
-    make_state(Q, F, G)
+    State(Q, F, G)
 
 
 #
@@ -213,13 +209,10 @@ def phi_fj(int j, np.ndarray[double, ndim=1] Fj,
         fj: array of ancestral frequencies at locus j.
     """
 
-    cdef state st
     cdef double result
 
     if accelerate:
-        st = make_state(Q, None, G)
-        result = _phi_fj(j, &Fj[0], &st, epsilon)
-        return result
+        return _phi_fj(j, &Fj[0], State(Q, None, G), epsilon)
 
     mean_f = np.dot(Q, Fj)
     mean_F = np.dot(Q, 1 - Fj)
@@ -228,7 +221,7 @@ def phi_fj(int j, np.ndarray[double, ndim=1] Fj,
            - np.dot(2 - gj, np.log(mean_F))
 
 
-cdef double _phi_fj(int j, double* Fj, state* st, double e=1e-100):
+cdef double _phi_fj(int j, double* Fj, State st, double e=1e-100):
     # This implementation is accelerated with 16 partial multiplications before
     # calling log(x). Log is an expensive function and this approach cuts the
     # number of log(x) calls by a factor of 16.
@@ -277,12 +270,10 @@ def grad_qi(int i, np.ndarray[double, ndim=1] Qi, F, G, epsilon=1e-50, accelerat
     """
 
     cdef np.ndarray[double, ndim=1] grad
-    cdef state st
 
     if accelerate:
-        st = make_state(None, F, G)
         grad = np.empty(Qi.shape[0], dtype=float)
-        _grad_qi(i, &Qi[0], &st, &grad[0], epsilon)
+        _grad_qi(i, &Qi[0], State(None, F, G), &grad[0], epsilon)
         return grad
 
     F_comp = 1 - F
@@ -299,7 +290,7 @@ def grad_qi(int i, np.ndarray[double, ndim=1] Qi, F, G, epsilon=1e-50, accelerat
     return -(aux1 + aux2)
 
 
-cdef void _grad_qi(int i, double* Qi, state* st, double* grad, double e=1e-50) nogil:
+cdef void _grad_qi(int i, double* Qi, State st, double* grad, double e=1e-50) nogil:
     cdef int j, k, n
     cdef int ii = st.ii, jj = st.jj, kk = st.kk
     cdef double q_ik, f_jk, mean_f_ij, mean_F_ij, result, aux
@@ -326,12 +317,10 @@ def grad_fj(int j, np.ndarray[double, ndim=1] Fj, Q, G, epsilon=1e-50, accelerat
     """
 
     cdef np.ndarray[double, ndim=1] grad
-    cdef state st
 
     if accelerate:
-        st = make_state(Q, None, G)
         grad = np.empty(Fj.shape[0], dtype=float)
-        _grad_fj(j, &Fj[0], &st, &grad[0], epsilon)
+        _grad_fj(j, &Fj[0], State(Q, None, G), &grad[0], epsilon)
         return grad
 
     gj = G[:, j]
@@ -342,7 +331,7 @@ def grad_fj(int j, np.ndarray[double, ndim=1] Fj, Q, G, epsilon=1e-50, accelerat
     return -(aux1.sum(0) - aux2.sum(0))
 
 
-cdef void _grad_fj(int j, double* Fj, state* st, double* grad, double e=1e-50) nogil:
+cdef void _grad_fj(int j, double* Fj, State st, double* grad, double e=1e-50) nogil:
     cdef int i, k, n
     cdef int ii = st.ii, jj = st.jj, kk = st.kk
     cdef double q_ik, f_jk, aux, mean_F_ij, mean_f_ij
@@ -411,7 +400,7 @@ def hess_fj(int j, np.ndarray[double, ndim=1] Fj, Q, G, epsilon=1e-50, accelerat
     if accelerate:
         k = Fj.shape[0]
         hess = np.empty((k, k), dtype=float)
-        _hess_fj(j, &Fj[0], make_state(Q, None, G), &hess[0, 0], epsilon)
+        _hess_fj(j, &Fj[0], State(Q, None, G), &hess[0, 0], epsilon)
         return hess
 
     gj = G[:, j]
@@ -459,7 +448,7 @@ cpdef _hess_qi(int i, double[:] Qi,
     return hess
 
 
-cdef void _hess_fj(int j, double* Fj, state st, double* hess, double e=1e-50) nogil:
+cdef void _hess_fj(int j, double* Fj, State st, double* hess, double e=1e-50) nogil:
     cdef int i, k, l, n
     cdef int ii = st.ii, jj = st.jj, kk = st.kk
     cdef double q_ik, f_jk, mean_f_ij, mean_F_ij, aux
@@ -513,12 +502,12 @@ def phi_F(double[:, :] Q, double[:, :] F, int[:, :] G, epislon=1e-50):
         A (num_loci) array with each phi_j value.
     """
 
-    cdef state st = make_state(Q, F, G)
+    cdef State st = State(Q, F, G)
     cdef np.ndarray[double, ndim=1] out = np.empty(st.jj, dtype=float)
     cdef int j, k = st.kk
 
     for j in range(st.jj):
-        out[j] = _phi_fj(j, &F[j, 0], &st, epislon)
+        out[j] = _phi_fj(j, &F[j, 0], st, epislon)
 
     return out
 
@@ -535,12 +524,12 @@ def grad_F(double[:, :] Q, double[:, :] F, int[:, :] G, epislon=1e-50):
         A (num_loci, k) array with each F[j] gradient.
     """
 
-    cdef state st = make_state(Q, F, G)
+    cdef State st = State(Q, F, G)
     cdef np.ndarray[double, ndim=2] out = np.empty((st.jj, st.kk), dtype=float)
     cdef int j, k = st.kk
 
     for j in range(st.jj):
-        _grad_fj(j, &F[j, 0], &st, &out[j, 0], epislon)
+        _grad_fj(j, &F[j, 0], st, &out[j, 0], epislon)
 
     return out
 
@@ -557,7 +546,7 @@ def hess_F(double[:, :] Q, double[:, :] F, int[:, :] G, epislon=1e-50):
         A (num_loci, k, k) array with the j-th Heassian at each out[j].
     """
 
-    cdef state st = make_state(Q, F, G)
+    cdef State st = State(Q, F, G)
     cdef int j = st.jj, k = st.kk
     cdef np.ndarray[double, ndim=3] out = np.empty((j, k, k), dtype=float)
 
@@ -579,7 +568,7 @@ def full_objective_F(double[:, :] Q, double[:, :] F, int[:, :] G, epislon=1e-50)
         func, grad and hessian matrices.
     """
 
-    cdef state st = make_state(Q, F, G)
+    cdef State st = State(Q, F, G)
     cdef int j = st.jj, k = st.kk
 
     cdef np.ndarray[double, ndim=1] phi = np.empty(j, dtype=float)
@@ -603,7 +592,7 @@ def derivatives_F(double[:, :] Q, double[:, :] F, int[:, :] G, epislon=1e-50):
         grad and hessian matrices.
     """
 
-    cdef state st = make_state(Q, F, G)
+    cdef State st = State(Q, F, G)
     cdef int j = st.jj, k = st.kk
 
     cdef np.ndarray[double, ndim=2] grad = np.empty((j, k), dtype=float)
@@ -627,7 +616,7 @@ def full_objective_fj(int j, double[:] Fj, double[:, :] Q, int[:, :] G, epsilon=
         A tuple of (function value, gradient, hessian)
     """
 
-    cdef state st = make_state(Q, None, G)
+    cdef State st = State(Q, None, G)
     cdef int k = st.kk
 
     cdef double phi
@@ -638,7 +627,7 @@ def full_objective_fj(int j, double[:] Fj, double[:, :] Q, int[:, :] G, epsilon=
     return phi, grad, hess
 
 
-cdef void _full_objective_fj(int j, double* Fj, state st, double* phi, double* grad, double* hess, double e=1e-50) nogil:
+cdef void _full_objective_fj(int j, double* Fj, State st, double* phi, double* grad, double* hess, double e=1e-50) nogil:
     cdef int i, k, l, n
     cdef int ii = st.ii, jj = st.jj, kk = st.kk
     cdef double q_ik, f_jk, mean_f_ij, mean_F_ij, aux_hess, aux_grad, result
@@ -713,7 +702,7 @@ def derivatives_fj(int j, double[:] Fj, double[:, :] Q, int[:, :] G, epsilon=1e-
         A tuple of (function value, gradient, hessian)
     """
 
-    cdef state st = make_state(Q, None, G)
+    cdef State st = State(Q, None, G)
     cdef int k = st.kk
 
     cdef np.ndarray[double, ndim=1] grad = np.empty(k, dtype=float)
@@ -723,7 +712,7 @@ def derivatives_fj(int j, double[:] Fj, double[:, :] Q, int[:, :] G, epsilon=1e-
     return grad, hess
 
 
-cdef void _derivatives_fj(int j, double* Fj, state st, double* grad, double* hess, double e=1e-50) nogil:
+cdef void _derivatives_fj(int j, double* Fj, State st, double* grad, double* hess, double e=1e-50) nogil:
     cdef int i, k, l, n
     cdef int ii = st.ii, jj = st.jj, kk = st.kk
     cdef double q_ik, f_jk, mean_f_ij, mean_F_ij, aux_hess, aux_grad

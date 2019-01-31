@@ -215,9 +215,9 @@ class TestPopulation:
 class TestMultiPopulationInteface(TestPopulation):
     @pytest.fixture
     def popA(self):
-        from kpop.tests.conftest import popA, popA_data
+        from tests.conftest import popA_, popA_data_
 
-        pop = popA(popA_data())
+        pop = popA_(popA_data_())
         return MultiPopulation([pop], id='A')
 
 
