@@ -39,8 +39,7 @@ def _colors(colors, n):
         colors = unique_colors(n)
     elif isinstance(colors, str):
         colors = unique_colors(n, colormap=colors)
-    colors = list(colors)
-    return colors
+    return list(colors)
 
 
 def _pop_sizes(pop_sizes, total):

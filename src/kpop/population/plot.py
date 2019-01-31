@@ -30,13 +30,13 @@ class Plot(Attr):
               colors=None, ylabel=None, scatter=False,
               show=True, sorted=False):
         """
-        Plot allele frequencies.
+        Plot population frequencies.
 
         Args:
             title:
                 Optional plot title.
             colors:
-                A colormap or a list of colors for each allele.
+                A colormap or a list of colors for each population.
             ylabel:
                 Label for the y-axis.
             scatter:
@@ -104,12 +104,12 @@ class Plot(Attr):
                 The projection method used to reduce dimensionality. Can be
                 anyone of 'pca', 'tsne', 'mds', or 'isomap'.
             data:
-                Method used to constructinitial raw data for visualization. This
+                Method used to construct initial raw data for visualization. This
                 is the same argument as in :cls:`kpop.Population.as_array`
             title:
                 Optional plot title.
             colors:
-                A colormap or a list of colors for each allele.
+                A colormap or a list of colors for each population.
             merge (bool):
                 If True, treats a MultiPopulation as a single population.
                 Otherwise separate data for each sub-population in the graph.
@@ -143,7 +143,7 @@ class Plot(Attr):
             title:
                 Optional plot title.
             colors:
-                A colormap or a list of colors for each allele.
+                A colormap or a list of colors for each population.
             merge (bool):
                 If True, treats a MultiPopulation as a single population.
                 Otherwise separate data for each sub-population in the graph.
@@ -168,11 +168,10 @@ class Plot(Attr):
         else:
             pop_sizes = [len(pop) for pop in self._populations]
             coords_list = group_individuals(coords, pop_sizes)
-            pop_ids = [pop.id or i for i, pop in
-                       enumerate(self._populations)]
+            pop_ids = [pop.id or i for i, pop in enumerate(self._populations)]
 
         colors = _colors(colors, len(coords_list))
-
+        
         # Plot scattered elements
         ax = axes or plt.axes()
         for i, coords in enumerate(coords_list):
@@ -198,7 +197,7 @@ class Plot(Attr):
             title:
                 Optional plot title.
             colors:
-                A colormap or a list of colors for each allele.
+                A colormap or a list of colors for each population.
             merge (bool):
                 If True, treats a MultiPopulation as a single population.
                 Otherwise separate data for each sub-population in the graph.
